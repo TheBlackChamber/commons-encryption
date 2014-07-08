@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.theblackchamber.key;
+package net.theblackchamber.crypto.key;
 
 import java.io.Serializable;
 

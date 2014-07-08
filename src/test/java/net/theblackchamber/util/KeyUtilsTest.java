@@ -4,7 +4,8 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 
-import net.theblackchamber.key.SymetricSerializableKey;
+import net.theblackchamber.crypto.key.SymetricSerializableKey;
+import net.theblackchamber.crypto.util.KeyUtils;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;

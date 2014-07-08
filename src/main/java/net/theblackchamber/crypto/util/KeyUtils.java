@@ -1,4 +1,4 @@
-package net.theblackchamber.util;
+package net.theblackchamber.crypto.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -22,7 +22,7 @@ import org.jasypt.digest.config.SimpleDigesterConfig;
 import org.jasypt.salt.RandomSaltGenerator;
 import org.jasypt.util.password.ConfigurablePasswordEncryptor;
 
-import net.theblackchamber.key.SymetricSerializableKey;
+import net.theblackchamber.crypto.key.SymetricSerializableKey;
 
 public class KeyUtils {
 

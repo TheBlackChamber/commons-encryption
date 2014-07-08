@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.theblackchamber;
+package net.theblackchamber.crypto.providers;
 
 import java.util.Properties;
 
