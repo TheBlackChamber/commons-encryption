@@ -1,26 +1,40 @@
 package net.theblackchamber.crypto.providers;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.crypto.SecretKey;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import static org.junit.Assert.*;
-import net.theblackchamber.crypto.key.SymetricSerializableKey;
-import net.theblackchamber.crypto.util.KeyUtils;
+import net.theblackchamber.crypto.util.KeystoreUtils;
 
 public class AESEncryptionProviderTest {
 
-	SymetricSerializableKey key;
+	SecretKey key;
 	AESEncryptionProvider aesEncryptionProvider;
+	
+	@Rule
+	public TemporaryFolder tempFolder = new TemporaryFolder();
 	
 	@Before
 	public void init(){
-		key = KeyUtils.generateSymetricSerializableKey();
-		aesEncryptionProvider = new AESEncryptionProvider(key);
+		try{
+			File keyFile = tempFolder.newFile("keystore.keys");
+			KeystoreUtils.generateAESSecretKey(keyFile);
+			key = KeystoreUtils.getAESSecretKey(keyFile);
+			aesEncryptionProvider = new AESEncryptionProvider(key);
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
 	}
 	
 	@Test

@@ -1,18 +1,20 @@
 package net.theblackchamber.crypto.providers;
 
+import javax.crypto.SecretKey;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.encoders.Hex;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimplePBEConfig;
 import org.jasypt.salt.RandomSaltGenerator;
 
-import net.theblackchamber.crypto.key.SymetricSerializableKey;
 
 public class AESEncryptionProvider {
 
-	private SymetricSerializableKey key;
+	private SecretKey key;
 	StandardPBEStringEncryptor encryptor;
 	
-	public AESEncryptionProvider(final SymetricSerializableKey key){
+	public AESEncryptionProvider(final SecretKey key){
 		super();
 		this.key = key;
 		
@@ -20,7 +22,7 @@ public class AESEncryptionProvider {
 		SimplePBEConfig config = new SimplePBEConfig();
 		config.setAlgorithm("PBEWITHSHA256AND128BITAES-CBC-BC");
 		config.setKeyObtentionIterations(10);
-		config.setPassword(key.getSecretKey());
+		config.setPassword(Hex.toHexString(key.getEncoded()));
 		config.setProvider(new BouncyCastleProvider());
 		config.setSaltGenerator(new RandomSaltGenerator());
 		
