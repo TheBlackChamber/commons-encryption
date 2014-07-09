@@ -9,6 +9,6 @@ import java.util.Properties;
  * @author sminogue
  *
  */
-public class SecureProperties extends Properties {
+public class SecurePropertiesProvider extends Properties {
 
 }
