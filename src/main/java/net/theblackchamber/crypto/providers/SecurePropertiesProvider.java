@@ -9,10 +9,6 @@ import java.io.Reader;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
-/**
- * @author sminogue
- * 
- */
 public class SecurePropertiesProvider extends Properties {
 
 	private static final long serialVersionUID = 6795084558089471182L;
