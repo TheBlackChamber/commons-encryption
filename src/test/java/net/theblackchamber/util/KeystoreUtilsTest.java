@@ -26,6 +26,7 @@ package net.theblackchamber.util;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.KeyStoreException;
 
 import javax.crypto.SecretKey;
 
@@ -172,11 +173,47 @@ public class KeystoreUtilsTest {
 	public void testLoadAESSecretKeyNullKeystore(){
 		try {
 			
-			SecretKey key = KeystoreUtils.getAESSecretKey(null,null,null);
+			SecretKey key = KeystoreUtils.getAESSecretKey(null,"aes-key","TEST");
 			
 			fail();
 			
 		} catch(FileNotFoundException fnf){
+			assertTrue(true);
+		}catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	public void testLoadAESSecretKeyNullPassword(){
+		try {
+			File file = temporaryFolder.newFile("test.key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, "AES", "aes-key");
+			KeystoreUtils.generateAESSecretKey(config);
+			SecretKey key = KeystoreUtils.getAESSecretKey(file,"aes-key",null);
+			
+			fail();
+			
+		} catch(KeyStoreException fnf){
+			assertTrue(true);
+		}catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	public void testLoadAESSecretKeyNullKeyEntry(){
+		try {
+			File file = temporaryFolder.newFile("test.key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, "AES", "aes-key");
+			KeystoreUtils.generateAESSecretKey(config);
+			SecretKey key = KeystoreUtils.getAESSecretKey(file,null,"TEST");
+			
+			fail();
+			
+		} catch(KeyStoreException fnf){
 			assertTrue(true);
 		}catch (Exception e) {
 			e.printStackTrace();

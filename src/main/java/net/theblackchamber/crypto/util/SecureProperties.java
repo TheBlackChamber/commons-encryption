@@ -62,7 +62,7 @@ public class SecureProperties extends Properties {
 	private static final long serialVersionUID = 6795084558089471182L;
 
 	private SecretKey key = null;
-	private AESEncryptionProvider encryptionProvider;
+	private AESEncryptionProvider encryptionProvider = null;
 
 	/**
 	 * Gets the AES encryption key to be used for encryption and decryption. The
