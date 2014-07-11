@@ -24,8 +24,13 @@
 package net.theblackchamber.util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableEntryException;
@@ -127,6 +132,117 @@ public class SecurePropertiesTest {
 	}
 	
 	@Test
+	public void testCreateNewSecurePropertiesFromInputStream(){
+		try{
+			
+			File keyfile = temporaryFolder.newFile("test.key");
+			
+			assertTrue(keyfile.exists());
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, "AES", "aes-key");
+			KeystoreUtils.generateAESSecretKey(config);
+		
+			assertTrue(FileUtils.sizeOf(keyfile) > 0);
+			
+			Properties clearProperties = new Properties();
+			clearProperties.setProperty("key-path", keyfile.getPath());
+			clearProperties.setProperty("entry-name", "aes-key");
+			clearProperties.setProperty("keystore-password", "TEST");
+			
+			File propertiesFile = temporaryFolder.newFile("test.properties");
+			OutputStream stream = new FileOutputStream(propertiesFile);
+			clearProperties.store(stream, "comment");
+			stream.close();
+			assertTrue(propertiesFile.exists());
+			assertTrue(FileUtils.sizeOf(keyfile) > 0);
+			
+			InputStream inputStream = new FileInputStream(propertiesFile);
+			SecureProperties sProperties = new SecureProperties();
+			sProperties.load(inputStream);
+			assertNotNull(sProperties);
+			assertNotNull(sProperties.getProperty("entry-name"));
+			
+		}catch(Throwable t){
+			t.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	public void testCreateNewSecurePropertiesFromReader(){
+		try{
+			
+			File keyfile = temporaryFolder.newFile("test.key");
+			
+			assertTrue(keyfile.exists());
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, "AES", "aes-key");
+			KeystoreUtils.generateAESSecretKey(config);
+		
+			assertTrue(FileUtils.sizeOf(keyfile) > 0);
+			
+			Properties clearProperties = new Properties();
+			clearProperties.setProperty("key-path", keyfile.getPath());
+			clearProperties.setProperty("entry-name", "aes-key");
+			clearProperties.setProperty("keystore-password", "TEST");
+			
+			File propertiesFile = temporaryFolder.newFile("test.properties");
+			OutputStream stream = new FileOutputStream(propertiesFile);
+			clearProperties.store(stream, "comment");
+			stream.close();
+			assertTrue(propertiesFile.exists());
+			assertTrue(FileUtils.sizeOf(keyfile) > 0);
+			
+			FileReader reader = new FileReader(propertiesFile);
+			SecureProperties sProperties = new SecureProperties();
+			sProperties.load(reader);
+			assertNotNull(sProperties);
+			assertNotNull(sProperties.getProperty("entry-name"));
+			assertNotNull(sProperties.getProperty("nothere","TEST"));
+			assertTrue(!StringUtils.equals(sProperties.getProperty("entry-name","SM"), "SM"));
+			
+		}catch(Throwable t){
+			t.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	public void testCreateNewSecurePropertiesFromXml(){
+		try{
+			
+			File keyfile = temporaryFolder.newFile("test.key");
+			
+			assertTrue(keyfile.exists());
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, "AES", "aes-key");
+			KeystoreUtils.generateAESSecretKey(config);
+		
+			assertTrue(FileUtils.sizeOf(keyfile) > 0);
+			
+			Properties clearProperties = new Properties();
+			clearProperties.setProperty("key-path", keyfile.getPath());
+			clearProperties.setProperty("entry-name", "aes-key");
+			clearProperties.setProperty("keystore-password", "TEST");
+			
+			File propertiesFile = temporaryFolder.newFile("test.xml");
+			OutputStream stream = new FileOutputStream(propertiesFile);
+			clearProperties.storeToXML(stream, "comment");
+			stream.close();
+			assertTrue(propertiesFile.exists());
+			assertTrue(FileUtils.sizeOf(keyfile) > 0);
+			
+			InputStream is = new FileInputStream(propertiesFile);
+			SecureProperties sProperties = new SecureProperties();
+			sProperties.loadFromXML(is);
+			assertNotNull(sProperties);
+			assertNotNull(sProperties.getProperty("entry-name"));
+			
+		}catch(Throwable t){
+			t.printStackTrace();
+			fail();
+		}
+	}
+	
+	
+	@Test
 	public void testEncryptSetProperties(){
 		try{
 			File keyfile = temporaryFolder.newFile("test.key");
@@ -180,32 +296,6 @@ public class SecurePropertiesTest {
 			t.printStackTrace();
 			fail();
 		}
-	}
-	
-	private Properties createTestCipherProperties(String keyPath) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, UnrecoverableEntryException, IOException{
-		
-		SecretKey key = KeystoreUtils.getAESSecretKey(new File(keyPath),"aes-key","TEST");
-		AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
-		
-		Properties props = createTestClearProperties(keyPath);
-		String cipherTestText = encryptionProvider.encrypt("TEST");
-		props.setProperty("test-encrypted", cipherTestText);
-		
-		return props;
-		
-	}
-	
-	private Properties createTestClearProperties(String keyPath){
-		
-		Properties properties = new Properties();
-		
-		properties.setProperty("key-path", keyPath);
-		properties.setProperty("entry-name", "aes-key");
-		properties.setProperty("keystore-password", "TEST");
-		properties.setProperty("test", "test");
-		
-		return properties;
-		
 	}
 	
 }
