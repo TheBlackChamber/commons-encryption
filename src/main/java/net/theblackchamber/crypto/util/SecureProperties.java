@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) {{{year}}} {{{fullname}}}
+ * Copyright (c) 2014 Seamus Minogue
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.theblackchamber.crypto.providers;
+package net.theblackchamber.crypto.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,9 +40,25 @@ import javax.crypto.SecretKey;
 import org.apache.commons.lang3.StringUtils;
 
 import net.theblackchamber.crypto.exceptions.RuntimeCryptoException;
-import net.theblackchamber.crypto.util.KeystoreUtils;
+import net.theblackchamber.crypto.providers.AESEncryptionProvider;
 
-public class SecurePropertiesProvider extends Properties {
+/**
+ * Extension of the java {@link Properties} class which will provide the ability
+ * to transparently use encrypted properties.<br>
+ * Usage: In order to make use of encryped properties the properties file should
+ * contain an entry key-path which will point to a keystore file created via
+ * {@link KeystoreUtils}.<br>
+ * Calling setProperty on a new property with name containing "-unencrypted"
+ * will result in the value being added to the {@link Properties} map with the
+ * name changed from XXX-unencrypted to XXX-encrypted and the value being
+ * encoded.<br>
+ * Calling getProperty for a property with key containing -encrypted in the name
+ * will result in the value being decoded and the clear text value returned.
+ * 
+ * @author sminogue
+ * 
+ */
+public class SecureProperties extends Properties {
 
 	private static final long serialVersionUID = 6795084558089471182L;
 
@@ -50,10 +66,23 @@ public class SecurePropertiesProvider extends Properties {
 
 	private AESEncryptionProvider encryptionProvider;
 
+	/**
+	 * Gets the AES encryption key to be used for encryption and decryption. The
+	 * path to <b>this file will have been specified in the properties file with
+	 * the key: "key-path"</b>
+	 * 
+	 * @return
+	 */
 	public SecretKey getKey() {
 		return key;
 	}
 
+	/**
+	 * Gets the encryption provider. This is the Provider which will be used to
+	 * encrypt and decrypt properties.
+	 * 
+	 * @return
+	 */
 	public AESEncryptionProvider getEncryptionProvider() {
 		return encryptionProvider;
 	}
@@ -61,7 +90,7 @@ public class SecurePropertiesProvider extends Properties {
 	/**
 	 * Default constructor.
 	 */
-	public SecurePropertiesProvider() {
+	public SecureProperties() {
 		super();
 	}
 
@@ -77,7 +106,7 @@ public class SecurePropertiesProvider extends Properties {
 	 * @throws NoSuchAlgorithmException
 	 * @throws KeyStoreException
 	 */
-	public SecurePropertiesProvider(Properties defaults)
+	public SecureProperties(Properties defaults)
 			throws KeyStoreException, NoSuchAlgorithmException,
 			CertificateException, FileNotFoundException,
 			UnrecoverableEntryException, IOException {
@@ -126,17 +155,17 @@ public class SecurePropertiesProvider extends Properties {
 
 	/**
 	 * @see java.util.Properties#loadFromXML(java.io.InputStream) Also loads
-	 *      encryption keystore if it exists. <b>Note that if an exception occurred in
-	 *      encryption/decryption methods the IOException will wrap the
-	 *      underlying exception</b>
+	 *      encryption keystore if it exists. <b>Note that if an exception
+	 *      occurred in encryption/decryption methods the IOException will wrap
+	 *      the underlying exception</b>
 	 */
 	@Override
 	public synchronized void loadFromXML(InputStream in) throws IOException,
 			InvalidPropertiesFormatException {
 		super.loadFromXML(in);
-		try{
-		loadKeystore();
-		initializeEncryptionProvider();
+		try {
+			loadKeystore();
+			initializeEncryptionProvider();
 		} catch (RuntimeCryptoException rce) {
 			throw new IOException(rce);
 		}
@@ -252,6 +281,10 @@ public class SecurePropertiesProvider extends Properties {
 
 	}
 
+	/**
+	 * Method which will create a new Encryption provider using the already
+	 * specified key.
+	 */
 	private void initializeEncryptionProvider() {
 		if (key != null) {
 			encryptionProvider = new AESEncryptionProvider(key);

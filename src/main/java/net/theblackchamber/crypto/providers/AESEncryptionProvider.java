@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) {{{year}}} {{{fullname}}}
+ * Copyright (c) 2014 Seamus Minogue
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,11 +31,23 @@ import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimplePBEConfig;
 import org.jasypt.salt.RandomSaltGenerator;
 
-public class AESEncryptionProvider {
+/**
+ * Provider which will allow for encryption and decryption of strings using the
+ * AES algorithm.
+ * 
+ * @author sminogue
+ * 
+ */
+public class AESEncryptionProvider implements EncryptionProvider {
 
 	private SecretKey key;
-	StandardPBEStringEncryptor encryptor;
+	private StandardPBEStringEncryptor encryptor;
 
+	/**
+	 * Constructor to create new AES encryption provider.
+	 * 
+	 * @param key
+	 */
 	public AESEncryptionProvider(final SecretKey key) {
 		super();
 		this.key = key;
@@ -53,10 +65,16 @@ public class AESEncryptionProvider {
 		encryptor.setStringOutputType("hexadecimal");
 	}
 
+	/**
+	 * @see net.theblackchamber.crypto.providers.EncryptionProvider#decrypt(java.lang.String)
+	 */
 	public String decrypt(String cipherText) {
 		return encryptor.decrypt(cipherText);
 	}
 
+	/**
+	 * @see net.theblackchamber.crypto.providers.EncryptionProvider#encrypt(java.lang.String)
+	 */
 	public String encrypt(String clearText) {
 		return encryptor.encrypt(clearText);
 	}

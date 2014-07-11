@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) {{{year}}} {{{fullname}}}
+ * Copyright (c) 2014 Seamus Minogue
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,6 +35,7 @@ import java.util.Properties;
 import javax.crypto.SecretKey;
 
 import net.theblackchamber.crypto.util.KeystoreUtils;
+import net.theblackchamber.crypto.util.SecureProperties;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -54,7 +55,7 @@ public class SecurePropertiesProviderTest {
 	public void testSecurePropertiesIsProperties(){
 		try{
 			
-			Properties properties = new SecurePropertiesProvider();
+			Properties properties = new SecureProperties();
 			
 			assertNotNull(properties);
 			
@@ -76,12 +77,12 @@ public class SecurePropertiesProviderTest {
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
-			Properties props = new SecurePropertiesProvider();
+			Properties props = new SecureProperties();
 			
 			props.setProperty("key-path", keyfile.getPath());
 			
-			assertNotNull(((SecurePropertiesProvider)props).getKey());
-			assertNotNull(((SecurePropertiesProvider)props).getEncryptionProvider());
+			assertNotNull(((SecureProperties)props).getKey());
+			assertNotNull(((SecureProperties)props).getEncryptionProvider());
 			
 			assertTrue(StringUtils.equals(props.getProperty("key-path"), keyfile.getPath()));
 			
@@ -106,10 +107,10 @@ public class SecurePropertiesProviderTest {
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("key-path", keyfile.getPath());
 			
-			Properties props = new SecurePropertiesProvider(clearProperties);
+			Properties props = new SecureProperties(clearProperties);
 			
-			assertNotNull(((SecurePropertiesProvider)props).getKey());
-			assertNotNull(((SecurePropertiesProvider)props).getEncryptionProvider());
+			assertNotNull(((SecureProperties)props).getKey());
+			assertNotNull(((SecureProperties)props).getEncryptionProvider());
 			
 			assertTrue(StringUtils.equals(props.getProperty("key-path"), keyfile.getPath()));
 			
@@ -130,12 +131,12 @@ public class SecurePropertiesProviderTest {
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
-			Properties props = new SecurePropertiesProvider();
+			Properties props = new SecureProperties();
 			
 			props.setProperty("key-path", keyfile.getPath());
 			
-			assertNotNull(((SecurePropertiesProvider)props).getKey());
-			assertNotNull(((SecurePropertiesProvider)props).getEncryptionProvider());
+			assertNotNull(((SecureProperties)props).getKey());
+			assertNotNull(((SecureProperties)props).getEncryptionProvider());
 			
 			assertTrue(StringUtils.equals(props.getProperty("key-path"), keyfile.getPath()));
 			
@@ -162,7 +163,7 @@ public class SecurePropertiesProviderTest {
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
-			Properties props = new SecurePropertiesProvider();
+			Properties props = new SecureProperties();
 			props.setProperty("test", "test");
 			
 			assertTrue(StringUtils.equals("test", props.getProperty("test")));

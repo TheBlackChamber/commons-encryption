@@ -21,38 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.theblackchamber.crypto.exceptions;
+package net.theblackchamber.crypto.providers;
 
 /**
- * Custom runtime exception to be thrown when overriding methods will not allow
- * us to specify custom checked exceptions.
+ * Interface to define Encryption providers. This is kinda un-needed at the
+ * moment but I am adding it to support future plans to allow more dynamic
+ * configuration of encryption used in utilities.
  * 
  * @author sminogue
  * 
  */
-public class RuntimeCryptoException extends RuntimeException {
+public interface EncryptionProvider {
 
-	private static final long serialVersionUID = 3326566324705121158L;
-
-	public RuntimeCryptoException() {
-		super();
-	}
-
-	public RuntimeCryptoException(String message, Throwable cause,
-			boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-
-	public RuntimeCryptoException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public RuntimeCryptoException(String message) {
-		super(message);
-	}
-
-	public RuntimeCryptoException(Throwable cause) {
-		super(cause);
-	}
-
+	/**
+	 * Decrypt string.
+	 * @param cipherText
+	 * @return
+	 */
+	public String decrypt(String cipherText);
+	
+	/**
+	 * Encrypt string.
+	 * @param clearText
+	 * @return
+	 */
+	public String encrypt(String clearText);
+	
 }

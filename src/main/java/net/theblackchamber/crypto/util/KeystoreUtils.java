@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) {{{year}}} {{{fullname}}}
+ * Copyright (c) 2014 Seamus Minogue
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 public class KeystoreUtils {
-	private static final String KEYSTORE_PASSWORD = "f42ecc4c507d43f9071c13491e3a3c6a";
+	private static final String DEFAULT_KEYSTORE_PASSWORD = "f42ecc4c507d43f9071c13491e3a3c6a";
+	private static final int DEFAULT_KEY_SIZE = 256;
 	private static final String DEFAULT_ENTRY_NAME = "aes-key";
 
 	/**
@@ -89,7 +90,7 @@ public class KeystoreUtils {
 
 		KeyGenerator keygen = KeyGenerator.getInstance("AES",
 				new BouncyCastleProvider());
-		keygen.init(256, random);
+		keygen.init(DEFAULT_KEY_SIZE, random);
 
 		SecretKey key = keygen.generateKey();
 
@@ -99,10 +100,10 @@ public class KeystoreUtils {
 			fis = new FileInputStream(keystore);
 		}
 
-		keyStore.load(fis, KEYSTORE_PASSWORD.toCharArray());
+		keyStore.load(fis, DEFAULT_KEYSTORE_PASSWORD.toCharArray());
 
 		KeyStore.ProtectionParameter protectionParameter = new KeyStore.PasswordProtection(
-				KEYSTORE_PASSWORD.toCharArray());
+				DEFAULT_KEYSTORE_PASSWORD.toCharArray());
 		KeyStore.SecretKeyEntry secretKeyEntry = new KeyStore.SecretKeyEntry(
 				key);
 
@@ -112,7 +113,7 @@ public class KeystoreUtils {
 		}
 		FileOutputStream fos = new FileOutputStream(keystore);
 
-		keyStore.store(fos, KEYSTORE_PASSWORD.toCharArray());
+		keyStore.store(fos, DEFAULT_KEYSTORE_PASSWORD.toCharArray());
 
 		fos.close();
 
@@ -163,9 +164,9 @@ public class KeystoreUtils {
 			throw new FileNotFoundException();
 		}
 		fis = new FileInputStream(keystore);
-		keyStore.load(fis, KEYSTORE_PASSWORD.toCharArray());
+		keyStore.load(fis, DEFAULT_KEYSTORE_PASSWORD.toCharArray());
 		KeyStore.ProtectionParameter protectionParameter = new KeyStore.PasswordProtection(
-				KEYSTORE_PASSWORD.toCharArray());
+				DEFAULT_KEYSTORE_PASSWORD.toCharArray());
 		KeyStore.SecretKeyEntry pkEntry = (KeyStore.SecretKeyEntry) keyStore
 				.getEntry(entryName, protectionParameter);
 		try {
