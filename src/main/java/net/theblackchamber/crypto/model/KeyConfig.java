@@ -27,8 +27,6 @@ import java.io.File;
 
 import net.theblackchamber.crypto.constants.SupportedAlgorithms;
 
-import org.apache.commons.lang3.StringUtils;
-
 public class KeyConfig {
 
 	private static final int DEFAULT_KEY_SIZE = 256;
