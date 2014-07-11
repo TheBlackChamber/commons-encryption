@@ -1,5 +1,25 @@
 /**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) {{{year}}} {{{fullname}}}
  * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 package net.theblackchamber.crypto.providers;
 
@@ -19,6 +39,7 @@ import javax.crypto.SecretKey;
 
 import org.apache.commons.lang3.StringUtils;
 
+import net.theblackchamber.crypto.exceptions.RuntimeCryptoException;
 import net.theblackchamber.crypto.util.KeystoreUtils;
 
 public class SecurePropertiesProvider extends Properties {
@@ -29,8 +50,6 @@ public class SecurePropertiesProvider extends Properties {
 
 	private AESEncryptionProvider encryptionProvider;
 
-	
-	
 	public SecretKey getKey() {
 		return key;
 	}
@@ -47,7 +66,9 @@ public class SecurePropertiesProvider extends Properties {
 	}
 
 	/**
-	 * Constructor which specifies {@link Properties} defaults.
+	 * Constructor which specifies {@link Properties} defaults. <b>Note that if
+	 * an exception occurred in encryption/decryption methods the IOException
+	 * will wrap the underlying exception</b>
 	 * 
 	 * @throws IOException
 	 * @throws UnrecoverableEntryException
@@ -61,55 +82,71 @@ public class SecurePropertiesProvider extends Properties {
 			CertificateException, FileNotFoundException,
 			UnrecoverableEntryException, IOException {
 		super(defaults);
-		loadKeystore();
-		initializeEncryptionProvider();
+		try {
+			loadKeystore();
+			initializeEncryptionProvider();
+		} catch (RuntimeCryptoException rce) {
+			throw new IOException(rce);
+		}
 	}
 
 	/**
 	 * @see java.util.Properties#load(java.io.Reader) Also loads encryption
-	 *      keystore if it exists.
-	 * @throws RuntimeException
-	 *             Wraps encryption key loading errors.
+	 *      keystore if it exists. <b>Note that if an exception occurred in
+	 *      encryption/decryption methods the IOException will wrap the
+	 *      underlying exception</b>
 	 */
 	@Override
 	public synchronized void load(Reader reader) throws IOException {
 		super.load(reader);
-		loadKeystore();
-		initializeEncryptionProvider();
+		try {
+			loadKeystore();
+			initializeEncryptionProvider();
+		} catch (RuntimeCryptoException rce) {
+			throw new IOException(rce);
+		}
 	}
 
 	/**
 	 * @see java.util.Properties#load(java.io.InputStream) Also loads encryption
-	 *      keystore if it exists.
-	 * @throws RuntimeException
-	 *             Wraps encryption key loading errors.
+	 *      keystore if it exists. <b>Note that if an exception occurred in
+	 *      encryption/decryption methods the IOException will wrap the
+	 *      underlying exception</b>
 	 */
 	@Override
 	public synchronized void load(InputStream inStream) throws IOException {
 		super.load(inStream);
-		loadKeystore();
-		initializeEncryptionProvider();
+		try {
+			loadKeystore();
+			initializeEncryptionProvider();
+		} catch (RuntimeCryptoException rce) {
+			throw new IOException(rce);
+		}
 	}
 
 	/**
 	 * @see java.util.Properties#loadFromXML(java.io.InputStream) Also loads
-	 *      encryption keystore if it exists.
-	 * @throws RuntimeException
-	 *             Wraps encryption key loading errors.
+	 *      encryption keystore if it exists. <b>Note that if an exception occurred in
+	 *      encryption/decryption methods the IOException will wrap the
+	 *      underlying exception</b>
 	 */
 	@Override
 	public synchronized void loadFromXML(InputStream in) throws IOException,
 			InvalidPropertiesFormatException {
 		super.loadFromXML(in);
+		try{
 		loadKeystore();
 		initializeEncryptionProvider();
+		} catch (RuntimeCryptoException rce) {
+			throw new IOException(rce);
+		}
 	}
 
 	/**
 	 * @see java.util.Properties#getProperty(java.lang.String) If property key
 	 *      ends in "-encrypted" this method will attempt to decrypt before
 	 *      returning the value.
-	 * @throws RuntimeException
+	 * @throws RuntimeCryptoException
 	 *             If no encryption key was configured. This usually happens
 	 *             when no key was successfully loaded. .
 	 */
@@ -123,7 +160,7 @@ public class SecurePropertiesProvider extends Properties {
 	 * @see java.util.Properties#getProperty(java.lang.String, java.lang.String)
 	 *      If property key ends in "-encrypted" this method will attempt to
 	 *      decrypt before returning the value.
-	 * @throws RuntimeException
+	 * @throws RuntimeCryptoException
 	 *             If no encryption key was configured. This usually happens
 	 *             when no key was successfully loaded.
 	 */
@@ -143,7 +180,7 @@ public class SecurePropertiesProvider extends Properties {
 	 *      encrypt the value prior to adding it. If the property key is
 	 *      "key-path" then the encryption will be re-initialized using the
 	 *      specified key.
-	 * @throws RuntimeException
+	 * @throws RuntimeCryptoException
 	 *             If no encryption key was configured. This usually happens
 	 *             when no key was successfully loaded.
 	 */
@@ -157,7 +194,7 @@ public class SecurePropertiesProvider extends Properties {
 		}
 
 		String property = attemptEncryption(key, value);
-		if(!StringUtils.equals(property, value)){
+		if (!StringUtils.equals(property, value)) {
 			key = StringUtils.replace(key, "-unencrypted", "-encrypted");
 		}
 		return super.setProperty(key, property);
@@ -172,13 +209,16 @@ public class SecurePropertiesProvider extends Properties {
 	 * 
 	 * @param key
 	 * @param property
+	 * @throws RuntimeCryptoException
+	 *             If no encryption provider is configured.
 	 * @return
 	 */
 	private String attemptDecryption(String key, String property) {
 
 		if (StringUtils.endsWithIgnoreCase(key, "-encrypted")) {
 			if (encryptionProvider == null)
-				throw new RuntimeException("No encryption provider configured");
+				throw new RuntimeCryptoException(
+						"No encryption provider configured");
 			return encryptionProvider.decrypt(property);
 		} else {
 			return property;
@@ -195,13 +235,16 @@ public class SecurePropertiesProvider extends Properties {
 	 * 
 	 * @param key
 	 * @param property
+	 * @throws RuntimeCryptoException
+	 *             If not encryption provider is configured.
 	 * @return
 	 */
 	private String attemptEncryption(String key, String property) {
 
 		if (StringUtils.endsWithIgnoreCase(key, "-unencrypted")) {
 			if (encryptionProvider == null)
-				throw new RuntimeException("No encryption provider configured");
+				throw new RuntimeCryptoException(
+						"No encryption provider configured");
 			return encryptionProvider.encrypt(property);
 		} else {
 			return property;
@@ -219,7 +262,7 @@ public class SecurePropertiesProvider extends Properties {
 	 * Method will get the key-path from this properties object and attempt to
 	 * load the keystore from file.
 	 * 
-	 * @throws RuntimeException
+	 * @throws RuntimeCryptoException
 	 *             Wraps encryption key loading errors.
 	 */
 	private void loadKeystore() {
@@ -229,7 +272,7 @@ public class SecurePropertiesProvider extends Properties {
 			try {
 				key = KeystoreUtils.getAESSecretKey(new File(keypath));
 			} catch (Throwable t) {
-				throw new RuntimeException(
+				throw new RuntimeCryptoException(
 						"Failed when attempting to load keystore: "
 								+ t.getMessage(), t);
 			}
