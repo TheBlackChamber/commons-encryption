@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.theblackchamber.crypto.util;
-
+package net.theblackchamber.crypto.implementations;
+import static net.theblackchamber.crypto.constants.Constants.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -41,6 +41,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import net.theblackchamber.crypto.exceptions.RuntimeCryptoException;
 import net.theblackchamber.crypto.providers.AESEncryptionProvider;
+import net.theblackchamber.crypto.util.KeystoreUtils;
 
 /**
  * Extension of the java {@link Properties} class which will provide the ability
@@ -60,7 +61,8 @@ import net.theblackchamber.crypto.providers.AESEncryptionProvider;
 public class SecureProperties extends Properties {
 
 	private static final long serialVersionUID = 6795084558089471182L;
-
+	private static final String ENCRYPTED_SUFFIX = "-encrypted";
+	private static final String UNENCRYPTED_SUFFIX = "-unencrypted";
 	private SecretKey key = null;
 	private AESEncryptionProvider encryptionProvider = null;
 
@@ -223,7 +225,7 @@ public class SecureProperties extends Properties {
 
 		String property = attemptEncryption(key, value);
 		if (!StringUtils.equals(property, value)) {
-			key = StringUtils.replace(key, "-unencrypted", "-encrypted");
+			key = StringUtils.replace(key, UNENCRYPTED_SUFFIX, ENCRYPTED_SUFFIX);
 		}
 		return super.setProperty(key, property);
 	}
@@ -243,7 +245,7 @@ public class SecureProperties extends Properties {
 	 */
 	private String attemptDecryption(String key, String property) {
 
-		if (StringUtils.endsWithIgnoreCase(key, "-encrypted")) {
+		if (StringUtils.endsWithIgnoreCase(key, ENCRYPTED_SUFFIX)) {
 			if (encryptionProvider == null)
 				throw new RuntimeCryptoException(
 						"No encryption provider configured");
@@ -269,7 +271,7 @@ public class SecureProperties extends Properties {
 	 */
 	private String attemptEncryption(String key, String property) {
 
-		if (StringUtils.endsWithIgnoreCase(key, "-unencrypted")) {
+		if (StringUtils.endsWithIgnoreCase(key, UNENCRYPTED_SUFFIX)) {
 			if (encryptionProvider == null)
 				throw new RuntimeCryptoException(
 						"No encryption provider configured");
@@ -298,9 +300,9 @@ public class SecureProperties extends Properties {
 	 *             Wraps encryption key loading errors.
 	 */
 	private void loadKeystore() {
-		String keypath = this.getProperty("key-path");
-		String keyEntryName = this.getProperty("entry-name");
-		String keyStorePassword = this.getProperty("keystore-password");
+		String keypath = this.getProperty(KEY_PATH_PROPERTY_KEY);
+		String keyEntryName = this.getProperty(ENTRY_NAME_PROPERTY_KEY);
+		String keyStorePassword = this.getProperty(KEYSTORE_PASSWORD_PROPERTY_KEY);
 
 		if (keypath != null) {
 			try {

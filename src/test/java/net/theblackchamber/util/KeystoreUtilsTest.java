@@ -30,6 +30,7 @@ import java.security.KeyStoreException;
 
 import javax.crypto.SecretKey;
 
+import net.theblackchamber.crypto.constants.SupportedAlgorithms;
 import net.theblackchamber.crypto.model.KeyConfig;
 import net.theblackchamber.crypto.util.KeystoreUtils;
 
@@ -53,7 +54,7 @@ public class KeystoreUtilsTest {
 		
 		try {
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", null, "AES", "aes-key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedAlgorithms.AES, "aes-key");
 			KeystoreUtils.generateAESSecretKey(config);
 			
 			assertTrue(FileUtils.sizeOf(file) > 0);
@@ -91,7 +92,7 @@ public class KeystoreUtilsTest {
 		try {
 			
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", null, "AES", null);
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedAlgorithms.AES, null);
 			KeystoreUtils.generateAESSecretKey(config);
 			fail();
 			
@@ -112,7 +113,7 @@ public class KeystoreUtilsTest {
 		
 		try {
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", null, "AES", "aes-key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedAlgorithms.AES, "aes-key");
 			KeystoreUtils.generateAESSecretKey(config);
 			
 			assertTrue(FileUtils.sizeOf(file) > 0);
@@ -130,11 +131,11 @@ public class KeystoreUtilsTest {
 		
 		try {
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", null, "AES", "aes-key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedAlgorithms.AES, "aes-key");
 			KeystoreUtils.generateAESSecretKey(config);
 			long fileSize = FileUtils.sizeOf(file);
 			assertTrue(fileSize > 0);
-			KeyConfig config2 = new KeyConfig(file, "TEST", null, "AES", "aes-key2");
+			KeyConfig config2 = new KeyConfig(file, "TEST", null, SupportedAlgorithms.AES, "aes-key2");
 			KeystoreUtils.generateAESSecretKey(config2);
 			assertTrue(FileUtils.sizeOf(file) > 0);
 			assertTrue(FileUtils.sizeOf(file) > fileSize);
@@ -151,7 +152,7 @@ public class KeystoreUtilsTest {
 	public void testLoadAESSecretKey(){
 		try {
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", null, "AES", "aes-key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedAlgorithms.AES, "aes-key");
 			KeystoreUtils.generateAESSecretKey(config);
 			
 			assertTrue(FileUtils.sizeOf(file) > 0);
@@ -189,7 +190,7 @@ public class KeystoreUtilsTest {
 	public void testLoadAESSecretKeyNullPassword(){
 		try {
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", null, "AES", "aes-key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedAlgorithms.AES, "aes-key");
 			KeystoreUtils.generateAESSecretKey(config);
 			SecretKey key = KeystoreUtils.getAESSecretKey(file,"aes-key",null);
 			
@@ -207,7 +208,7 @@ public class KeystoreUtilsTest {
 	public void testLoadAESSecretKeyNullKeyEntry(){
 		try {
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", null, "AES", "aes-key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedAlgorithms.AES, "aes-key");
 			KeystoreUtils.generateAESSecretKey(config);
 			SecretKey key = KeystoreUtils.getAESSecretKey(file,null,"TEST");
 			
@@ -225,7 +226,7 @@ public class KeystoreUtilsTest {
 	public void testLoadAESSecretKeyCustomEntryName(){
 		try {
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", null, "AES", "aes-key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedAlgorithms.AES, "aes-key");
 			KeystoreUtils.generateAESSecretKey(config);
 			
 			assertTrue(FileUtils.sizeOf(file) > 0);

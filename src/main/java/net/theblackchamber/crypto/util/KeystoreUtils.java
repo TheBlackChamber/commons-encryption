@@ -63,14 +63,14 @@ public class KeystoreUtils {
 
 		if (config == null || config.getKeyStoreFile() == null
 				|| StringUtils.isEmpty(config.getKeyEntryName())
-				|| StringUtils.isEmpty(config.getAlgorithm())) {
+				|| config.getAlgorithm() == null) {
 			throw new KeyStoreException(
 					"Missing parameters, unable to create keystore.");
 		}
 
 		SecureRandom random = new SecureRandom();
 
-		KeyGenerator keygen = KeyGenerator.getInstance(config.getAlgorithm(),
+		KeyGenerator keygen = KeyGenerator.getInstance(config.getAlgorithm().toString(),
 				new BouncyCastleProvider());
 		keygen.init(config.getKeySize(), random);
 

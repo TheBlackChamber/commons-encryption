@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 
+import net.theblackchamber.crypto.constants.SupportedAlgorithms;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
@@ -13,7 +15,7 @@ public class KeyConfigTest {
 	public void testFullConstructor(){
 		try{
 			
-			KeyConfig config = new KeyConfig(new File("/tmp/test"), "TEST", 256, "AES", "TEST");
+			KeyConfig config = new KeyConfig(new File("/tmp/test"), "TEST", 256, SupportedAlgorithms.AES, "TEST");
 			
 			assertNotNull(config);
 			
@@ -21,7 +23,7 @@ public class KeyConfigTest {
 			assertNotNull(config.getKeySize());
 			config.setKeySize(null);
 			assertNotNull(config.getKeySize());
-			assertTrue(!StringUtils.isEmpty(config.getAlgorithm()));
+			assertTrue(config.getAlgorithm() != null);
 			assertTrue(!StringUtils.isEmpty(config.getKeyEntryName()));
 			assertTrue(!StringUtils.isEmpty(config.getKeyStorePassword()));
 			
@@ -39,7 +41,7 @@ public class KeyConfigTest {
 			
 			assertNotNull(config);
 			
-			config.setAlgorithm("AES");
+			config.setAlgorithm(SupportedAlgorithms.AES);
 			config.setKeyStoreFile(new File("/tmp/test"));
 			config.setKeyEntryName("TEST");
 			config.setKeySize(256);
@@ -49,7 +51,7 @@ public class KeyConfigTest {
 			assertNotNull(config.getKeySize());
 			config.setKeySize(null);
 			assertNotNull(config.getKeySize());
-			assertTrue(!StringUtils.isEmpty(config.getAlgorithm()));
+			assertTrue(config.getAlgorithm() != null);
 			assertTrue(!StringUtils.isEmpty(config.getKeyEntryName()));
 			assertTrue(!StringUtils.isEmpty(config.getKeyStorePassword()));
 			

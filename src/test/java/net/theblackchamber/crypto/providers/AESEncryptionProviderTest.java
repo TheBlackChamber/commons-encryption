@@ -37,6 +37,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import static org.junit.Assert.*;
+import net.theblackchamber.crypto.constants.SupportedAlgorithms;
 import net.theblackchamber.crypto.model.KeyConfig;
 import net.theblackchamber.crypto.util.KeystoreUtils;
 
@@ -53,7 +54,7 @@ public class AESEncryptionProviderTest {
 		try{
 			File keyFile = tempFolder.newFile("keystore.keys");
 			
-			KeyConfig config = new KeyConfig(keyFile, "TEST", null, "AES", "aes-key");
+			KeyConfig config = new KeyConfig(keyFile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
 			
 			KeystoreUtils.generateAESSecretKey(config);
 			key = KeystoreUtils.getAESSecretKey(keyFile,"aes-key","TEST");

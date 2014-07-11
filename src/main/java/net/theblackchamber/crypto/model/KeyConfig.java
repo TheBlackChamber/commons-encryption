@@ -25,6 +25,8 @@ package net.theblackchamber.crypto.model;
 
 import java.io.File;
 
+import net.theblackchamber.crypto.constants.SupportedAlgorithms;
+
 import org.apache.commons.lang3.StringUtils;
 
 public class KeyConfig {
@@ -34,7 +36,7 @@ public class KeyConfig {
 	private File keyStoreFile = null;
 	private String keyStorePassword = null;
 	private Integer keySize = null;
-	private String algorithm = null;
+	private SupportedAlgorithms algorithm = null;
 	private String keyEntryName = null;
 
 	/**
@@ -54,7 +56,7 @@ public class KeyConfig {
 	 * @param keyEntryName
 	 */
 	public KeyConfig(final File keyStoreFile, final String keyStorePassword,
-			final Integer keySize, final String algorithm,
+			final Integer keySize, final SupportedAlgorithms algorithm,
 			final String keyEntryName) {
 		super();
 		this.keyStoreFile = keyStoreFile;
@@ -145,7 +147,7 @@ public class KeyConfig {
 	 * 
 	 * @return
 	 */
-	public String getAlgorithm() {
+	public SupportedAlgorithms getAlgorithm() {
 		return algorithm;
 	}
 
@@ -154,7 +156,7 @@ public class KeyConfig {
 	 * 
 	 * @param algorithm
 	 */
-	public void setAlgorithm(final String algorithm) {
+	public void setAlgorithm(final SupportedAlgorithms algorithm) {
 		this.algorithm = algorithm;
 	}
 
