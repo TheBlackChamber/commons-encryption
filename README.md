@@ -16,7 +16,7 @@ In order to make use of the commons-encryption library you first need to downloa
 </dependency>
 ```
 
-After the commons-encryption library has been added to your project usage is pretty straight forward. Generally the classes you will be interacting with will be in the implementations, util, and providers packages. Specific examples of use can be found in the API documents located on the [project website](http://sminogue.github.io/commons-encryption) and in the unit tests under src/test/java.
+After the commons-encryption library has been added to your project usage is pretty straight forward. Generally the classes you will be interacting with will be in the implementations, util, and providers packages. Specific examples of use can be found in the [API](http://sminogue.github.io/commons-encryption/api) documents located on the [project website](http://sminogue.github.io/commons-encryption) and in the unit tests under src/test/java.
 
 
 ### Examples:
@@ -28,7 +28,7 @@ KeystoreUtils.generateAESSecretKey(config);
 ```
 
 ###### SecureProperties
-SecureProperties is an attempt to provide a transparent extension of the native java Properties class which allows property values to be encrypted at rest. Be aware of the exceptions thrown by methods as described in the API... Methods throw a custom unchecked runtime exception.
+SecureProperties is an attempt to provide a transparent extension of the native java Properties class which allows property values to be encrypted at rest. Be aware of the exceptions thrown by methods as described in the [API](http://sminogue.github.io/commons-encryption/api)... Methods throw a custom unchecked runtime exception.
 ###### test.properties
 ```properties
 entry-name=aes-key
