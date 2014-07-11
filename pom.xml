@@ -4,6 +4,7 @@
 	<groupId>net.theblackchamber</groupId>
 	<artifactId>commons-encryption</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<url>http://sminogue.github.io/commons-encryption/</url>
 
 	<dependencies>
 		<dependency>
