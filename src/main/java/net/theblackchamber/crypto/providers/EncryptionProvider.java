@@ -23,28 +23,53 @@
  */
 package net.theblackchamber.crypto.providers;
 
+import java.security.Key;
+
 /**
- * Interface to define Encryption providers. This is kinda un-needed at the
- * moment but I am adding it to support future plans to allow more dynamic
- * configuration of encryption used in utilities.
+ * Abstract class which will be the base for all Encryption providers. This is
+ * kinda un-needed at the moment but I am adding it to support future plans to
+ * allow more dynamic configuration of encryption used in utilities.
  * 
  * @author sminogue
  * 
  */
-public interface EncryptionProvider {
+public abstract class EncryptionProvider<T> {
 
 	/**
-	 * Decrypt string.
+	 * Encryption {@link Key} to be used for encryption and decryption options.
+	 */
+	private T key;
+	
+	/**
+	 * Method which will return the {@link Key} being used by the instance of this provider.
+	 * @return
+	 */
+	protected T getKey(){
+		return key;
+	}
+	
+	/**
+	 * Method which will set the {@link Key} to be used by the instance of this provider.
+	 * @param key
+	 */
+	protected void setKey(final T key){
+		this.key = key;
+	}
+	
+	/**
+	 * Method which will decrypt a string.
+	 * 
 	 * @param cipherText
 	 * @return
 	 */
-	public String decrypt(String cipherText);
-	
+	public abstract String decrypt(String cipherText);
+
 	/**
-	 * Encrypt string.
+	 * Method which will encrypt a string.
+	 * 
 	 * @param clearText
 	 * @return
 	 */
-	public String encrypt(String clearText);
-	
+	public abstract String encrypt(String clearText);
+
 }

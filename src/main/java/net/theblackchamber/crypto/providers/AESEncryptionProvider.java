@@ -34,13 +34,19 @@ import org.jasypt.salt.RandomSaltGenerator;
 /**
  * Provider which will allow for encryption and decryption of strings using the
  * AES algorithm.
+ * <br>
+ * Usage:
+ * <code>
+ * SecretKey key = KeystoreUtils.getAESSecretKey(keyfile, "aes-key", "TEST");
+ * AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
+ * String cipherText = encryptionProvider.encode("clear text");
+ * </code>
  * 
  * @author sminogue
  * 
  */
-public class AESEncryptionProvider implements EncryptionProvider {
+public class AESEncryptionProvider extends EncryptionProvider<SecretKey> {
 
-	private SecretKey key;
 	private StandardPBEStringEncryptor encryptor;
 
 	/**
@@ -50,11 +56,11 @@ public class AESEncryptionProvider implements EncryptionProvider {
 	 */
 	public AESEncryptionProvider(final SecretKey key) {
 		super();
-		this.key = key;
+		setKey(key);
 
 		// Configure Encryptor
 		SimplePBEConfig config = new SimplePBEConfig();
-		config.setAlgorithm("PBEWITHSHA256AND128BITAES-CBC-BC");
+		config.setAlgorithm("PBEWITHSHA256AND256BITAES-CBC-BC");
 		config.setKeyObtentionIterations(10);
 		config.setPassword(Hex.toHexString(key.getEncoded()));
 		config.setProvider(new BouncyCastleProvider());
