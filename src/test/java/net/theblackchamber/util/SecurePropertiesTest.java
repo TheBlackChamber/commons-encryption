@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.theblackchamber.crypto.providers;
+package net.theblackchamber.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,6 +35,7 @@ import java.util.Properties;
 import javax.crypto.SecretKey;
 
 import net.theblackchamber.crypto.model.KeyConfig;
+import net.theblackchamber.crypto.providers.AESEncryptionProvider;
 import net.theblackchamber.crypto.util.KeystoreUtils;
 import net.theblackchamber.crypto.util.SecureProperties;
 
@@ -47,7 +48,7 @@ import static org.junit.Assert.*;
 
 import org.junit.rules.TemporaryFolder;
 
-public class SecurePropertiesProviderTest {
+public class SecurePropertiesTest {
 
 	@Rule
 	public TemporaryFolder temporaryFolder = new TemporaryFolder();
