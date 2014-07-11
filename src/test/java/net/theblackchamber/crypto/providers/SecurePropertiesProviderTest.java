@@ -34,6 +34,7 @@ import java.util.Properties;
 
 import javax.crypto.SecretKey;
 
+import net.theblackchamber.crypto.model.KeyConfig;
 import net.theblackchamber.crypto.util.KeystoreUtils;
 import net.theblackchamber.crypto.util.SecureProperties;
 
@@ -72,13 +73,14 @@ public class SecurePropertiesProviderTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 		
 			assertTrue(keyfile.exists());
-			
-			KeystoreUtils.generateAESSecretKey(keyfile);
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, "AES", "aes-key");
+			KeystoreUtils.generateAESSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties props = new SecureProperties();
-			
+			props.setProperty("entry-name", "aes-key");
+			props.setProperty("keystore-password", "TEST");
 			props.setProperty("key-path", keyfile.getPath());
 			
 			assertNotNull(((SecureProperties)props).getKey());
@@ -99,13 +101,16 @@ public class SecurePropertiesProviderTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 		
 			assertTrue(keyfile.exists());
-			
-			KeystoreUtils.generateAESSecretKey(keyfile);
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, "AES", "aes-key");
+			KeystoreUtils.generateAESSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("key-path", keyfile.getPath());
+			clearProperties.setProperty("entry-name", "aes-key");
+			clearProperties.setProperty("keystore-password", "TEST");
+			
 			
 			Properties props = new SecureProperties(clearProperties);
 			
@@ -126,14 +131,16 @@ public class SecurePropertiesProviderTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			
-			KeystoreUtils.generateAESSecretKey(keyfile);
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, "AES", "aes-key");
+			KeystoreUtils.generateAESSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties props = new SecureProperties();
-			
+			props.setProperty("entry-name", "aes-key");
+			props.setProperty("keystore-password", "TEST");
 			props.setProperty("key-path", keyfile.getPath());
+			
 			
 			assertNotNull(((SecureProperties)props).getKey());
 			assertNotNull(((SecureProperties)props).getEncryptionProvider());
@@ -158,8 +165,8 @@ public class SecurePropertiesProviderTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			
-			KeystoreUtils.generateAESSecretKey(keyfile);
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, "AES", "aes-key");
+			KeystoreUtils.generateAESSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
@@ -176,7 +183,7 @@ public class SecurePropertiesProviderTest {
 	
 	private Properties createTestCipherProperties(String keyPath) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, UnrecoverableEntryException, IOException{
 		
-		SecretKey key = KeystoreUtils.getAESSecretKey(new File(keyPath));
+		SecretKey key = KeystoreUtils.getAESSecretKey(new File(keyPath),"aes-key","TEST");
 		AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
 		
 		Properties props = createTestClearProperties(keyPath);
@@ -192,6 +199,8 @@ public class SecurePropertiesProviderTest {
 		Properties properties = new Properties();
 		
 		properties.setProperty("key-path", keyPath);
+		properties.setProperty("entry-name", "aes-key");
+		properties.setProperty("keystore-password", "TEST");
 		properties.setProperty("test", "test");
 		
 		return properties;

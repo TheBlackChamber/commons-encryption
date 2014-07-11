@@ -38,105 +38,69 @@ import java.security.cert.CertificateException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
+import net.theblackchamber.crypto.model.KeyConfig;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 public class KeystoreUtils {
-	private static final String DEFAULT_KEYSTORE_PASSWORD = "f42ecc4c507d43f9071c13491e3a3c6a";
-	private static final int DEFAULT_KEY_SIZE = 256;
-	private static final String DEFAULT_ENTRY_NAME = "aes-key";
-
-	/**
-	 * Method which will generate a random AES key and add it to a keystore.
-	 * 
-	 * @param keystore
-	 * @throws NoSuchAlgorithmException
-	 * @throws KeyStoreException
-	 * @throws CertificateException
-	 * @throws IOException
-	 */
-	public static void generateAESSecretKey(File keystore)
-			throws NoSuchAlgorithmException, KeyStoreException,
-			CertificateException, IOException {
-
-		generateAESSecretKey(keystore, DEFAULT_ENTRY_NAME);
-
-	}
 
 	/**
 	 * Method which will generate a random AES key and add it to a keystore with
 	 * the entry name provided.
 	 * 
-	 * @param keystore
-	 *            Keystore File
-	 * @param entryName
-	 *            Name of entry
+	 * @param config
+	 *            Configuration for generation of key.
 	 * @throws NoSuchAlgorithmException
 	 * @throws KeyStoreException
 	 * @throws CertificateException
 	 * @throws IOException
 	 */
-	public static void generateAESSecretKey(File keystore, String entryName)
+	public static void generateAESSecretKey(KeyConfig config)
 			throws NoSuchAlgorithmException, KeyStoreException,
 			CertificateException, IOException {
 
-		if (keystore == null || StringUtils.isEmpty(entryName)) {
+		if (config == null || config.getKeyStoreFile() == null
+				|| StringUtils.isEmpty(config.getKeyEntryName())
+				|| StringUtils.isEmpty(config.getAlgorithm())) {
 			throw new KeyStoreException(
 					"Missing parameters, unable to create keystore.");
 		}
 
 		SecureRandom random = new SecureRandom();
 
-		KeyGenerator keygen = KeyGenerator.getInstance("AES",
+		KeyGenerator keygen = KeyGenerator.getInstance(config.getAlgorithm(),
 				new BouncyCastleProvider());
-		keygen.init(DEFAULT_KEY_SIZE, random);
+		keygen.init(config.getKeySize(), random);
 
 		SecretKey key = keygen.generateKey();
 
 		KeyStore keyStore = KeyStore.getInstance("JCEKS");
 		FileInputStream fis = null;
-		if (keystore.exists() && FileUtils.sizeOf(keystore) > 0) {
-			fis = new FileInputStream(keystore);
+		if (config.getKeyStoreFile().exists()
+				&& FileUtils.sizeOf(config.getKeyStoreFile()) > 0) {
+			fis = new FileInputStream(config.getKeyStoreFile());
 		}
 
-		keyStore.load(fis, DEFAULT_KEYSTORE_PASSWORD.toCharArray());
+		keyStore.load(fis, config.getKeyStorePassword().toCharArray());
 
 		KeyStore.ProtectionParameter protectionParameter = new KeyStore.PasswordProtection(
-				DEFAULT_KEYSTORE_PASSWORD.toCharArray());
+				config.getKeyStorePassword().toCharArray());
 		KeyStore.SecretKeyEntry secretKeyEntry = new KeyStore.SecretKeyEntry(
 				key);
 
-		keyStore.setEntry(entryName, secretKeyEntry, protectionParameter);
+		keyStore.setEntry(config.getKeyEntryName(), secretKeyEntry,
+				protectionParameter);
 		if (fis != null) {
 			fis.close();
 		}
-		FileOutputStream fos = new FileOutputStream(keystore);
+		FileOutputStream fos = new FileOutputStream(config.getKeyStoreFile());
 
-		keyStore.store(fos, DEFAULT_KEYSTORE_PASSWORD.toCharArray());
+		keyStore.store(fos, config.getKeyStorePassword().toCharArray());
 
 		fos.close();
 
-	}
-
-	/**
-	 * Method which will load a secret key from disk with the DEFAULT entry
-	 * name.
-	 * 
-	 * @param keystore
-	 * @return
-	 * @throws KeyStoreException
-	 * @throws NoSuchAlgorithmException
-	 * @throws CertificateException
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws UnrecoverableEntryException
-	 */
-	public static SecretKey getAESSecretKey(File keystore)
-			throws KeyStoreException, NoSuchAlgorithmException,
-			CertificateException, FileNotFoundException, IOException,
-			UnrecoverableEntryException {
-		return getAESSecretKey(keystore, DEFAULT_ENTRY_NAME);
 	}
 
 	/**
@@ -145,6 +109,7 @@ public class KeystoreUtils {
 	 * 
 	 * @param keystore
 	 * @param entryName
+	 * @param keyStorePassword
 	 * @return
 	 * @throws KeyStoreException
 	 * @throws NoSuchAlgorithmException
@@ -153,20 +118,27 @@ public class KeystoreUtils {
 	 * @throws IOException
 	 * @throws UnrecoverableEntryException
 	 */
-	public static SecretKey getAESSecretKey(File keystore, String entryName)
-			throws KeyStoreException, NoSuchAlgorithmException,
-			CertificateException, FileNotFoundException, IOException,
-			UnrecoverableEntryException {
+	public static SecretKey getAESSecretKey(File keystore, String entryName,
+			String keyStorePassword) throws KeyStoreException,
+			NoSuchAlgorithmException, CertificateException,
+			FileNotFoundException, IOException, UnrecoverableEntryException {
 		KeyStore keyStore = KeyStore.getInstance("JCEKS");
 		FileInputStream fis = null;
 		if (keystore == null || !keystore.exists()
 				|| FileUtils.sizeOf(keystore) == 0) {
 			throw new FileNotFoundException();
 		}
+		if (StringUtils.isEmpty(keyStorePassword)) {
+			throw new KeyStoreException("No Keystore password provided.");
+		}
+		if (StringUtils.isEmpty(entryName)) {
+			throw new KeyStoreException("No Keystore entry name provided.");
+		}
+
 		fis = new FileInputStream(keystore);
-		keyStore.load(fis, DEFAULT_KEYSTORE_PASSWORD.toCharArray());
+		keyStore.load(fis, keyStorePassword.toCharArray());
 		KeyStore.ProtectionParameter protectionParameter = new KeyStore.PasswordProtection(
-				DEFAULT_KEYSTORE_PASSWORD.toCharArray());
+				keyStorePassword.toCharArray());
 		KeyStore.SecretKeyEntry pkEntry = (KeyStore.SecretKeyEntry) keyStore
 				.getEntry(entryName, protectionParameter);
 		try {

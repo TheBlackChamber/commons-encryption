@@ -50,8 +50,7 @@ import net.theblackchamber.crypto.providers.AESEncryptionProvider;
  * {@link KeystoreUtils}.<br>
  * Calling setProperty on a new property with name containing "-unencrypted"
  * will result in the value being added to the {@link Properties} map with the
- * name changed from XXX-unencrypted to XXX-encrypted and the value being
- * encoded.<br>
+ * name changed from XX-unencrypted to XX-encrypted and the value being encoded.<br>
  * Calling getProperty for a property with key containing -encrypted in the name
  * will result in the value being decoded and the clear text value returned.
  * 
@@ -63,7 +62,6 @@ public class SecureProperties extends Properties {
 	private static final long serialVersionUID = 6795084558089471182L;
 
 	private SecretKey key = null;
-
 	private AESEncryptionProvider encryptionProvider;
 
 	/**
@@ -106,10 +104,9 @@ public class SecureProperties extends Properties {
 	 * @throws NoSuchAlgorithmException
 	 * @throws KeyStoreException
 	 */
-	public SecureProperties(Properties defaults)
-			throws KeyStoreException, NoSuchAlgorithmException,
-			CertificateException, FileNotFoundException,
-			UnrecoverableEntryException, IOException {
+	public SecureProperties(Properties defaults) throws KeyStoreException,
+			NoSuchAlgorithmException, CertificateException,
+			FileNotFoundException, UnrecoverableEntryException, IOException {
 		super(defaults);
 		try {
 			loadKeystore();
@@ -208,7 +205,9 @@ public class SecureProperties extends Properties {
 	 *      If property key ends in -unencrypted this method will attempt to
 	 *      encrypt the value prior to adding it. If the property key is
 	 *      "key-path" then the encryption will be re-initialized using the
-	 *      specified key.
+	 *      specified key. NOTE: If you specify key-path its important to have
+	 *      FIRST specified entry-name and keystore-password or an error will
+	 *      occur.
 	 * @throws RuntimeCryptoException
 	 *             If no encryption key was configured. This usually happens
 	 *             when no key was successfully loaded.
@@ -292,18 +291,21 @@ public class SecureProperties extends Properties {
 	}
 
 	/**
-	 * Method will get the key-path from this properties object and attempt to
-	 * load the keystore from file.
+	 * Method will load the KeyStore from file using the key path, entry name,
+	 * and keystore password from the properties file.
 	 * 
 	 * @throws RuntimeCryptoException
 	 *             Wraps encryption key loading errors.
 	 */
 	private void loadKeystore() {
 		String keypath = this.getProperty("key-path");
+		String keyEntryName = this.getProperty("entry-name");
+		String keyStorePassword = this.getProperty("keystore-password");
 
 		if (keypath != null) {
 			try {
-				key = KeystoreUtils.getAESSecretKey(new File(keypath));
+				key = KeystoreUtils.getAESSecretKey(new File(keypath),
+						keyEntryName, keyStorePassword);
 			} catch (Throwable t) {
 				throw new RuntimeCryptoException(
 						"Failed when attempting to load keystore: "
