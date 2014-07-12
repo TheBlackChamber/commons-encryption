@@ -23,10 +23,10 @@
  */
 package net.theblackchamber.crypto.constants;
 
-import net.theblackchamber.crypto.implementations.SecureProperties;
+import java.security.KeyStore;
 
 /**
- * Class which will define all constants used across all classes. Classes MAY
+ * Class which will define all constants used across classes. Classes MAY
  * contain private constants but anything which is used across classes will be
  * defined here.
  * 
@@ -35,10 +35,21 @@ import net.theblackchamber.crypto.implementations.SecureProperties;
  */
 public class Constants {
 	/**
+	 * ======================================================
 	 * Constants Used by the {@link SecureProperties} classes
+	 * ======================================================
+	 */
+	/**
+	 * Property key which defines the {@link KeyStore} entry to be used.
 	 */
 	public static final String ENTRY_NAME_PROPERTY_KEY = "entry-name";
+	/**
+	 * Property key which defines the file path to the {@link KeyStore} to be loaded from file.
+	 */
 	public static final String KEY_PATH_PROPERTY_KEY = "key-path";
+	/**
+	 * Property key which defines the password to be used to open the {@link KeyStore}
+	 */
 	public static final String KEYSTORE_PASSWORD_PROPERTY_KEY = "keystore-password";
 
 }

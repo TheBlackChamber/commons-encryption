@@ -44,6 +44,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
+/**
+ * Utility used for managing a keystore. Generate keys etc.
+ * @author sminogue
+ *
+ */
 public class KeystoreUtils {
 
 	/**
@@ -107,9 +112,9 @@ public class KeystoreUtils {
 	 * Method which will load a secret key from disk with the specified entry
 	 * name.
 	 * 
-	 * @param keystore
-	 * @param entryName
-	 * @param keyStorePassword
+	 * @param keystore {@link KeyStore} file to read.
+	 * @param entryName Entry name of the key to be retrieved
+	 * @param keyStorePassword Password used to open the {@link KeyStore}
 	 * @return
 	 * @throws KeyStoreException
 	 * @throws NoSuchAlgorithmException

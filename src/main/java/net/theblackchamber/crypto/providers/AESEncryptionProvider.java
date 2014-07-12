@@ -52,7 +52,7 @@ public class AESEncryptionProvider extends EncryptionProvider<SecretKey> {
 	/**
 	 * Constructor to create new AES encryption provider.
 	 * 
-	 * @param key
+	 * @param key Instance of {@link SecretKey} to be used for encryption and decryption.
 	 */
 	public AESEncryptionProvider(final SecretKey key) {
 		super();

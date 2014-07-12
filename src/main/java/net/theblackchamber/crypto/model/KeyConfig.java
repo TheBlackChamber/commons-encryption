@@ -27,6 +27,11 @@ import java.io.File;
 
 import net.theblackchamber.crypto.constants.SupportedAlgorithms;
 
+/**
+ * Class used to configure key generation. 
+ * @author sminogue
+ *
+ */
 public class KeyConfig {
 
 	private static final int DEFAULT_KEY_SIZE = 256;
@@ -47,11 +52,11 @@ public class KeyConfig {
 	/**
 	 * Constructor
 	 * 
-	 * @param keyStoreFile
-	 * @param keyStorePassword
-	 * @param keySize
-	 * @param algorithm
-	 * @param keyEntryName
+	 * @param keyStoreFile Key Store file to add a key to.
+	 * @param keyStorePassword Password to be used to secure the keystore or open the keystore if it aleady exists.
+	 * @param keySize Size in bits of the key to generate.
+	 * @param algorithm Algorithm the key is for
+	 * @param keyEntryName Entry name for the key in the keystore.
 	 */
 	public KeyConfig(final File keyStoreFile, final String keyStorePassword,
 			final Integer keySize, final SupportedAlgorithms algorithm,

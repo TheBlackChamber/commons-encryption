@@ -33,7 +33,7 @@ import java.security.Key;
  * @author sminogue
  * 
  */
-public abstract class EncryptionProvider<T> {
+public abstract class EncryptionProvider<T extends Key> {
 
 	/**
 	 * Encryption {@link Key} to be used for encryption and decryption options.
@@ -50,7 +50,7 @@ public abstract class EncryptionProvider<T> {
 	
 	/**
 	 * Method which will set the {@link Key} to be used by the instance of this provider.
-	 * @param key
+	 * @param key Instance of {@link Key} to be used for encryption and decryption.
 	 */
 	protected void setKey(final T key){
 		this.key = key;
@@ -59,7 +59,7 @@ public abstract class EncryptionProvider<T> {
 	/**
 	 * Method which will decrypt a string.
 	 * 
-	 * @param cipherText
+	 * @param cipherText Encrypted text to be decrypted.
 	 * @return
 	 */
 	public abstract String decrypt(String cipherText);
@@ -67,8 +67,8 @@ public abstract class EncryptionProvider<T> {
 	/**
 	 * Method which will encrypt a string.
 	 * 
-	 * @param clearText
-	 * @return
+	 * @param clearText Clear text to be encrypted.
+	 * @return Encrypted text.
 	 */
 	public abstract String encrypt(String clearText);
 
