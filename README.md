@@ -2,7 +2,7 @@ commons-encryption
 ==================
 
 ### Pre-Requisites
-Prior to making use of the commons-encryption library it may be necessary to install the [Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files](http://www.oracle.com/technetwork/java/javase/downloads/jce-7-download-432124.html). If you live in a jurisdiciton where you cannot make use of these unlimited strength encryption policy files you should still be able to make use of commons-encryption by specifying smaller key lengths to the keystore generator. 
+Prior to making use of the commons-encryption library it may be necessary to install the [Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files](http://www.oracle.com/technetwork/java/javase/downloads/jce-7-download-432124.html).
 
 ### Usage
 In order to make use of the commons-encryption library you first need to download the jars from here on github, or alternatively if you use maven you will soon be able to download the dependency from maven central repository.
