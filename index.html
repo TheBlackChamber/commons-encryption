@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
 
-    <title>Commons-encryption by sminogue</title>
+    <title>Commons-encryption by TheBlackChamber</title>
   </head>
 
   <body>
@@ -19,13 +19,9 @@
         <h2></h2>
 
         <section id="downloads">
-          <a href="https://github.com/sminogue/commons-encryption/zipball/master" class="btn">Download as .zip</a>
-          <a href="https://github.com/sminogue/commons-encryption/tarball/master" class="btn">Download as .tar.gz</a>
-          <a href="https://github.com/sminogue/commons-encryption" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
-        </section>
-        <section id="apis">
-          <a href="https://sminogue.github.io/commons-encryption/api" class="btn">Javadoc API</a>
-          <a href="https://sminogue.github.io/commons-encryption/site" class="btn">Maven Site</a>
+          <a href="https://github.com/TheBlackChamber/commons-encryption/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/TheBlackChamber/commons-encryption/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/TheBlackChamber/commons-encryption" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
         </section>
       </div>
     </header>
@@ -89,8 +85,8 @@
 <div class="highlight highlight-java"><pre><span class="n">FileReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">FileReader</span><span class="o">(</span><span class="n">propertiesFile</span><span class="o">);</span>
 <span class="n">Properties</span> <span class="n">sProperties</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">SecureProperties</span><span class="o">();</span>
 <span class="n">sProperties</span><span class="o">.</span><span class="na">load</span><span class="o">(</span><span class="n">reader</span><span class="o">);</span>
-<span class="n">String</span> <span class="n">clearKey2</span> <span class="o">=</span> <span class="n">sProperties</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="err">'</span><span class="n">key2</span><span class="o">-</span><span class="n">encrypted</span><span class="err">'</span><span class="o">);</span>
-<span class="n">sProperties</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="err">'</span><span class="n">key3</span><span class="o">-</span><span class="n">unencrypted</span><span class="sc">','</span><span class="n">cleartext</span> <span class="n">value</span><span class="err">'</span><span class="o">);</span>
+<span class="n">String</span> <span class="n">clearKey2</span> <span class="o">=</span> <span class="n">sProperties</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">"key2-encrypted"</span><span class="o">);</span>
+<span class="n">sProperties</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"key3-unencrypted"</span><span class="o">,</span><span class="s">"cleartext value"</span><span class="o">);</span>
 </pre></div>
 
 <h6>
