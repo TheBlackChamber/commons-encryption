@@ -43,8 +43,8 @@ The following snipped of code is an example of loading a properties file from di
 FileReader reader = new FileReader(propertiesFile);
 Properties sProperties = new SecureProperties();
 sProperties.load(reader);
-String clearKey2 = sProperties.getProperty('key2-encrypted');
-sProperties.setProperty('key3-unencrypted','cleartext value');
+String clearKey2 = sProperties.getProperty("key2-encrypted");
+sProperties.setProperty("key3-unencrypted","cleartext value");
 ```
 
 ###### AESEncryptionProvider
