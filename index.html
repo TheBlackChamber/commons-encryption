@@ -23,14 +23,6 @@
           <a href="https://github.com/TheBlackChamber/commons-encryption/tarball/master" class="btn">Download as .tar.gz</a>
           <a href="https://github.com/TheBlackChamber/commons-encryption" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
         </section>
-        <section id="apis">
-          <a href="http://theblackchamber.github.io/commons-encryption/api" target="_blank" class="btn">API</a>
-          <a href="http://theblackchamber.github.io/commons-encryption/site" target="_blank" class="btn">Maven Site</a>
-        </section>
-        <section id="APIs">
-        	<a href="https://sminogue.github.io/commons-encryption/api" target="_blank" class="btn">Javadoc API</a>
-        	<a href="https://sminogue.github.io/commons-encryption/site" target="_blank" class="btn">Maven Docs</a>
-        </section>
       </div>
     </header>
 
@@ -76,7 +68,7 @@
 <h6>
 <a name="secureproperties" class="anchor" href="#secureproperties"><span class="octicon octicon-link"></span></a>SecureProperties</h6>
 
-<p>SecureProperties is an attempt to provide a transparent extension of the native java Properties class which allows property values to be encrypted at rest. Be aware of the exceptions thrown by methods as described in the <a href="http://sminogue.github.io/commons-encryption/api">API</a>... Methods throw a custom unchecked runtime exception.</p>
+<p>SecureProperties is an attempt to provide a transparent extension of the native java Properties class which allows property values to be encrypted at rest. Be aware of the exceptions thrown by methods as described in the <a href="http://theblackchamber.github.io/commons-encryption/api">API</a>... Methods throw a custom unchecked runtime exception. Also note that its possible to pass Key Password, Keystore Path, and Key Entry name to the SecureProperties constructor rather than specifying them in the properties file.</p>
 
 <h6>
 <a name="testproperties" class="anchor" href="#testproperties"><span class="octicon octicon-link"></span></a>test.properties</h6>
@@ -110,7 +102,7 @@
 <h6>
 <a name="securepropertiesutils" class="anchor" href="#securepropertiesutils"><span class="octicon octicon-link"></span></a>SecurePropertiesUtils</h6>
 
-<p>The SecurePropertiesUtils is a utility class primarily used to initially encrypt a clear text properties file in preperation of deploying it to a server. This is so that you can keep a clear text version in your project, edit it, and then easily in one step encrypt the fields which need to be secured and then deploy. Important to note that while a SecureProperties instance is returned the file IS changed on disk as well, the returned SecureProperties is just a convenience.</p>
+<p>The SecurePropertiesUtils is a utility class primarily used to initially encrypt a clear text properties file in preperation of deploying it to a server. This is so that you can keep a clear text version in your project, edit it, and then easily in one step encrypt the fields which need to be secured and then deploy. Important to note that while a SecureProperties instance is returned the file IS changed on disk as well, the returned SecureProperties is just a convenience. Also note that its possible to pass Key Password, Keystore Path, and Key Entry name to the encryptPropertiesFile method rather than specifying them in the properties file.</p>
 
 <div class="highlight highlight-properties"><pre><span class="na">entry-name</span><span class="o">=</span><span class="s">aes-key</span>
 <span class="na">keystore-password</span><span class="o">=</span><span class="s">changeit</span>
