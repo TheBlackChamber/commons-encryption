@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 package net.theblackchamber.crypto.implementations;
+
 import static net.theblackchamber.crypto.constants.Constants.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -92,6 +93,35 @@ public class SecureProperties extends Properties {
 	 */
 	public SecureProperties() {
 		super();
+	}
+
+	/**
+	 * Constructor which specifies {@link Properties} defaults and the keystore
+	 * details. <b>Note that if an exception occurred in encryption/decryption
+	 * methods the IOException will wrap the underlying exception</b>
+	 * 
+	 * @param defaults
+	 * @param keyPath
+	 * @param keyEntry
+	 * @param keyPass
+	 * @throws KeyStoreException
+	 * @throws NoSuchAlgorithmException
+	 * @throws CertificateException
+	 * @throws FileNotFoundException
+	 * @throws UnrecoverableEntryException
+	 * @throws IOException
+	 */
+	public SecureProperties(Properties defaults, String keyPath,
+			String keyEntry, String keyPass) throws KeyStoreException,
+			NoSuchAlgorithmException, CertificateException,
+			FileNotFoundException, UnrecoverableEntryException, IOException {
+		super(defaults);
+		try {
+			loadKeystore(keyPath, keyPass, keyEntry);
+			initializeEncryptionProvider();
+		} catch (RuntimeCryptoException rce) {
+			throw new IOException(rce);
+		}
 	}
 
 	/**
@@ -225,7 +255,8 @@ public class SecureProperties extends Properties {
 
 		String property = attemptEncryption(key, value);
 		if (!StringUtils.equals(property, value)) {
-			key = StringUtils.replace(key, UNENCRYPTED_SUFFIX, ENCRYPTED_SUFFIX);
+			key = StringUtils
+					.replace(key, UNENCRYPTED_SUFFIX, ENCRYPTED_SUFFIX);
 		}
 		return super.setProperty(key, property);
 	}
@@ -302,12 +333,34 @@ public class SecureProperties extends Properties {
 	private void loadKeystore() {
 		String keypath = this.getProperty(KEY_PATH_PROPERTY_KEY);
 		String keyEntryName = this.getProperty(ENTRY_NAME_PROPERTY_KEY);
-		String keyStorePassword = this.getProperty(KEYSTORE_PASSWORD_PROPERTY_KEY);
+		String keyStorePassword = this
+				.getProperty(KEYSTORE_PASSWORD_PROPERTY_KEY);
 
-		if (keypath != null) {
+		loadKeystore(keypath, keyStorePassword, keyEntryName);
+
+	}
+
+	/**
+	 * 
+	 * Method will load the KeyStore from file using the Key Path, Key Entry,
+	 * and Key Password specified.
+	 * 
+	 * @param keyPath
+	 *            Path to keystore file.
+	 * @param keyPass
+	 *            Password to open keystore.
+	 * @param keyEntry
+	 *            Entry name for the key in the keystore.
+	 * 
+	 * @throws RuntimeCryptoException
+	 *             Wraps encryption key loading errors.
+	 * 
+	 */
+	private void loadKeystore(String keyPath, String keyPass, String keyEntry) {
+		if (!StringUtils.isEmpty(keyPath)) {
 			try {
-				key = KeystoreUtils.getAESSecretKey(new File(keypath),
-						keyEntryName, keyStorePassword);
+				key = KeystoreUtils.getAESSecretKey(new File(keyPath),
+						keyEntry, keyPass);
 			} catch (Throwable t) {
 				throw new RuntimeCryptoException(
 						"Failed when attempting to load keystore: "

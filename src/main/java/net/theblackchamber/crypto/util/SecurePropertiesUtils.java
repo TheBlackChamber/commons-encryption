@@ -56,13 +56,91 @@ public class SecurePropertiesUtils {
 	 * using this. entry-name, key-path, keystore-password
 	 * 
 	 * @param clearProperties
+	 *            Un-encrypted properties file to be secured
 	 * @return
 	 * @throws FileNotFoundException
+	 *             Properties file not found on disk.
 	 * @throws IOException
+	 *             Error reading/writing From the clear properties or to the
+	 *             secure properties
 	 * @throws KeyStoreException
+	 *             Error accessing or using the keystore.
 	 */
 	public static SecureProperties encryptPropertiesFile(File clearProperties)
 			throws FileNotFoundException, IOException, KeyStoreException {
+
+		// Open clear properties file and load it
+		Properties cProperties = new Properties();
+		FileInputStream fis = new FileInputStream(clearProperties);
+		cProperties.load(fis);
+		fis.close();
+
+		return encryptPropertiesFile(clearProperties,
+				cProperties.getProperty(KEY_PATH_PROPERTY_KEY),
+				cProperties.getProperty(KEYSTORE_PASSWORD_PROPERTY_KEY),
+				cProperties.getProperty(ENTRY_NAME_PROPERTY_KEY), true);
+
+	}
+
+	/**
+	 * Utility which will take an existing Properties file on disk and replace
+	 * any -unencrypted values with encrypted.<br>
+	 * Note: Encryption fields passed as parameters <b>WILL NOT</b> be placed
+	 * into the resulting SecureProperties file.
+	 * 
+	 * @param clearProperties
+	 *            Un-encrypted properties file to be secured
+	 * @param keyPath
+	 *            Path to the keystore file.
+	 * @param keyPass
+	 *            Password to be used to open and secure the Keystore password.
+	 * @param keyEntry
+	 *            Entry name of the key to use from the keystore.
+	 * @return
+	 * @throws FileNotFoundException
+	 *             Properties file not found on disk.
+	 * @throws IOException
+	 *             Error reading/writing From the clear properties or to the
+	 *             secure properties
+	 * @throws KeyStoreException
+	 *             Error accessing or using the keystore.
+	 */
+	public static SecureProperties encryptPropertiesFile(File clearProperties,
+			String keyPath, String keyPass, String keyEntry)
+			throws FileNotFoundException, IOException, KeyStoreException {
+		return encryptPropertiesFile(clearProperties, keyPath, keyPass,
+				keyEntry, false);
+	}
+
+	/**
+	 * Utility which will take an existing Properties file on disk and replace
+	 * any -unencrypted values with encrypted.<br>
+	 * 
+	 * @param clearProperties
+	 *            Un-encrypted properties file to be secured
+	 * @param keyPath
+	 *            Path to the keystore file.
+	 * @param keyPass
+	 *            Password to be used to open and secure the Keystore password.
+	 * @param keyEntry
+	 *            Entry name of the key to use from the keystore.
+	 * @param retainCrytoConfigProperties
+	 *            Boolean to indicate if the encryption field parameters should
+	 *            be stored in the resulting SecureProperties file. True they
+	 *            will be, False they wont.
+	 * @return
+	 * @throws FileNotFoundException
+	 *             Properties file not found on disk.
+	 * @throws IOException
+	 *             Error reading/writing From the clear properties or to the
+	 *             secure properties
+	 * @throws KeyStoreException
+	 *             Error accessing or using the keystore.
+	 */
+	public static SecureProperties encryptPropertiesFile(File clearProperties,
+			String keyPath, String keyPass, String keyEntry,
+			boolean retainCrytoConfigProperties) throws FileNotFoundException,
+			IOException, KeyStoreException {
 
 		// Save filename/Path
 		String propertiesFilePath = clearProperties.getPath();
@@ -76,22 +154,19 @@ public class SecurePropertiesUtils {
 		cProperties.load(fis);
 		fis.close();
 
-		// Ensure properties contains fields defining encryption
-		if (!cProperties.containsKey(ENTRY_NAME_PROPERTY_KEY)
-				|| !cProperties.containsKey(KEY_PATH_PROPERTY_KEY)
-				|| !cProperties.containsKey(KEYSTORE_PASSWORD_PROPERTY_KEY)) {
+		// Ensure the encryption parameters are not empty.
+		if (StringUtils.isEmpty(ENTRY_NAME_PROPERTY_KEY)
+				|| StringUtils.isEmpty(KEY_PATH_PROPERTY_KEY)
+				|| StringUtils.isEmpty(KEYSTORE_PASSWORD_PROPERTY_KEY)) {
 			throw new KeyStoreException(
 					"Unable to configure due to missing configurations");
 		}
 
 		// Loop over clear properties and construct new SecureProperties object
 		// First add crypto entries this will initialize the encryption support.
-		sProperties.setProperty(ENTRY_NAME_PROPERTY_KEY,
-				cProperties.getProperty(ENTRY_NAME_PROPERTY_KEY));
-		sProperties.setProperty(KEYSTORE_PASSWORD_PROPERTY_KEY,
-				cProperties.getProperty(KEYSTORE_PASSWORD_PROPERTY_KEY));
-		sProperties.setProperty(KEY_PATH_PROPERTY_KEY,
-				cProperties.getProperty(KEY_PATH_PROPERTY_KEY));
+		sProperties.setProperty(ENTRY_NAME_PROPERTY_KEY, keyEntry);
+		sProperties.setProperty(KEYSTORE_PASSWORD_PROPERTY_KEY, keyPass);
+		sProperties.setProperty(KEY_PATH_PROPERTY_KEY, keyPath);
 
 		for (Object key : cProperties.keySet()) {
 
@@ -104,6 +179,14 @@ public class SecurePropertiesUtils {
 						.setProperty(keyStr, cProperties.getProperty(keyStr));
 			}
 
+		}
+
+		if (!retainCrytoConfigProperties) {
+			// Remove the crypto entries from the secure file. Since its passed
+			// in...
+			sProperties.remove(ENTRY_NAME_PROPERTY_KEY);
+			sProperties.remove(KEYSTORE_PASSWORD_PROPERTY_KEY);
+			sProperties.remove(KEY_PATH_PROPERTY_KEY);
 		}
 
 		// Delete original file from disk

@@ -28,7 +28,7 @@ KeystoreUtils.generateAESSecretKey(config);
 ```
 
 ###### SecureProperties
-SecureProperties is an attempt to provide a transparent extension of the native java Properties class which allows property values to be encrypted at rest. Be aware of the exceptions thrown by methods as described in the [API](http://sminogue.github.io/commons-encryption/api)... Methods throw a custom unchecked runtime exception.
+SecureProperties is an attempt to provide a transparent extension of the native java Properties class which allows property values to be encrypted at rest. Be aware of the exceptions thrown by methods as described in the [API](http://theblackchamber.github.io/commons-encryption/api)... Methods throw a custom unchecked runtime exception. Also note that its possible to pass Key Password, Keystore Path, and Key Entry name to the SecureProperties constructor rather than specifying them in the properties file.
 ###### test.properties
 ```properties
 entry-name=aes-key
@@ -56,7 +56,7 @@ String cipherText = encryptionProvider.encode("clear text");
 ```
 
 ###### SecurePropertiesUtils
-The SecurePropertiesUtils is a utility class primarily used to initially encrypt a clear text properties file in preperation of deploying it to a server. This is so that you can keep a clear text version in your project, edit it, and then easily in one step encrypt the fields which need to be secured and then deploy. Important to note that while a SecureProperties instance is returned the file IS changed on disk as well, the returned SecureProperties is just a convenience.
+The SecurePropertiesUtils is a utility class primarily used to initially encrypt a clear text properties file in preperation of deploying it to a server. This is so that you can keep a clear text version in your project, edit it, and then easily in one step encrypt the fields which need to be secured and then deploy. Important to note that while a SecureProperties instance is returned the file IS changed on disk as well, the returned SecureProperties is just a convenience. Also note that its possible to pass Key Password, Keystore Path, and Key Entry name to the encryptPropertiesFile method rather than specifying them in the properties file.
 ```properties
 entry-name=aes-key
 keystore-password=changeit

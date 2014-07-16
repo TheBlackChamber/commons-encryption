@@ -23,8 +23,7 @@
  */
 package net.theblackchamber.util;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,6 +32,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
+import net.theblackchamber.crypto.constants.Constants;
 import net.theblackchamber.crypto.constants.SupportedAlgorithms;
 import net.theblackchamber.crypto.implementations.SecureProperties;
 import net.theblackchamber.crypto.model.KeyConfig;
@@ -50,6 +50,136 @@ public class SecurePropertiesUtilsTest {
 	@Rule
 	public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
+	@Test
+	public void testEncryptPropertiesFileEncryptionParamsTwo() {
+		try {
+			File keyfile = temporaryFolder.newFile("test.key");
+
+			assertTrue(keyfile.exists());
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null,
+					SupportedAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateAESSecretKey(config);
+
+			Properties clearProperties = new Properties();
+			clearProperties.setProperty("test-unencrypted", "TESTY");
+
+			File propertiesFile = temporaryFolder.newFile("test.properties");
+			OutputStream stream = new FileOutputStream(propertiesFile);
+			clearProperties.store(stream, "comment");
+			stream.close();
+			assertTrue(propertiesFile.exists());
+			assertTrue(FileUtils.sizeOf(keyfile) > 0);
+
+			SecureProperties sProperties = SecurePropertiesUtils
+					.encryptPropertiesFile(propertiesFile,keyfile.getPath(),"TEST","aes-key",true);
+			String decryptedProperty = sProperties
+					.getProperty("test-encrypted");
+			assertTrue(StringUtils.equals(decryptedProperty, "TESTY"));
+			assertTrue(sProperties.getProperty("test-unencrypted") == null);
+			assertNotNull(sProperties.getProperty(Constants.ENTRY_NAME_PROPERTY_KEY));
+			assertNotNull(sProperties.getProperty(Constants.KEY_PATH_PROPERTY_KEY));
+			assertNotNull(sProperties.getProperty(Constants.KEYSTORE_PASSWORD_PROPERTY_KEY));
+
+			sProperties = new SecureProperties();
+			InputStream is = new FileInputStream(propertiesFile);
+			sProperties.load(is);
+			decryptedProperty = sProperties.getProperty("test-encrypted");
+			assertTrue(StringUtils.equals(decryptedProperty, "TESTY"));
+			assertTrue(sProperties.getProperty("test-unencrypted") == null);
+
+		} catch (Throwable t) {
+			t.printStackTrace();
+			fail();
+		}
+	}
+	
+	
+	@Test
+	public void testEncryptPropertiesFileEncryptionParamsThree() {
+		try {
+			File keyfile = temporaryFolder.newFile("test.key");
+
+			assertTrue(keyfile.exists());
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null,
+					SupportedAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateAESSecretKey(config);
+
+			Properties clearProperties = new Properties();
+			clearProperties.setProperty("test-unencrypted", "TESTY");
+
+			File propertiesFile = temporaryFolder.newFile("test.properties");
+			OutputStream stream = new FileOutputStream(propertiesFile);
+			clearProperties.store(stream, "comment");
+			stream.close();
+			assertTrue(propertiesFile.exists());
+			assertTrue(FileUtils.sizeOf(keyfile) > 0);
+
+			SecureProperties sProperties = SecurePropertiesUtils
+					.encryptPropertiesFile(propertiesFile,keyfile.getPath(),"TEST","aes-key",true);
+			String decryptedProperty = sProperties
+					.getProperty("test-encrypted");
+			assertTrue(StringUtils.equals(decryptedProperty, "TESTY"));
+			assertTrue(sProperties.getProperty("test-unencrypted") == null);
+			assertNotNull(sProperties.getProperty(Constants.ENTRY_NAME_PROPERTY_KEY));
+			assertNotNull(sProperties.getProperty(Constants.KEY_PATH_PROPERTY_KEY));
+			assertNotNull(sProperties.getProperty(Constants.KEYSTORE_PASSWORD_PROPERTY_KEY));
+
+			sProperties = new SecureProperties();
+			InputStream is = new FileInputStream(propertiesFile);
+			sProperties.load(is);
+			decryptedProperty = sProperties.getProperty("test-encrypted");
+			assertTrue(StringUtils.equals(decryptedProperty, "TESTY"));
+			assertTrue(sProperties.getProperty("test-unencrypted") == null);
+
+		} catch (Throwable t) {
+			t.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	public void testEncryptPropertiesFileEncryptionParamsOne() {
+		try {
+			File keyfile = temporaryFolder.newFile("test.key");
+
+			assertTrue(keyfile.exists());
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null,
+					SupportedAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateAESSecretKey(config);
+
+			Properties clearProperties = new Properties();
+			clearProperties.setProperty("test-unencrypted", "TESTY");
+
+			File propertiesFile = temporaryFolder.newFile("test.properties");
+			OutputStream stream = new FileOutputStream(propertiesFile);
+			clearProperties.store(stream, "comment");
+			stream.close();
+			assertTrue(propertiesFile.exists());
+			assertTrue(FileUtils.sizeOf(keyfile) > 0);
+
+			SecureProperties sProperties = SecurePropertiesUtils
+					.encryptPropertiesFile(propertiesFile,keyfile.getPath(),"TEST","aes-key");
+			String decryptedProperty = sProperties
+					.getProperty("test-encrypted");
+			assertTrue(StringUtils.equals(decryptedProperty, "TESTY"));
+			assertTrue(sProperties.getProperty("test-unencrypted") == null);
+
+			sProperties = new SecureProperties();
+			InputStream is = new FileInputStream(propertiesFile);
+			sProperties.load(is);
+			sProperties.setProperty(Constants.ENTRY_NAME_PROPERTY_KEY, "aes-key");
+			sProperties.setProperty(Constants.KEYSTORE_PASSWORD_PROPERTY_KEY, "TEST");
+			sProperties.setProperty(Constants.KEY_PATH_PROPERTY_KEY, keyfile.getPath());
+			decryptedProperty = sProperties.getProperty("test-encrypted");
+			assertTrue(StringUtils.equals(decryptedProperty, "TESTY"));
+			assertTrue(sProperties.getProperty("test-unencrypted") == null);
+
+		} catch (Throwable t) {
+			t.printStackTrace();
+			fail();
+		}
+	}
+	
 	@Test
 	public void testEncryptPropertiesFile() {
 		try {

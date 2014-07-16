@@ -23,24 +23,21 @@
  */
 package net.theblackchamber.crypto.implementations;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
 import java.util.Properties;
 
 import javax.crypto.SecretKey;
 
 import net.theblackchamber.crypto.constants.SupportedAlgorithms;
-import net.theblackchamber.crypto.implementations.SecureProperties;
 import net.theblackchamber.crypto.model.KeyConfig;
 import net.theblackchamber.crypto.providers.AESEncryptionProvider;
 import net.theblackchamber.crypto.util.KeystoreUtils;
@@ -49,9 +46,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Rule;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
-
 import org.junit.rules.TemporaryFolder;
 
 public class SecurePropertiesTest {
@@ -89,6 +83,33 @@ public class SecurePropertiesTest {
 			props.setProperty("entry-name", "aes-key");
 			props.setProperty("keystore-password", "TEST");
 			props.setProperty("key-path", keyfile.getPath());
+			
+			assertNotNull(((SecureProperties)props).getKey());
+			assertNotNull(((SecureProperties)props).getEncryptionProvider());
+			
+			assertTrue(StringUtils.equals(props.getProperty("key-path"), keyfile.getPath()));
+			
+		}catch(Throwable t){
+			t.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	public void testCreateNewSecurePropertiesFromPropertiesUsingParamsConstructor(){
+		try{
+			
+			File keyfile = temporaryFolder.newFile("test.key");
+		
+			assertTrue(keyfile.exists());
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateAESSecretKey(config);
+		
+			assertTrue(FileUtils.sizeOf(keyfile) > 0);
+			
+			Properties clearProperties = new Properties();
+			
+			Properties props = new SecureProperties(clearProperties,keyfile.getPath(),"aes-key","TEST");
 			
 			assertNotNull(((SecureProperties)props).getKey());
 			assertNotNull(((SecureProperties)props).getEncryptionProvider());
