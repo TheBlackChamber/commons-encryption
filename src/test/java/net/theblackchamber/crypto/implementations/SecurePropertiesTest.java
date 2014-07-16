@@ -114,8 +114,6 @@ public class SecurePropertiesTest {
 			assertNotNull(((SecureProperties)props).getKey());
 			assertNotNull(((SecureProperties)props).getEncryptionProvider());
 			
-			assertTrue(StringUtils.equals(props.getProperty("key-path"), keyfile.getPath()));
-			
 		}catch(Throwable t){
 			t.printStackTrace();
 			fail();
