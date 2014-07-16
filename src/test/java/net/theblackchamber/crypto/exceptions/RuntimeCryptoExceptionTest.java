@@ -57,18 +57,5 @@ public class RuntimeCryptoExceptionTest {
 			fail();
 		}
 	}
-	
-	@Test
-	public void testConstructorMessageAndThrowableAndBooleansConstructor(){
-		try{
-			
-			RuntimeCryptoException exception = new RuntimeCryptoException("MESSAGE",new Exception(),false,false);
-			assertNotNull(exception);
-			
-		}catch(Throwable t){
-			t.printStackTrace();
-			fail();
-		}
-	}
-	
+		
 }

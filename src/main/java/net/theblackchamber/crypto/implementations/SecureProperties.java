@@ -24,7 +24,9 @@
 package net.theblackchamber.crypto.implementations;
 
 import static net.theblackchamber.crypto.constants.Constants.*;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -96,6 +98,36 @@ public class SecureProperties extends Properties {
 	}
 
 	/**
+   * Constructor which specifies file path to load properties from and the keystore
+   * details. <b>Note that if an exception occurred in encryption/decryption
+   * methods the IOException will wrap the underlying exception</b>
+   * 
+   * @param propertiesPath
+   * @param keyPath
+   * @param keyEntry
+   * @param keyPass
+   * @throws KeyStoreException
+   * @throws NoSuchAlgorithmException
+   * @throws CertificateException
+   * @throws FileNotFoundException
+   * @throws UnrecoverableEntryException
+   * @throws IOException
+   */
+	public SecureProperties(String propertiesPath, String keyPath,
+  String keyEntry, String keyPass) throws KeyStoreException,
+  NoSuchAlgorithmException, CertificateException,
+  FileNotFoundException, UnrecoverableEntryException, IOException {
+	  super();
+	  super.load(new FileInputStream(new File(propertiesPath)));
+	  try {
+      loadKeystore(keyPath, keyPass, keyEntry);
+      initializeEncryptionProvider();
+    } catch (RuntimeCryptoException rce) {
+      throw new IOException(rce);
+    }
+	}
+	
+	/**
 	 * Constructor which specifies {@link Properties} defaults and the keystore
 	 * details. <b>Note that if an exception occurred in encryption/decryption
 	 * methods the IOException will wrap the underlying exception</b>
@@ -125,10 +157,37 @@ public class SecureProperties extends Properties {
 	}
 
 	/**
+   * Constructor which specifies file path to load properties from. <b>Note that if
+   * an exception occurred in encryption/decryption methods the IOException
+   * will wrap the underlying exception</b>
+   * 
+   * @param propertiesPath
+   * @throws IOException
+   * @throws UnrecoverableEntryException
+   * @throws FileNotFoundException
+   * @throws CertificateException
+   * @throws NoSuchAlgorithmException
+   * @throws KeyStoreException
+   */
+  public SecureProperties(String propertiesPath) throws KeyStoreException,
+      NoSuchAlgorithmException, CertificateException,
+      FileNotFoundException, UnrecoverableEntryException, IOException {
+    super();
+    super.load(new FileInputStream(new File(propertiesPath)));
+    try {
+      loadKeystore();
+      initializeEncryptionProvider();
+    } catch (RuntimeCryptoException rce) {
+      throw new IOException(rce);
+    }
+  }
+	
+	/**
 	 * Constructor which specifies {@link Properties} defaults. <b>Note that if
 	 * an exception occurred in encryption/decryption methods the IOException
 	 * will wrap the underlying exception</b>
 	 * 
+	 * @param defaults
 	 * @throws IOException
 	 * @throws UnrecoverableEntryException
 	 * @throws FileNotFoundException
