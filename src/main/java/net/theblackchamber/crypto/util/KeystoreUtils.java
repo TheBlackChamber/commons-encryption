@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -141,17 +142,52 @@ public class KeystoreUtils {
 		}
 
 		fis = new FileInputStream(keystore);
-		keyStore.load(fis, keyStorePassword.toCharArray());
-		KeyStore.ProtectionParameter protectionParameter = new KeyStore.PasswordProtection(
-				keyStorePassword.toCharArray());
-		KeyStore.SecretKeyEntry pkEntry = (KeyStore.SecretKeyEntry) keyStore
-				.getEntry(entryName, protectionParameter);
-		try {
-			return pkEntry.getSecretKey();
-		} finally {
-			fis.close();
-		}
-
+		
+		return getAESSecretKey(fis, entryName, keyStorePassword);
+		
 	}
 
+	/**
+   * Method which will load a secret key from an input stream with the specified entry
+   * name.
+   * 
+   * @param keystore {@link KeyStore} file to read.
+   * @param entryName Entry name of the key to be retrieved
+   * @param keyStorePassword Password used to open the {@link KeyStore}
+   * @return
+   * @throws KeyStoreException
+   * @throws NoSuchAlgorithmException
+   * @throws CertificateException
+   * @throws IOException
+   * @throws UnrecoverableEntryException
+   */
+  public static SecretKey getAESSecretKey(InputStream keyInputStream, String entryName,
+      String keyStorePassword) throws KeyStoreException,
+      NoSuchAlgorithmException, CertificateException,
+      IOException, UnrecoverableEntryException {
+    KeyStore keyStore = KeyStore.getInstance("JCEKS");
+    
+    if(keyInputStream == null){
+      throw new KeyStoreException("No Keystore stream provided.");
+    }
+    if (StringUtils.isEmpty(keyStorePassword)) {
+      throw new KeyStoreException("No Keystore password provided.");
+    }
+    if (StringUtils.isEmpty(entryName)) {
+      throw new KeyStoreException("No Keystore entry name provided.");
+    }
+
+    keyStore.load(keyInputStream, keyStorePassword.toCharArray());
+    KeyStore.ProtectionParameter protectionParameter = new KeyStore.PasswordProtection(
+        keyStorePassword.toCharArray());
+    KeyStore.SecretKeyEntry pkEntry = (KeyStore.SecretKeyEntry) keyStore
+        .getEntry(entryName, protectionParameter);
+    try {
+      return pkEntry.getSecretKey();
+    } finally {
+      keyInputStream.close();
+    }
+
+  }
+	
 }

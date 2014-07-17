@@ -169,23 +169,7 @@ public class KeystoreUtilsTest {
 			fail();
 		}
 	}
-	
-	@Test
-	public void testLoadAESSecretKeyNullKeystore(){
-		try {
-			
-			SecretKey key = KeystoreUtils.getAESSecretKey(null,"aes-key","TEST");
-			
-			fail();
-			
-		} catch(FileNotFoundException fnf){
-			assertTrue(true);
-		}catch (Exception e) {
-			e.printStackTrace();
-			fail();
-		}
-	}
-	
+		
 	@Test
 	public void testLoadAESSecretKeyNullPassword(){
 		try {
