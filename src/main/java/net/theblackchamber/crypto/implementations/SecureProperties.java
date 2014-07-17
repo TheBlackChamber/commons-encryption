@@ -160,6 +160,7 @@ public class SecureProperties extends Properties {
 	}
 
 	/**
+   * Constructor which specifies file  to load properties from and the keystore
 	 * Constructor which specifies {@link Properties} defaults and the keystore
 	 * details. <b>Note that if an exception occurred in encryption/decryption
 	 * methods the IOException will wrap the underlying exception</b>
