@@ -219,33 +219,6 @@ public class SecureProperties extends Properties {
 	}
 
 	/**
-<<<<<<< HEAD
-	 * Constructor which specifies file path to load properties from. <b>Note
-	 * that if an exception occurred in encryption/decryption methods the
-	 * IOException will wrap the underlying exception</b>
-	 * 
-	 * @param propertiesPath
-	 * @throws IOException
-	 * @throws UnrecoverableEntryException
-	 * @throws FileNotFoundException
-	 * @throws CertificateException
-	 * @throws NoSuchAlgorithmException
-	 * @throws KeyStoreException
-	 */
-	public SecureProperties(String propertiesPath) throws KeyStoreException,
-			NoSuchAlgorithmException, CertificateException,
-			FileNotFoundException, UnrecoverableEntryException, IOException {
-		super();
-		super.load(new FileInputStream(new File(propertiesPath)));
-		try {
-			loadKeystore();
-			initializeEncryptionProvider();
-		} catch (RuntimeCryptoException rce) {
-			throw new IOException(rce);
-		}
-	}
-
-=======
    * Constructor which specifies file path to load properties from. <b>Note that if
    * an exception occurred in encryption/decryption methods the IOException
    * will wrap the underlying exception</b>
@@ -297,7 +270,6 @@ public class SecureProperties extends Properties {
     }
   }
   
->>>>>>> Dunno... github bullshit. These constructors were already there
 	/**
 	 * Constructor which specifies {@link Properties} defaults. <b>Note that if
 	 * an exception occurred in encryption/decryption methods the IOException
