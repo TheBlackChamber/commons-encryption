@@ -12,7 +12,7 @@ In order to make use of the commons-encryption library you first need to downloa
 <dependency>
 	<groupId>net.theblackchamber</groupId>
 	<artifactId>commons-encryption</artifactId>
-	<version>.1</version>
+	<version>1.0.0</version>
 </dependency>
 ```
 
