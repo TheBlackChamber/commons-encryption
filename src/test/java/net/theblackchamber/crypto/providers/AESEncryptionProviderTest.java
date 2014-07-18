@@ -59,6 +59,7 @@ public class AESEncryptionProviderTest {
 			KeystoreUtils.generateAESSecretKey(config);
 			key = KeystoreUtils.getAESSecretKey(keyFile,"aes-key","TEST");
 			aesEncryptionProvider = new AESEncryptionProvider(key);
+			assertNotNull(aesEncryptionProvider.getKey());
 		}catch(Exception e){
 			e.printStackTrace();
 			fail();

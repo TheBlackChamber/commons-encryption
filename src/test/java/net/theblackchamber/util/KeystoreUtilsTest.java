@@ -24,6 +24,7 @@
 package net.theblackchamber.util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.KeyStoreException;
@@ -189,12 +190,48 @@ public class KeystoreUtilsTest {
 	}
 	
 	@Test
+	public void testLoadAESSecretKeyInputStreamNullPassword(){
+		try {
+			File file = temporaryFolder.newFile("test.key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateAESSecretKey(config);
+			SecretKey key = KeystoreUtils.getAESSecretKey(new FileInputStream(file),"aes-key",null);
+			
+			fail();
+			
+		} catch(KeyStoreException fnf){
+			assertTrue(true);
+		}catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
 	public void testLoadAESSecretKeyNullKeyEntry(){
 		try {
 			File file = temporaryFolder.newFile("test.key");
 			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedAlgorithms.AES, "aes-key");
 			KeystoreUtils.generateAESSecretKey(config);
 			SecretKey key = KeystoreUtils.getAESSecretKey(file,null,"TEST");
+			
+			fail();
+			
+		} catch(KeyStoreException fnf){
+			assertTrue(true);
+		}catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	public void testLoadAESSecretKeyInputStreamNullKeyEntry(){
+		try {
+			File file = temporaryFolder.newFile("test.key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateAESSecretKey(config);
+			SecretKey key = KeystoreUtils.getAESSecretKey(new FileInputStream(file),null,"TEST");
 			
 			fail();
 			

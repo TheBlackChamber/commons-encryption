@@ -136,9 +136,9 @@ public class SecureProperties extends Properties {
 	 * exception</b>
 	 * 
 	 * @param inputStream
-	 * @param keyPath
-	 * @param keyEntry
-	 * @param keyPass
+	 * @param keyPath If null an attempt will be made to attempt to use the key path property from the underlying property file.
+	 * @param keyEntry If null an attempt will be made to attempt to use the key entry property from the underlying property file.
+	 * @param keyPass If null an attempt will be made to attempt to use the key pass property from the underlying property file.
 	 * @throws KeyStoreException
 	 * @throws NoSuchAlgorithmException
 	 * @throws CertificateException
@@ -178,8 +178,8 @@ public class SecureProperties extends Properties {
    * 
    * @param configInputStream
    * @param keyInputStream
-   * @param keyEntry
-   * @param keyPass
+   * @param keyEntry If null an attempt will be made to attempt to use the key entry property from the underlying property file.
+   * @param keyPass If null an attempt will be made to attempt to use the key pass property from the underlying property file.
    * @throws KeyStoreException
    * @throws NoSuchAlgorithmException
    * @throws CertificateException
@@ -214,9 +214,9 @@ public class SecureProperties extends Properties {
    * methods the IOException will wrap the underlying exception</b>
    * 
    * @param propertiesFile
-   * @param keyPath
-   * @param keyEntry
-   * @param keyPass
+   * @param keyPath If null an attempt will be made to attempt to use the key path property from the underlying property file.
+   * @param keyEntry If null an attempt will be made to attempt to use the key entry property from the underlying property file.
+   * @param keyPass If null an attempt will be made to attempt to use the key pass property from the underlying property file.
    * @throws KeyStoreException
    * @throws NoSuchAlgorithmException
    * @throws CertificateException
@@ -254,9 +254,9 @@ public class SecureProperties extends Properties {
 	 * methods the IOException will wrap the underlying exception</b>
 	 * 
 	 * @param defaults
-	 * @param keyPath
-	 * @param keyEntry
-	 * @param keyPass
+	 * @param keyPath If null an attempt will be made to attempt to use the key path property from the underlying property file.
+	 * @param keyEntry If null an attempt will be made to attempt to use the key entry property from the underlying property file.
+	 * @param keyPass If null an attempt will be made to attempt to use the key pass property from the underlying property file.
 	 * @throws KeyStoreException
 	 * @throws NoSuchAlgorithmException
 	 * @throws CertificateException
