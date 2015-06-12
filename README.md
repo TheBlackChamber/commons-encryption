@@ -12,7 +12,7 @@ In order to make use of the commons-encryption library you first need to downloa
 <dependency>
 	<groupId>net.theblackchamber</groupId>
 	<artifactId>commons-encryption</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 </dependency>
 ```
 
@@ -23,8 +23,8 @@ After the commons-encryption library has been added to your project usage is pre
 ###### Key Generation
 The following snippet of code is an example of generating a 256 bit AES key and adding it to a keystore on disk with the key entry name of "aes-key" and the keystore encrypted using the password "TEST".
 ```java
-KeyConfig config = new KeyConfig(keyStoreFile, "TEST", 256, SupportedAlgorithms.AES, "aes-key");
-KeystoreUtils.generateAESSecretKey(config);
+KeyConfig config = new KeyConfig(keyStoreFile, "TEST", 256, SupportedKeyGenAlgorithms.AES, "aes-key");
+KeystoreUtils.generateSecretKey(config);
 ```
 
 ###### SecureProperties
@@ -38,7 +38,7 @@ key1=My Unencrypted Property Value
 key2-encrypted=FAB123DE7A012FCD
 ```
 
-The following snipped of code is an example of loading a properties file from disk into a SecureProperties object which can be used in existing java classes.
+The following snippet of code is an example of loading a properties file from disk into a SecureProperties object which can be used in existing java classes.
 ```java
 FileReader reader = new FileReader(propertiesFile);
 Properties sProperties = new SecureProperties();
@@ -50,7 +50,7 @@ sProperties.setProperty("key3-unencrypted","cleartext value");
 ###### AESEncryptionProvider
 If you find yourself needing to build your own "implementation" using encryption or just want to manually encrypt/decrypt values. The providers can be used directly.
 ```java
-SecretKey key = KeystoreUtils.getAESSecretKey(keyfile, "aes-key", "TEST");
+SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
 AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
 String cipherText = encryptionProvider.encode("clear text");
 ```
