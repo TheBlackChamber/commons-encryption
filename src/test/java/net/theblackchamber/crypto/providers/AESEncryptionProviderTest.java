@@ -32,62 +32,192 @@ import javax.crypto.SecretKey;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import static org.junit.Assert.*;
-import net.theblackchamber.crypto.constants.SupportedAlgorithms;
+import net.theblackchamber.crypto.constants.SupportedKeyGenAlgorithms;
+import net.theblackchamber.crypto.exceptions.MissingParameterException;
+import net.theblackchamber.crypto.exceptions.UnsupportedAlgorithmException;
+import net.theblackchamber.crypto.exceptions.UnsupportedKeySizeException;
 import net.theblackchamber.crypto.model.KeyConfig;
 import net.theblackchamber.crypto.util.KeystoreUtils;
 
 public class AESEncryptionProviderTest {
 
-	SecretKey key;
-	AESEncryptionProvider aesEncryptionProvider;
-	
+	SecretKey key256;
+	SecretKey key192;
+	SecretKey key128;
+	SecretKey badKeySize;
+	SecretKey badKeyAlg;
+
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
-	
+
 	@Before
-	public void init(){
-		try{
+	public void init() {
+		try {
 			File keyFile = tempFolder.newFile("keystore.keys");
+
+			KeyConfig config = new KeyConfig(keyFile, "TEST", 256,
+					SupportedKeyGenAlgorithms.AES, "aes-key-256");
+			KeystoreUtils.generateSecretKey(config);
 			
-			KeyConfig config = new KeyConfig(keyFile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
+			config = new KeyConfig(keyFile, "TEST", 192,
+					SupportedKeyGenAlgorithms.AES, "aes-key-192");
+			KeystoreUtils.generateSecretKey(config);
 			
-			KeystoreUtils.generateAESSecretKey(config);
-			key = KeystoreUtils.getAESSecretKey(keyFile,"aes-key","TEST");
-			aesEncryptionProvider = new AESEncryptionProvider(key);
-			assertNotNull(aesEncryptionProvider.getKey());
-		}catch(Exception e){
+			config = new KeyConfig(keyFile, "TEST", 128,
+					SupportedKeyGenAlgorithms.AES, "aes-key-128");
+			KeystoreUtils.generateSecretKey(config);
+			
+			config = new KeyConfig(keyFile, "TEST", 101,
+					SupportedKeyGenAlgorithms.AES, "aes-key-badlen");
+			KeystoreUtils.generateSecretKey(config);
+			config = new KeyConfig(keyFile, "TEST", 192,
+					SupportedKeyGenAlgorithms.TRIPLE_DES, "aes-key-badalg");
+			KeystoreUtils.generateSecretKey(config);
+
+			key256 = KeystoreUtils.getSecretKey(keyFile, "aes-key-256", "TEST");
+			key192 = KeystoreUtils.getSecretKey(keyFile, "aes-key-192", "TEST");
+			key128 = KeystoreUtils.getSecretKey(keyFile, "aes-key-128", "TEST");
+
+			assertNotNull(key256);
+			assertNotNull(key192);
+			assertNotNull(key128);
+			
+			
+			badKeySize = KeystoreUtils.getSecretKey(keyFile, "aes-key-badlen",
+					"TEST");
+
+			badKeyAlg = KeystoreUtils.getSecretKey(keyFile, "aes-key-badalg",
+					"TEST");
+
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
 		}
 	}
-	
+
 	@Test
-	public void testEncrypt(){
-		String clear = RandomStringUtils.randomAlphabetic(20);
-		Set<String> crypts = new HashSet<String>();
-		for(int i = 10;i<10;i++){
-			String cipher = aesEncryptionProvider.encrypt(clear);
-			assertTrue(!crypts.contains(cipher));
-			crypts.add(cipher);
+	public void testBadKeyLength() {
+
+		try {
+
+			AESEncryptionProvider aesEncryptionProviderBad = new AESEncryptionProvider(
+					badKeySize);
+
+			fail();
+
+		} catch (Throwable t) {
+			if (!(t instanceof UnsupportedKeySizeException)) {
+				fail();
+			}
 		}
-		
+
 	}
-	
+
 	@Test
-	public void testDecrypt(){
-		String clear = RandomStringUtils.randomAlphabetic(20);
-		
-		String cipher = aesEncryptionProvider.encrypt(clear);
-		
-		String decrypted = aesEncryptionProvider.decrypt(cipher);
-		
-		assertTrue(StringUtils.equals(clear, decrypted));
-		
+	public void testBadKeyAlgorithm() {
+
+		try {
+
+			AESEncryptionProvider aesEncryptionProviderBad = new AESEncryptionProvider(
+					badKeyAlg);
+
+			fail();
+
+		} catch (Throwable t) {
+			if (!(t instanceof UnsupportedAlgorithmException)) {
+				fail();
+			}
+		}
+
 	}
-	
+
+	@Test
+	public void testEncrypt() {
+
+		try {
+
+			AESEncryptionProvider aesEncryptionProvider = new AESEncryptionProvider(key256);
+
+			assertNotNull(aesEncryptionProvider.getKey());
+			
+			String clear = RandomStringUtils.randomAlphabetic(20);
+			Set<String> crypts = new HashSet<String>();
+			for (int i = 10; i < 10; i++) {
+				String cipher = aesEncryptionProvider.encrypt(clear);
+				assertTrue(!crypts.contains(cipher));
+				crypts.add(cipher);
+			}
+
+			aesEncryptionProvider = new AESEncryptionProvider(key192);
+
+			assertNotNull(aesEncryptionProvider.getKey());
+			
+			 clear = RandomStringUtils.randomAlphabetic(20);
+			crypts = new HashSet<String>();
+			for (int i = 10; i < 10; i++) {
+				String cipher = aesEncryptionProvider.encrypt(clear);
+				assertTrue(!crypts.contains(cipher));
+				crypts.add(cipher);
+			}
+			
+			aesEncryptionProvider = new AESEncryptionProvider(key128);
+
+			assertNotNull(aesEncryptionProvider.getKey());
+			
+			 clear = RandomStringUtils.randomAlphabetic(20);
+			crypts = new HashSet<String>();
+			for (int i = 10; i < 10; i++) {
+				String cipher = aesEncryptionProvider.encrypt(clear);
+				assertTrue(!crypts.contains(cipher));
+				crypts.add(cipher);
+			}
+			
+			
+			try {
+				aesEncryptionProvider.encrypt(null);
+				fail();
+			} catch (MissingParameterException mpe) {
+
+			}
+
+		} catch (Throwable t) {
+			t.printStackTrace();
+			fail();
+		}
+	}
+
+	@Test
+	public void testDecrypt() {
+		try {
+			AESEncryptionProvider aesEncryptionProvider = new AESEncryptionProvider(key256);
+
+			assertNotNull(aesEncryptionProvider.getKey());
+			
+			String clear = RandomStringUtils.randomAlphabetic(20);
+
+			String cipher = aesEncryptionProvider.encrypt(clear);
+
+			String decrypted = aesEncryptionProvider.decrypt(cipher);
+
+			assertTrue(StringUtils.equals(clear, decrypted));
+
+			try {
+				aesEncryptionProvider.decrypt(null);
+				fail();
+			} catch (MissingParameterException mpe) {
+
+			}
+
+		} catch (Throwable t) {
+			t.printStackTrace();
+			fail();
+		}
+	}
+
 }

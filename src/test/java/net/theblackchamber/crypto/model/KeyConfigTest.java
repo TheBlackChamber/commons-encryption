@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 
-import net.theblackchamber.crypto.constants.SupportedAlgorithms;
+import net.theblackchamber.crypto.constants.SupportedKeyGenAlgorithms;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
@@ -15,7 +15,7 @@ public class KeyConfigTest {
 	public void testFullConstructor(){
 		try{
 			
-			KeyConfig config = new KeyConfig(new File("/tmp/test"), "TEST", 256, SupportedAlgorithms.AES, "TEST");
+			KeyConfig config = new KeyConfig(new File("/tmp/test"), "TEST", 256, SupportedKeyGenAlgorithms.AES, "TEST");
 			
 			assertNotNull(config);
 			
@@ -41,7 +41,7 @@ public class KeyConfigTest {
 			
 			assertNotNull(config);
 			
-			config.setAlgorithm(SupportedAlgorithms.AES);
+			config.setAlgorithm(SupportedKeyGenAlgorithms.AES);
 			config.setKeyStoreFile(new File("/tmp/test"));
 			config.setKeyEntryName("TEST");
 			config.setKeySize(256);

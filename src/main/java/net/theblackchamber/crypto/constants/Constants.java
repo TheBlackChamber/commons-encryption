@@ -33,7 +33,7 @@ import java.security.KeyStore;
  * @author sminogue
  * 
  */
-public class Constants {
+public final class Constants {
 	/**
 	 * ======================================================
 	 * Constants Used by the {@link SecureProperties} classes

@@ -38,7 +38,7 @@ import java.util.Properties;
 import javax.crypto.SecretKey;
 
 import net.theblackchamber.crypto.constants.Constants;
-import net.theblackchamber.crypto.constants.SupportedAlgorithms;
+import net.theblackchamber.crypto.constants.SupportedKeyGenAlgorithms;
 import net.theblackchamber.crypto.model.KeyConfig;
 import net.theblackchamber.crypto.providers.AESEncryptionProvider;
 import net.theblackchamber.crypto.util.KeystoreUtils;
@@ -75,8 +75,8 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 		
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
-			KeystoreUtils.generateAESSecretKey(config);
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
@@ -103,8 +103,8 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 		
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
-			KeystoreUtils.generateAESSecretKey(config);
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
@@ -128,8 +128,8 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 		
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
-			KeystoreUtils.generateAESSecretKey(config);
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
@@ -154,8 +154,8 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 		
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
-			KeystoreUtils.generateAESSecretKey(config);
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
@@ -181,8 +181,8 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 		
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
-			KeystoreUtils.generateAESSecretKey(config);
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
@@ -212,8 +212,8 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
-			KeystoreUtils.generateAESSecretKey(config);
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
@@ -247,9 +247,9 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
-			KeystoreUtils.generateAESSecretKey(config);
-			SecretKey key = KeystoreUtils.getAESSecretKey(keyfile, "aes-key", "TEST");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateSecretKey(config);
+			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
 			
 			AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
 			
@@ -286,9 +286,9 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
-			KeystoreUtils.generateAESSecretKey(config);
-			SecretKey key = KeystoreUtils.getAESSecretKey(keyfile, "aes-key", "TEST");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateSecretKey(config);
+			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
 			
 			AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
 			
@@ -323,9 +323,9 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
-			KeystoreUtils.generateAESSecretKey(config);
-			SecretKey key = KeystoreUtils.getAESSecretKey(keyfile, "aes-key", "TEST");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateSecretKey(config);
+			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
 			
 			AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
 			
@@ -360,9 +360,9 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
-			KeystoreUtils.generateAESSecretKey(config);
-			SecretKey key = KeystoreUtils.getAESSecretKey(keyfile, "aes-key", "TEST");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateSecretKey(config);
+			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
 			
 			AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
 			
@@ -397,9 +397,9 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
-			KeystoreUtils.generateAESSecretKey(config);
-			SecretKey key = KeystoreUtils.getAESSecretKey(keyfile, "aes-key", "TEST");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateSecretKey(config);
+			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
 			
 			AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
 			
@@ -433,9 +433,9 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
-			KeystoreUtils.generateAESSecretKey(config);
-			SecretKey key = KeystoreUtils.getAESSecretKey(keyfile, "aes-key", "TEST");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateSecretKey(config);
+			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
 			
 			AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
 			
@@ -469,9 +469,9 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
-			KeystoreUtils.generateAESSecretKey(config);
-			SecretKey key = KeystoreUtils.getAESSecretKey(keyfile, "aes-key", "TEST");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateSecretKey(config);
+			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
 			
 			AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
 			
@@ -505,9 +505,9 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
-			KeystoreUtils.generateAESSecretKey(config);
-			SecretKey key = KeystoreUtils.getAESSecretKey(keyfile, "aes-key", "TEST");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateSecretKey(config);
+			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
 			
 			AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
 			
@@ -543,8 +543,8 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
-			KeystoreUtils.generateAESSecretKey(config);
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
@@ -581,8 +581,8 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
-			KeystoreUtils.generateAESSecretKey(config);
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
@@ -617,8 +617,8 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
-			KeystoreUtils.generateAESSecretKey(config);
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
@@ -651,8 +651,8 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedAlgorithms.AES, "aes-key");
-			KeystoreUtils.generateAESSecretKey(config);
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			

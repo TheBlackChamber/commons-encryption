@@ -155,9 +155,9 @@ public class SecurePropertiesUtils {
 		fis.close();
 
 		// Ensure the encryption parameters are not empty.
-		if (StringUtils.isEmpty(ENTRY_NAME_PROPERTY_KEY)
-				|| StringUtils.isEmpty(KEY_PATH_PROPERTY_KEY)
-				|| StringUtils.isEmpty(KEYSTORE_PASSWORD_PROPERTY_KEY)) {
+		if (StringUtils.isEmpty(keyEntry)
+				|| StringUtils.isEmpty(keyPath)
+				|| StringUtils.isEmpty(keyPass)) {
 			throw new KeyStoreException(
 					"Unable to configure due to missing configurations");
 		}

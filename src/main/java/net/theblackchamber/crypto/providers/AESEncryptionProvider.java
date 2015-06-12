@@ -25,6 +25,13 @@ package net.theblackchamber.crypto.providers;
 
 import javax.crypto.SecretKey;
 
+import net.theblackchamber.crypto.constants.Constants;
+import net.theblackchamber.crypto.constants.SupportedEncryptionAlgorithms;
+import net.theblackchamber.crypto.exceptions.MissingParameterException;
+import net.theblackchamber.crypto.exceptions.UnsupportedAlgorithmException;
+import net.theblackchamber.crypto.exceptions.UnsupportedKeySizeException;
+
+import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
@@ -33,10 +40,8 @@ import org.jasypt.salt.RandomSaltGenerator;
 
 /**
  * Provider which will allow for encryption and decryption of strings using the
- * AES algorithm.
- * <br>
- * Usage:
- * <code>
+ * AES algorithm. <br>
+ * Usage: <code>
  * SecretKey key = KeystoreUtils.getAESSecretKey(keyfile, "aes-key", "TEST");
  * AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
  * String cipherText = encryptionProvider.encode("clear text");
@@ -52,15 +57,35 @@ public class AESEncryptionProvider extends EncryptionProvider<SecretKey> {
 	/**
 	 * Constructor to create new AES encryption provider.
 	 * 
-	 * @param key Instance of {@link SecretKey} to be used for encryption and decryption.
+	 * @param key
+	 *            Instance of {@link SecretKey} to be used for encryption and
+	 *            decryption.
+	 * @throws UnsupportedKeySizeException
+	 * @throws UnsupportedAlgorithmException
 	 */
-	public AESEncryptionProvider(final SecretKey key) {
-		super();
-		setKey(key);
+	public AESEncryptionProvider(final SecretKey key)
+			throws UnsupportedKeySizeException, UnsupportedAlgorithmException {
+		super(key);
+
+		int keySize = (key.getEncoded().length) * 8;
 
 		// Configure Encryptor
 		SimplePBEConfig config = new SimplePBEConfig();
-		config.setAlgorithm("PBEWITHSHA256AND256BITAES-CBC-BC");
+
+		switch (keySize) {
+		case 128:
+			config.setAlgorithm(SupportedEncryptionAlgorithms.AES128.getAlgorithm());
+			break;
+
+		case 192:
+			config.setAlgorithm(SupportedEncryptionAlgorithms.AES192.getAlgorithm());
+			break;
+
+		default:
+			config.setAlgorithm(SupportedEncryptionAlgorithms.AES256.getAlgorithm());
+			break;
+		}
+
 		config.setKeyObtentionIterations(10);
 		config.setPassword(Hex.toHexString(key.getEncoded()));
 		config.setProvider(new BouncyCastleProvider());
@@ -74,15 +99,48 @@ public class AESEncryptionProvider extends EncryptionProvider<SecretKey> {
 	/**
 	 * @see net.theblackchamber.crypto.providers.EncryptionProvider#decrypt(java.lang.String)
 	 */
-	public String decrypt(String cipherText) {
+	public String decrypt(String cipherText) throws MissingParameterException {
+
+		if (StringUtils.isBlank(cipherText)) {
+			throw new MissingParameterException("Missing parameter: cipherText");
+		}
+
 		return encryptor.decrypt(cipherText);
 	}
 
 	/**
 	 * @see net.theblackchamber.crypto.providers.EncryptionProvider#encrypt(java.lang.String)
 	 */
-	public String encrypt(String clearText) {
+	public String encrypt(String clearText) throws MissingParameterException {
+
+		if (StringUtils.isBlank(clearText)) {
+			throw new MissingParameterException("Missing parameter: clearText");
+		}
+
 		return encryptor.encrypt(clearText);
 	}
 
+	/**
+	 * @see net.theblackchamber.crypto.providers.EncryptionProvider#validateKey(java.security.Key)
+	 */
+	@Override
+	protected void validateKey(SecretKey key)
+			throws UnsupportedKeySizeException, UnsupportedAlgorithmException {
+		byte[] keyBytes = key.getEncoded();
+		// Validate Key Size for AES
+		if (keyBytes.length != 16 && keyBytes.length != 24
+				&& keyBytes.length != 32) {
+			throw new UnsupportedKeySizeException(
+					"Found unsupported key size ["
+							+ (keyBytes.length * 8)
+							+ "]. The AES algorithm only supports key sizes of 128, 192, or 256");
+		}
+
+		if (!"AES".equals(key.getAlgorithm())) {
+			throw new UnsupportedAlgorithmException(
+					"Key does not support AES algorithm: ["
+							+ key.getAlgorithm() + "]");
+		}
+
+	}
 }

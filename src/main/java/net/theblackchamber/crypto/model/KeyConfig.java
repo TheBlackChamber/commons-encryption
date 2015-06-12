@@ -25,7 +25,7 @@ package net.theblackchamber.crypto.model;
 
 import java.io.File;
 
-import net.theblackchamber.crypto.constants.SupportedAlgorithms;
+import net.theblackchamber.crypto.constants.SupportedKeyGenAlgorithms;
 
 /**
  * Class used to configure key generation. 
@@ -39,7 +39,7 @@ public class KeyConfig {
 	private File keyStoreFile = null;
 	private String keyStorePassword = null;
 	private Integer keySize = null;
-	private SupportedAlgorithms algorithm = null;
+	private SupportedKeyGenAlgorithms algorithm = null;
 	private String keyEntryName = null;
 
 	/**
@@ -59,7 +59,7 @@ public class KeyConfig {
 	 * @param keyEntryName Entry name for the key in the keystore.
 	 */
 	public KeyConfig(final File keyStoreFile, final String keyStorePassword,
-			final Integer keySize, final SupportedAlgorithms algorithm,
+			final Integer keySize, final SupportedKeyGenAlgorithms algorithm,
 			final String keyEntryName) {
 		super();
 		this.keyStoreFile = keyStoreFile;
@@ -150,7 +150,7 @@ public class KeyConfig {
 	 * 
 	 * @return
 	 */
-	public SupportedAlgorithms getAlgorithm() {
+	public SupportedKeyGenAlgorithms getAlgorithm() {
 		return algorithm;
 	}
 
@@ -159,7 +159,7 @@ public class KeyConfig {
 	 * 
 	 * @param algorithm
 	 */
-	public void setAlgorithm(final SupportedAlgorithms algorithm) {
+	public void setAlgorithm(final SupportedKeyGenAlgorithms algorithm) {
 		this.algorithm = algorithm;
 	}
 

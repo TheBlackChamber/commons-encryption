@@ -47,14 +47,16 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
  * Utility used for managing a keystore. Generate keys etc.
+ * 
  * @author sminogue
- *
+ * 
  */
 public class KeystoreUtils {
 
+
 	/**
-	 * Method which will generate a random AES key and add it to a keystore with
-	 * the entry name provided.
+	 * Method which will generate a random Secret key and add it to a keystore
+	 * with the entry name provided.
 	 * 
 	 * @param config
 	 *            Configuration for generation of key.
@@ -63,7 +65,7 @@ public class KeystoreUtils {
 	 * @throws CertificateException
 	 * @throws IOException
 	 */
-	public static void generateAESSecretKey(KeyConfig config)
+	public static void generateSecretKey(KeyConfig config)
 			throws NoSuchAlgorithmException, KeyStoreException,
 			CertificateException, IOException {
 
@@ -76,8 +78,8 @@ public class KeystoreUtils {
 
 		SecureRandom random = new SecureRandom();
 
-		KeyGenerator keygen = KeyGenerator.getInstance(config.getAlgorithm().toString(),
-				new BouncyCastleProvider());
+		KeyGenerator keygen = KeyGenerator.getInstance(config.getAlgorithm()
+				.getName(), new BouncyCastleProvider());
 		keygen.init(config.getKeySize(), random);
 
 		SecretKey key = keygen.generateKey();
@@ -113,9 +115,12 @@ public class KeystoreUtils {
 	 * Method which will load a secret key from disk with the specified entry
 	 * name.
 	 * 
-	 * @param keystore {@link KeyStore} file to read.
-	 * @param entryName Entry name of the key to be retrieved
-	 * @param keyStorePassword Password used to open the {@link KeyStore}
+	 * @param keystore
+	 *            {@link KeyStore} file to read.
+	 * @param entryName
+	 *            Entry name of the key to be retrieved
+	 * @param keyStorePassword
+	 *            Password used to open the {@link KeyStore}
 	 * @return
 	 * @throws KeyStoreException
 	 * @throws NoSuchAlgorithmException
@@ -124,7 +129,7 @@ public class KeystoreUtils {
 	 * @throws IOException
 	 * @throws UnrecoverableEntryException
 	 */
-	public static SecretKey getAESSecretKey(File keystore, String entryName,
+	public static SecretKey getSecretKey(File keystore, String entryName,
 			String keyStorePassword) throws KeyStoreException,
 			NoSuchAlgorithmException, CertificateException,
 			FileNotFoundException, IOException, UnrecoverableEntryException {
@@ -142,52 +147,55 @@ public class KeystoreUtils {
 		}
 
 		fis = new FileInputStream(keystore);
-		
-		return getAESSecretKey(fis, entryName, keyStorePassword);
-		
+
+		return getSecretKey(fis, entryName, keyStorePassword);
+
 	}
 
 	/**
-   * Method which will load a secret key from an input stream with the specified entry
-   * name.
-   * 
-   * @param keystore {@link KeyStore} file to read.
-   * @param entryName Entry name of the key to be retrieved
-   * @param keyStorePassword Password used to open the {@link KeyStore}
-   * @return
-   * @throws KeyStoreException
-   * @throws NoSuchAlgorithmException
-   * @throws CertificateException
-   * @throws IOException
-   * @throws UnrecoverableEntryException
-   */
-  public static SecretKey getAESSecretKey(InputStream keyInputStream, String entryName,
-      String keyStorePassword) throws KeyStoreException,
-      NoSuchAlgorithmException, CertificateException,
-      IOException, UnrecoverableEntryException {
-    KeyStore keyStore = KeyStore.getInstance("JCEKS");
-    
-    if(keyInputStream == null){
-      throw new KeyStoreException("No Keystore stream provided.");
-    }
-    if (StringUtils.isEmpty(keyStorePassword)) {
-      throw new KeyStoreException("No Keystore password provided.");
-    }
-    if (StringUtils.isEmpty(entryName)) {
-      throw new KeyStoreException("No Keystore entry name provided.");
-    }
+	 * Method which will load a secret key from an input stream with the
+	 * specified entry name.
+	 * 
+	 * @param keystore
+	 *            {@link KeyStore} file to read.
+	 * @param entryName
+	 *            Entry name of the key to be retrieved
+	 * @param keyStorePassword
+	 *            Password used to open the {@link KeyStore}
+	 * @return
+	 * @throws KeyStoreException
+	 * @throws NoSuchAlgorithmException
+	 * @throws CertificateException
+	 * @throws IOException
+	 * @throws UnrecoverableEntryException
+	 */
+	public static SecretKey getSecretKey(InputStream keyInputStream,
+			String entryName, String keyStorePassword)
+			throws KeyStoreException, NoSuchAlgorithmException,
+			CertificateException, IOException, UnrecoverableEntryException {
+		KeyStore keyStore = KeyStore.getInstance("JCEKS");
 
-    keyStore.load(keyInputStream, keyStorePassword.toCharArray());
-    KeyStore.ProtectionParameter protectionParameter = new KeyStore.PasswordProtection(
-        keyStorePassword.toCharArray());
-    KeyStore.SecretKeyEntry pkEntry = (KeyStore.SecretKeyEntry) keyStore
-        .getEntry(entryName, protectionParameter);
-    try {
-      return pkEntry.getSecretKey();
-    } finally {
-      keyInputStream.close();
-    }
+		if (keyInputStream == null) {
+			throw new KeyStoreException("No Keystore stream provided.");
+		}
+		if (StringUtils.isEmpty(keyStorePassword)) {
+			throw new KeyStoreException("No Keystore password provided.");
+		}
+		if (StringUtils.isEmpty(entryName)) {
+			throw new KeyStoreException("No Keystore entry name provided.");
+		}
 
-  }
-	
+		keyStore.load(keyInputStream, keyStorePassword.toCharArray());
+		KeyStore.ProtectionParameter protectionParameter = new KeyStore.PasswordProtection(
+				keyStorePassword.toCharArray());
+		KeyStore.SecretKeyEntry pkEntry = (KeyStore.SecretKeyEntry) keyStore
+				.getEntry(entryName, protectionParameter);
+		try {
+			return pkEntry.getSecretKey();
+		} finally {
+			keyInputStream.close();
+		}
+
+	}
+
 }
