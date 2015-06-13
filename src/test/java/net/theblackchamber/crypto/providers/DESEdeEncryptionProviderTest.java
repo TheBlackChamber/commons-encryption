@@ -137,7 +137,7 @@ public class DESEdeEncryptionProviderTest {
 			
 			
 			try {
-				aesEncryptionProvider.encrypt(null);
+				aesEncryptionProvider.encrypt("");
 				fail();
 			} catch (MissingParameterException mpe) {
 
@@ -165,7 +165,7 @@ public class DESEdeEncryptionProviderTest {
 			assertTrue(StringUtils.equals(clear, decrypted));
 
 			try {
-				aesEncryptionProvider.decrypt(null);
+				aesEncryptionProvider.decrypt("");
 				fail();
 			} catch (MissingParameterException mpe) {
 

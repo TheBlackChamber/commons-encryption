@@ -1,6 +1,6 @@
 /**
  * The MIT License (MIT)
- *
+ * 
  * Copyright (c) 2014 Seamus Minogue
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -10,7 +10,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  * 
- * The above copyright notice and this permission notice shall be included in all
+ * The above copyright notice and this permission notice shall be included in
+ * all
  * copies or substantial portions of the Software.
  * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -27,6 +28,10 @@ import java.security.Key;
 
 import javax.crypto.SecretKey;
 
+import org.apache.commons.lang3.StringUtils;
+import org.jasypt.encryption.pbe.PooledPBEByteEncryptor;
+import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
+
 import net.theblackchamber.crypto.exceptions.MissingParameterException;
 import net.theblackchamber.crypto.exceptions.UnsupportedAlgorithmException;
 import net.theblackchamber.crypto.exceptions.UnsupportedKeySizeException;
@@ -40,6 +45,12 @@ import net.theblackchamber.crypto.exceptions.UnsupportedKeySizeException;
  * 
  */
 public abstract class EncryptionProvider {
+
+	protected int ENCRYPTOR_POOL_SIZE = 4;
+
+	protected PooledPBEStringEncryptor stringEncryptor;
+
+	protected PooledPBEByteEncryptor byteEncryptor;
 
 	/**
 	 * Encryption {@link Key} to be used for encryption and decryption options.
@@ -74,19 +85,68 @@ public abstract class EncryptionProvider {
 	 * @param cipherText
 	 *            Encrypted text to be decrypted.
 	 * @return
-	 * @throws MissingParameterException 
+	 * @throws MissingParameterException
 	 */
-	public abstract String decrypt(String cipherText) throws MissingParameterException;
+	public String decrypt(String cipherText) throws MissingParameterException {
 
+		if (StringUtils.isBlank(cipherText)) {
+			throw new MissingParameterException("Missing parameter: cipherText");
+		}
+
+		return stringEncryptor.decrypt(cipherText);
+	}
+	
 	/**
 	 * Method which will encrypt a string.
 	 * 
 	 * @param clearText
 	 *            Clear text to be encrypted.
 	 * @return Encrypted text.
-	 * @throws MissingParameterException 
+	 * @throws MissingParameterException
 	 */
-	public abstract String encrypt(String clearText) throws MissingParameterException;
+	public String encrypt(String clearText) throws MissingParameterException {
+
+		if (StringUtils.isBlank(clearText)) {
+			throw new MissingParameterException("Missing parameter: clearText");
+		}
+
+		return stringEncryptor.encrypt(clearText);
+	}
+	
+	/**
+	 * Method which will encrypt an array of bytes.
+	 * 
+	 * @param clearBytes
+	 *            Array of clear text bytes
+	 * @return Encrypted byte array
+	 * @throws MissingParameterException
+	 */
+	public byte[] encrypt(byte[] clearBytes) throws MissingParameterException {
+
+		if (clearBytes == null || clearBytes.length == 0) {
+			throw new MissingParameterException("Missing parameter: clearBytes");
+		}
+
+		return byteEncryptor.encrypt(clearBytes);
+
+	}
+
+	/**
+	 * Method which will decrypt an array of bytes.
+	 * 
+	 * @param clearBytes
+	 *            Array of cipher text bytes
+	 * @return Decrypted byte array
+	 * @throws MissingParameterException
+	 */
+	public byte[] decrypt(byte[] cipherBytes) throws MissingParameterException {
+		if (cipherBytes == null || cipherBytes.length == 0) {
+			throw new MissingParameterException("Missing parameter: cipherBytes");
+		}
+
+		return byteEncryptor.decrypt(cipherBytes);
+
+	}
 
 	/**
 	 * Method which will validate that the key passed to the provider is
@@ -94,8 +154,8 @@ public abstract class EncryptionProvider {
 	 * the correct algorithm, etc.
 	 * 
 	 * @param key
-	 * @throws UnsupportedKeySizeException 
-	 * @throws UnsupportedAlgorithmException 
+	 * @throws UnsupportedKeySizeException
+	 * @throws UnsupportedAlgorithmException
 	 */
 	protected abstract void validateKey(Key key) throws UnsupportedKeySizeException, UnsupportedAlgorithmException;
 
@@ -107,7 +167,7 @@ public abstract class EncryptionProvider {
 	 *            Instance of {@link SecretKey} to be used for encryption and
 	 *            decryption.
 	 * @throws UnsupportedKeySizeException
-	 * @throws UnsupportedAlgorithmException 
+	 * @throws UnsupportedAlgorithmException
 	 */
 	public EncryptionProvider(Key key) throws UnsupportedKeySizeException, UnsupportedAlgorithmException {
 		validateKey(key);

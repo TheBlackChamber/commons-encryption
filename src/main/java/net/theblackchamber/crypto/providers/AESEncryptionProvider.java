@@ -1,6 +1,6 @@
 /**
  * The MIT License (MIT)
- *
+ * 
  * Copyright (c) 2014 Seamus Minogue
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -10,7 +10,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  * 
- * The above copyright notice and this permission notice shall be included in all
+ * The above copyright notice and this permission notice shall be included in
+ * all
  * copies or substantial portions of the Software.
  * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -35,6 +36,7 @@ import net.theblackchamber.crypto.exceptions.UnsupportedKeySizeException;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
+import org.jasypt.encryption.pbe.PooledPBEByteEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimplePBEConfig;
 import org.jasypt.salt.RandomSaltGenerator;
@@ -52,8 +54,6 @@ import org.jasypt.salt.RandomSaltGenerator;
  * 
  */
 public class AESEncryptionProvider extends EncryptionProvider {
-
-	private PooledPBEStringEncryptor encryptor;
 
 	/**
 	 * Constructor to create new AES encryption provider.
@@ -92,34 +92,15 @@ public class AESEncryptionProvider extends EncryptionProvider {
 		config.setProvider(new BouncyCastleProvider());
 		config.setSaltGenerator(new RandomSaltGenerator());
 
-		encryptor = new PooledPBEStringEncryptor();
-		encryptor.setPoolSize(4);
-		encryptor.setConfig(config);
-		encryptor.setStringOutputType("hexadecimal");
-	}
+		stringEncryptor = new PooledPBEStringEncryptor();
+		stringEncryptor.setPoolSize(ENCRYPTOR_POOL_SIZE);
+		stringEncryptor.setConfig(config);
+		stringEncryptor.setStringOutputType("hexadecimal");
 
-	/**
-	 * @see net.theblackchamber.crypto.providers.EncryptionProvider#decrypt(java.lang.String)
-	 */
-	public String decrypt(String cipherText) throws MissingParameterException {
+		byteEncryptor = new PooledPBEByteEncryptor();
+		byteEncryptor.setPoolSize(ENCRYPTOR_POOL_SIZE);
+		byteEncryptor.setConfig(config);
 
-		if (StringUtils.isBlank(cipherText)) {
-			throw new MissingParameterException("Missing parameter: cipherText");
-		}
-
-		return encryptor.decrypt(cipherText);
-	}
-
-	/**
-	 * @see net.theblackchamber.crypto.providers.EncryptionProvider#encrypt(java.lang.String)
-	 */
-	public String encrypt(String clearText) throws MissingParameterException {
-
-		if (StringUtils.isBlank(clearText)) {
-			throw new MissingParameterException("Missing parameter: clearText");
-		}
-
-		return encryptor.encrypt(clearText);
 	}
 
 	/**
@@ -145,4 +126,5 @@ public class AESEncryptionProvider extends EncryptionProvider {
 		}
 
 	}
+
 }

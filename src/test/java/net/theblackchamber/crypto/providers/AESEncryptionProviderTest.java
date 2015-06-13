@@ -180,7 +180,7 @@ public class AESEncryptionProviderTest {
 			
 			
 			try {
-				aesEncryptionProvider.encrypt(null);
+				aesEncryptionProvider.encrypt("");
 				fail();
 			} catch (MissingParameterException mpe) {
 
@@ -208,7 +208,7 @@ public class AESEncryptionProviderTest {
 			assertTrue(StringUtils.equals(clear, decrypted));
 
 			try {
-				aesEncryptionProvider.decrypt(null);
+				aesEncryptionProvider.decrypt("");
 				fail();
 			} catch (MissingParameterException mpe) {
 

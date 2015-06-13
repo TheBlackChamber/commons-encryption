@@ -24,32 +24,29 @@
  */
 package net.theblackchamber.crypto.providers;
 
-
 import java.security.Key;
 
 import net.theblackchamber.crypto.constants.SupportedEncryptionAlgorithms;
-import net.theblackchamber.crypto.exceptions.MissingParameterException;
 import net.theblackchamber.crypto.exceptions.UnsupportedAlgorithmException;
 import net.theblackchamber.crypto.exceptions.UnsupportedKeySizeException;
 
-import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
+import org.jasypt.encryption.pbe.PooledPBEByteEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimplePBEConfig;
 import org.jasypt.salt.RandomSaltGenerator;
 
 /**
  * 
- * Implementation of {@link EncryptionProvider} which will implement the Triple DES (DESede) algorithm.
+ * Implementation of {@link EncryptionProvider} which will implement the Triple
+ * DES (DESede) algorithm.
  * 
  * @author sminogue
- *
+ * 
  */
 public class DESEdeEncryptionProvider extends EncryptionProvider {
 
-	private PooledPBEStringEncryptor encryptor;
-	
 	public DESEdeEncryptionProvider(Key key) throws UnsupportedKeySizeException, UnsupportedAlgorithmException {
 		super(key);
 
@@ -59,7 +56,7 @@ public class DESEdeEncryptionProvider extends EncryptionProvider {
 		SimplePBEConfig config = new SimplePBEConfig();
 
 		switch (keySize) {
-		
+
 		default:
 			config.setAlgorithm(SupportedEncryptionAlgorithms.DESede.getAlgorithm());
 			break;
@@ -70,34 +67,15 @@ public class DESEdeEncryptionProvider extends EncryptionProvider {
 		config.setProvider(new BouncyCastleProvider());
 		config.setSaltGenerator(new RandomSaltGenerator());
 
-		encryptor = new PooledPBEStringEncryptor();
-		encryptor.setPoolSize(4);
-		encryptor.setConfig(config);
-		encryptor.setStringOutputType("hexadecimal");
-	}
+		stringEncryptor = new PooledPBEStringEncryptor();
+		stringEncryptor.setPoolSize(ENCRYPTOR_POOL_SIZE);
+		stringEncryptor.setConfig(config);
+		stringEncryptor.setStringOutputType("hexadecimal");
 
-	/**
-	 * @see net.theblackchamber.crypto.providers.EncryptionProvider#decrypt(java.lang.String)
-	 */
-	public String decrypt(String cipherText) throws MissingParameterException {
+		byteEncryptor = new PooledPBEByteEncryptor();
+		byteEncryptor.setPoolSize(ENCRYPTOR_POOL_SIZE);
+		byteEncryptor.setConfig(config);
 
-		if (StringUtils.isBlank(cipherText)) {
-			throw new MissingParameterException("Missing parameter: cipherText");
-		}
-
-		return encryptor.decrypt(cipherText);
-	}
-
-	/**
-	 * @see net.theblackchamber.crypto.providers.EncryptionProvider#encrypt(java.lang.String)
-	 */
-	public String encrypt(String clearText) throws MissingParameterException {
-
-		if (StringUtils.isBlank(clearText)) {
-			throw new MissingParameterException("Missing parameter: clearText");
-		}
-
-		return encryptor.encrypt(clearText);
 	}
 
 	/**
