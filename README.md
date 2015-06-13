@@ -5,7 +5,7 @@ commons-encryption
 Prior to making use of the commons-encryption library it may be necessary to install the [Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files](http://www.oracle.com/technetwork/java/javase/downloads/jce-7-download-432124.html).
 
 ### Usage
-In order to make use of the commons-encryption library you first need to download the jars from here on github, or alternatively if you use maven you will soon be able to download the dependency from maven central repository.
+In order to make use of the commons-encryption library you first need to download the jars from here on github, or alternatively if you use maven you are able to download the dependency from maven central repository.
 
 ###### Maven Dependency
 ```XML
@@ -45,6 +45,14 @@ Properties sProperties = new SecureProperties();
 sProperties.load(reader);
 String clearKey2 = sProperties.getProperty("key2-encrypted");
 sProperties.setProperty("key3-unencrypted","cleartext value");
+```
+
+The following snippet of code is an example of configuring the SecureProperties by parameter rather than having configuration in the same file as the secured values (<b>This is the recommended use</b>)
+```java
+FileReader reader = new FileReader(propertiesFile);
+SecureProperties sProperties = new SecureProperties(propertiesFile,keyfile.getPath(),"aes-key","TEST");
+sProperties.load(reader);
+String decryptedProperty = sProperties.getProperty("test-encrypted");
 ```
 
 ###### AESEncryptionProvider
