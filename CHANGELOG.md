@@ -1,4 +1,4 @@
-## 2.0.0 (TBD)
+## 1.2.0 (TBD)
 Release of version 2.0.0 
 
 Enhancements:
