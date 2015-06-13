@@ -1,6 +1,6 @@
 /**
  * The MIT License (MIT)
- *
+ * 
  * Copyright (c) 2014 Seamus Minogue
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -10,7 +10,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  * 
- * The above copyright notice and this permission notice shall be included in all
+ * The above copyright notice and this permission notice shall be included in
+ * all
  * copies or substantial portions of the Software.
  * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -23,9 +24,8 @@
  */
 package net.theblackchamber.crypto.providers;
 
-import java.security.Key;
 
-import javax.crypto.SecretKey;
+import java.security.Key;
 
 import net.theblackchamber.crypto.constants.SupportedEncryptionAlgorithms;
 import net.theblackchamber.crypto.exceptions.MissingParameterException;
@@ -40,32 +40,17 @@ import org.jasypt.encryption.pbe.config.SimplePBEConfig;
 import org.jasypt.salt.RandomSaltGenerator;
 
 /**
- * Provider which will allow for encryption and decryption of strings using the
- * AES algorithm. <br>
- * Usage: <code>
- * SecretKey key = KeystoreUtils.getAESSecretKey(keyfile, "aes-key", "TEST");
- * AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
- * String cipherText = encryptionProvider.encode("clear text");
- * </code>
+ * 
+ * Implementation of {@link EncryptionProvider} which will implement the Triple DES (DESede) algorithm.
  * 
  * @author sminogue
- * 
+ *
  */
-public class AESEncryptionProvider extends EncryptionProvider {
+public class DESEdeEncryptionProvider extends EncryptionProvider {
 
 	private PooledPBEStringEncryptor encryptor;
-
-	/**
-	 * Constructor to create new AES encryption provider.
-	 * 
-	 * @param key
-	 *            Instance of {@link SecretKey} to be used for encryption and
-	 *            decryption.
-	 * @throws UnsupportedKeySizeException
-	 * @throws UnsupportedAlgorithmException
-	 */
-	public AESEncryptionProvider(final Key key)
-			throws UnsupportedKeySizeException, UnsupportedAlgorithmException {
+	
+	public DESEdeEncryptionProvider(Key key) throws UnsupportedKeySizeException, UnsupportedAlgorithmException {
 		super(key);
 
 		int keySize = (key.getEncoded().length) * 8;
@@ -74,16 +59,9 @@ public class AESEncryptionProvider extends EncryptionProvider {
 		SimplePBEConfig config = new SimplePBEConfig();
 
 		switch (keySize) {
-		case 128:
-			config.setAlgorithm(SupportedEncryptionAlgorithms.AES128.getAlgorithm());
-			break;
-
-		case 192:
-			config.setAlgorithm(SupportedEncryptionAlgorithms.AES192.getAlgorithm());
-			break;
-
+		
 		default:
-			config.setAlgorithm(SupportedEncryptionAlgorithms.AES256.getAlgorithm());
+			config.setAlgorithm(SupportedEncryptionAlgorithms.DESede.getAlgorithm());
 			break;
 		}
 
@@ -126,23 +104,21 @@ public class AESEncryptionProvider extends EncryptionProvider {
 	 * @see net.theblackchamber.crypto.providers.EncryptionProvider#validateKey(java.security.Key)
 	 */
 	@Override
-	protected void validateKey(Key key)
-			throws UnsupportedKeySizeException, UnsupportedAlgorithmException {
+	protected void validateKey(Key key) throws UnsupportedKeySizeException, UnsupportedAlgorithmException {
 		byte[] keyBytes = key.getEncoded();
-		// Validate Key Size for AES
-		if (keyBytes.length != 16 && keyBytes.length != 24
-				&& keyBytes.length != 32) {
+		// Validate Key Size for DES
+		if (keyBytes.length != 16 && keyBytes.length != 24) {
 			throw new UnsupportedKeySizeException(
 					"Found unsupported key size ["
 							+ (keyBytes.length * 8)
-							+ "]. The AES algorithm only supports key sizes of 128, 192, or 256");
+							+ "]. The DES algorithm only supports key sizes of 128, or 192");
 		}
 
-		if (!"AES".equals(key.getAlgorithm())) {
+		if (!"DESede".equals(key.getAlgorithm())) {
 			throw new UnsupportedAlgorithmException(
-					"Key does not support AES algorithm: ["
+					"Key does not support DES algorithm: ["
 							+ key.getAlgorithm() + "]");
 		}
-
 	}
+
 }

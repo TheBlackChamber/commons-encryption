@@ -45,12 +45,10 @@ import net.theblackchamber.crypto.exceptions.UnsupportedKeySizeException;
 import net.theblackchamber.crypto.model.KeyConfig;
 import net.theblackchamber.crypto.util.KeystoreUtils;
 
-public class AESEncryptionProviderTest {
+public class DESEdeEncryptionProviderTest {
 
-	SecretKey key256;
 	SecretKey key192;
 	SecretKey key128;
-	SecretKey badKeySize;
 	SecretKey badKeyAlg;
 
 	@Rule
@@ -60,39 +58,27 @@ public class AESEncryptionProviderTest {
 	public void init() {
 		try {
 			File keyFile = tempFolder.newFile("keystore.keys");
-
-			KeyConfig config = new KeyConfig(keyFile, "TEST", 256,
-					SupportedKeyGenAlgorithms.AES, "aes-key-256");
-			KeystoreUtils.generateSecretKey(config);
 			
-			config = new KeyConfig(keyFile, "TEST", 192,
-					SupportedKeyGenAlgorithms.AES, "aes-key-192");
+			KeyConfig config = new KeyConfig(keyFile, "TEST", 192,
+					SupportedKeyGenAlgorithms.DESede, "des-key-192");
 			KeystoreUtils.generateSecretKey(config);
 			
 			config = new KeyConfig(keyFile, "TEST", 128,
-					SupportedKeyGenAlgorithms.AES, "aes-key-128");
+					SupportedKeyGenAlgorithms.DESede, "des-key-128");
 			KeystoreUtils.generateSecretKey(config);
 			
-			config = new KeyConfig(keyFile, "TEST", 101,
-					SupportedKeyGenAlgorithms.AES, "aes-key-badlen");
-			KeystoreUtils.generateSecretKey(config);
 			config = new KeyConfig(keyFile, "TEST", 192,
-					SupportedKeyGenAlgorithms.DESede, "aes-key-badalg");
+					SupportedKeyGenAlgorithms.AES, "des-key-badalg");
 			KeystoreUtils.generateSecretKey(config);
 
-			key256 = KeystoreUtils.getSecretKey(keyFile, "aes-key-256", "TEST");
-			key192 = KeystoreUtils.getSecretKey(keyFile, "aes-key-192", "TEST");
-			key128 = KeystoreUtils.getSecretKey(keyFile, "aes-key-128", "TEST");
+			key192 = KeystoreUtils.getSecretKey(keyFile, "des-key-192", "TEST");
+			key128 = KeystoreUtils.getSecretKey(keyFile, "des-key-128", "TEST");
 
-			assertNotNull(key256);
 			assertNotNull(key192);
 			assertNotNull(key128);
 			
-			
-			badKeySize = KeystoreUtils.getSecretKey(keyFile, "aes-key-badlen",
-					"TEST");
 
-			badKeyAlg = KeystoreUtils.getSecretKey(keyFile, "aes-key-badalg",
+			badKeyAlg = KeystoreUtils.getSecretKey(keyFile, "des-key-badalg",
 					"TEST");
 
 		} catch (Exception e) {
@@ -101,30 +87,13 @@ public class AESEncryptionProviderTest {
 		}
 	}
 
-	@Test
-	public void testBadKeyLength() {
-
-		try {
-
-			AESEncryptionProvider aesEncryptionProviderBad = new AESEncryptionProvider(
-					badKeySize);
-
-			fail();
-
-		} catch (Throwable t) {
-			if (!(t instanceof UnsupportedKeySizeException)) {
-				fail();
-			}
-		}
-
-	}
-
+	
 	@Test
 	public void testBadKeyAlgorithm() {
 
 		try {
 
-			AESEncryptionProvider aesEncryptionProviderBad = new AESEncryptionProvider(
+			DESEdeEncryptionProvider aesEncryptionProviderBad = new DESEdeEncryptionProvider(
 					badKeyAlg);
 
 			fail();
@@ -142,7 +111,7 @@ public class AESEncryptionProviderTest {
 
 		try {
 
-			AESEncryptionProvider aesEncryptionProvider = new AESEncryptionProvider(key256);
+			DESEdeEncryptionProvider aesEncryptionProvider = new DESEdeEncryptionProvider(key192);
 
 			assertNotNull(aesEncryptionProvider.getKey());
 			
@@ -153,20 +122,8 @@ public class AESEncryptionProviderTest {
 				assertTrue(!crypts.contains(cipher));
 				crypts.add(cipher);
 			}
-
-			aesEncryptionProvider = new AESEncryptionProvider(key192);
-
-			assertNotNull(aesEncryptionProvider.getKey());
 			
-			 clear = RandomStringUtils.randomAlphabetic(20);
-			crypts = new HashSet<String>();
-			for (int i = 10; i < 10; i++) {
-				String cipher = aesEncryptionProvider.encrypt(clear);
-				assertTrue(!crypts.contains(cipher));
-				crypts.add(cipher);
-			}
-			
-			aesEncryptionProvider = new AESEncryptionProvider(key128);
+			aesEncryptionProvider = new DESEdeEncryptionProvider(key128);
 
 			assertNotNull(aesEncryptionProvider.getKey());
 			
@@ -195,7 +152,7 @@ public class AESEncryptionProviderTest {
 	@Test
 	public void testDecrypt() {
 		try {
-			AESEncryptionProvider aesEncryptionProvider = new AESEncryptionProvider(key256);
+			DESEdeEncryptionProvider aesEncryptionProvider = new DESEdeEncryptionProvider(key192);
 
 			assertNotNull(aesEncryptionProvider.getKey());
 			

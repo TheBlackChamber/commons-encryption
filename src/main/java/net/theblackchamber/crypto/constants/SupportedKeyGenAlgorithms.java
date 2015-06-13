@@ -23,9 +23,11 @@
  */
 package net.theblackchamber.crypto.constants;
 
+import net.theblackchamber.crypto.exceptions.UnsupportedAlgorithmException;
+
 public enum SupportedKeyGenAlgorithms {
 
-	AES("AES"),TRIPLE_DES("DESede");
+	AES("AES"),DESede("DESede");
 	
 	private String name;
 	
@@ -35,6 +37,26 @@ public enum SupportedKeyGenAlgorithms {
 	
 	public String getName(){
 		return name;
+	}
+	
+	/**
+	 * Get enum based on name.
+	 * @param algorithm
+	 * @return
+	 * @throws UnsupportedAlgorithmException
+	 */
+	public static SupportedKeyGenAlgorithms getAlgorithm(String algorithm) throws UnsupportedAlgorithmException{
+		
+		for(SupportedKeyGenAlgorithms supportedAlgorithm : SupportedKeyGenAlgorithms.values()){
+			
+			if(algorithm.equals(supportedAlgorithm.getName())){
+				return supportedAlgorithm;
+			}
+			
+		}
+		
+		throw new UnsupportedAlgorithmException("Algorithm ["+algorithm+"] is unsupported.");
+		
 	}
 	
 }

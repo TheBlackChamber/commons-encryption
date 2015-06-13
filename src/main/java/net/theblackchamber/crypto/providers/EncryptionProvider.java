@@ -39,12 +39,12 @@ import net.theblackchamber.crypto.exceptions.UnsupportedKeySizeException;
  * @author sminogue
  * 
  */
-public abstract class EncryptionProvider<T extends Key> {
+public abstract class EncryptionProvider {
 
 	/**
 	 * Encryption {@link Key} to be used for encryption and decryption options.
 	 */
-	private T key;
+	private Key key;
 
 	/**
 	 * Method which will return the {@link Key} being used by the instance of
@@ -52,7 +52,7 @@ public abstract class EncryptionProvider<T extends Key> {
 	 * 
 	 * @return
 	 */
-	protected T getKey() {
+	protected Key getKey() {
 		return key;
 	}
 
@@ -64,7 +64,7 @@ public abstract class EncryptionProvider<T extends Key> {
 	 *            Instance of {@link Key} to be used for encryption and
 	 *            decryption.
 	 */
-	protected void setKey(final T key) {
+	protected void setKey(final Key key) {
 		this.key = key;
 	}
 
@@ -97,7 +97,7 @@ public abstract class EncryptionProvider<T extends Key> {
 	 * @throws UnsupportedKeySizeException 
 	 * @throws UnsupportedAlgorithmException 
 	 */
-	protected abstract void validateKey(T key) throws UnsupportedKeySizeException, UnsupportedAlgorithmException;
+	protected abstract void validateKey(Key key) throws UnsupportedKeySizeException, UnsupportedAlgorithmException;
 
 	/**
 	 * Constructor used by all implementations of {@link EncryptionProvider}
@@ -109,7 +109,7 @@ public abstract class EncryptionProvider<T extends Key> {
 	 * @throws UnsupportedKeySizeException
 	 * @throws UnsupportedAlgorithmException 
 	 */
-	public EncryptionProvider(T key) throws UnsupportedKeySizeException, UnsupportedAlgorithmException {
+	public EncryptionProvider(Key key) throws UnsupportedKeySizeException, UnsupportedAlgorithmException {
 		validateKey(key);
 		setKey(key);
 	}

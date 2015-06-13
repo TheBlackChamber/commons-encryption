@@ -40,7 +40,8 @@ import javax.crypto.SecretKey;
 import net.theblackchamber.crypto.constants.Constants;
 import net.theblackchamber.crypto.constants.SupportedKeyGenAlgorithms;
 import net.theblackchamber.crypto.model.KeyConfig;
-import net.theblackchamber.crypto.providers.AESEncryptionProvider;
+import net.theblackchamber.crypto.providers.DESEdeEncryptionProvider;
+import net.theblackchamber.crypto.providers.EncryptionProvider;
 import net.theblackchamber.crypto.util.KeystoreUtils;
 
 import org.apache.commons.io.FileUtils;
@@ -49,7 +50,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-public class SecurePropertiesTest {
+public class SecurePropertiesDESTest {
 
 	@Rule
 	public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -75,13 +76,13 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 		
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties props = new SecureProperties();
-			props.setProperty("entry-name", "aes-key");
+			props.setProperty("entry-name", "des-key");
 			props.setProperty("keystore-password", "TEST");
 			props.setProperty("key-path", keyfile.getPath());
 			
@@ -103,14 +104,14 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 		
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties clearProperties = new Properties();
 			
-			Properties props = new SecureProperties(clearProperties,keyfile.getPath(),"aes-key","TEST");
+			Properties props = new SecureProperties(clearProperties,keyfile.getPath(),"des-key","TEST");
 			
 			assertNotNull(((SecureProperties)props).getKey());
 			assertNotNull(((SecureProperties)props).getEncryptionProvider());
@@ -128,7 +129,7 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 		
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
@@ -136,7 +137,7 @@ public class SecurePropertiesTest {
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty(Constants.KEYSTORE_PASSWORD_PROPERTY_KEY, "TEST");
 			
-			Properties props = new SecureProperties(clearProperties,keyfile.getPath(),"aes-key",null);
+			Properties props = new SecureProperties(clearProperties,keyfile.getPath(),"des-key",null);
 			
 			assertNotNull(((SecureProperties)props).getKey());
 			assertNotNull(((SecureProperties)props).getEncryptionProvider());
@@ -154,13 +155,13 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 		
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties clearProperties = new Properties();
-			clearProperties.setProperty(Constants.ENTRY_NAME_PROPERTY_KEY, "aes-key");
+			clearProperties.setProperty(Constants.ENTRY_NAME_PROPERTY_KEY, "des-key");
 			
 			Properties props = new SecureProperties(clearProperties,keyfile.getPath(),null,"TEST");
 			
@@ -181,14 +182,14 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 		
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("key-path", keyfile.getPath());
-			clearProperties.setProperty("entry-name", "aes-key");
+			clearProperties.setProperty("entry-name", "des-key");
 			clearProperties.setProperty("keystore-password", "TEST");
 			
 			
@@ -212,14 +213,14 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("key-path", keyfile.getPath());
-			clearProperties.setProperty("entry-name", "aes-key");
+			clearProperties.setProperty("entry-name", "des-key");
 			clearProperties.setProperty("keystore-password", "TEST");
 			
 			File propertiesFile = temporaryFolder.newFile("test.properties");
@@ -247,15 +248,15 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
 			KeystoreUtils.generateSecretKey(config);
-			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
+			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "des-key", "TEST");
 			
-			AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
+			EncryptionProvider encryptionProvider = new DESEdeEncryptionProvider(key);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("key-path", keyfile.getPath());
-			clearProperties.setProperty("entry-name", "aes-key");
+			clearProperties.setProperty("entry-name", "des-key");
 			clearProperties.setProperty("keystore-password", "TEST");
 			clearProperties.setProperty("test-encrypted", encryptionProvider.encrypt("TESTY"));
 			
@@ -286,15 +287,15 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
 			KeystoreUtils.generateSecretKey(config);
-			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
+			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "des-key", "TEST");
 			
-			AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
+			EncryptionProvider encryptionProvider = new DESEdeEncryptionProvider(key);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("key-path", keyfile.getPath());
-			clearProperties.setProperty("entry-name", "aes-key");
+			clearProperties.setProperty("entry-name", "des-key");
 			clearProperties.setProperty("keystore-password", "TEST");
 			clearProperties.setProperty("test-encrypted", encryptionProvider.encrypt("TESTY"));
 			
@@ -323,15 +324,15 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
 			KeystoreUtils.generateSecretKey(config);
-			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
+			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "des-key", "TEST");
 			
-			AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
+			EncryptionProvider encryptionProvider = new DESEdeEncryptionProvider(key);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("key-path", keyfile.getPath());
-			clearProperties.setProperty("entry-name", "aes-key");
+			clearProperties.setProperty("entry-name", "des-key");
 			clearProperties.setProperty("keystore-password", "TEST");
 			clearProperties.setProperty("test-encrypted", encryptionProvider.encrypt("TESTY"));
 			
@@ -360,15 +361,15 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
 			KeystoreUtils.generateSecretKey(config);
-			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
+			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "des-key", "TEST");
 			
-			AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
+			EncryptionProvider encryptionProvider = new DESEdeEncryptionProvider(key);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("key-path", keyfile.getPath());
-			clearProperties.setProperty("entry-name", "aes-key");
+			clearProperties.setProperty("entry-name", "des-key");
 			clearProperties.setProperty("keystore-password", "TEST");
 			clearProperties.setProperty("test-encrypted", encryptionProvider.encrypt("TESTY"));
 			
@@ -397,11 +398,11 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
 			KeystoreUtils.generateSecretKey(config);
-			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
+			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "des-key", "TEST");
 			
-			AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
+			EncryptionProvider encryptionProvider = new DESEdeEncryptionProvider(key);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("test-encrypted", encryptionProvider.encrypt("TESTY"));
@@ -414,7 +415,7 @@ public class SecurePropertiesTest {
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			FileReader reader = new FileReader(propertiesFile);
-			SecureProperties sProperties = new SecureProperties(new FileInputStream(propertiesFile),new FileInputStream(keyfile),"aes-key","TEST");
+			SecureProperties sProperties = new SecureProperties(new FileInputStream(propertiesFile),new FileInputStream(keyfile),"des-key","TEST");
 			sProperties.load(reader);
 			assertNotNull(sProperties);
 			String decryptedProperty = sProperties.getProperty("test-encrypted");
@@ -433,11 +434,11 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
 			KeystoreUtils.generateSecretKey(config);
-			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
+			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "des-key", "TEST");
 			
-			AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
+			EncryptionProvider encryptionProvider = new DESEdeEncryptionProvider(key);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("test-encrypted", encryptionProvider.encrypt("TESTY"));
@@ -450,7 +451,7 @@ public class SecurePropertiesTest {
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			FileReader reader = new FileReader(propertiesFile);
-			SecureProperties sProperties = new SecureProperties(propertiesFile,keyfile.getPath(),"aes-key","TEST");
+			SecureProperties sProperties = new SecureProperties(propertiesFile,keyfile.getPath(),"des-key","TEST");
 			sProperties.load(reader);
 			assertNotNull(sProperties);
 			String decryptedProperty = sProperties.getProperty("test-encrypted");
@@ -469,11 +470,11 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
 			KeystoreUtils.generateSecretKey(config);
-			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
+			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "des-key", "TEST");
 			
-			AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
+			EncryptionProvider encryptionProvider = new DESEdeEncryptionProvider(key);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("test-encrypted", encryptionProvider.encrypt("TESTY"));
@@ -486,7 +487,7 @@ public class SecurePropertiesTest {
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			FileReader reader = new FileReader(propertiesFile);
-			SecureProperties sProperties = new SecureProperties(new FileInputStream(propertiesFile),keyfile.getPath(),"aes-key","TEST");
+			SecureProperties sProperties = new SecureProperties(new FileInputStream(propertiesFile),keyfile.getPath(),"des-key","TEST");
 			sProperties.load(reader);
 			assertNotNull(sProperties);
 			String decryptedProperty = sProperties.getProperty("test-encrypted");
@@ -505,11 +506,11 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
 			KeystoreUtils.generateSecretKey(config);
-			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
+			SecretKey key = KeystoreUtils.getSecretKey(keyfile, "des-key", "TEST");
 			
-			AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
+			EncryptionProvider encryptionProvider = new DESEdeEncryptionProvider(key);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("test-encrypted", encryptionProvider.encrypt("TESTY"));
@@ -522,7 +523,7 @@ public class SecurePropertiesTest {
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			FileReader reader = new FileReader(propertiesFile);
-			SecureProperties sProperties = new SecureProperties(propertiesFile.getPath(),keyfile.getPath(),"aes-key","TEST");
+			SecureProperties sProperties = new SecureProperties(propertiesFile.getPath(),keyfile.getPath(),"des-key","TEST");
 			sProperties.load(reader);
 			assertNotNull(sProperties);
 			String decryptedProperty = sProperties.getProperty("test-encrypted");
@@ -543,14 +544,14 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("key-path", keyfile.getPath());
-			clearProperties.setProperty("entry-name", "aes-key");
+			clearProperties.setProperty("entry-name", "des-key");
 			clearProperties.setProperty("keystore-password", "TEST");
 			
 			File propertiesFile = temporaryFolder.newFile("test.properties");
@@ -581,14 +582,14 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("key-path", keyfile.getPath());
-			clearProperties.setProperty("entry-name", "aes-key");
+			clearProperties.setProperty("entry-name", "des-key");
 			clearProperties.setProperty("keystore-password", "TEST");
 			
 			File propertiesFile = temporaryFolder.newFile("test.xml");
@@ -617,13 +618,13 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties props = new SecureProperties();
-			props.setProperty("entry-name", "aes-key");
+			props.setProperty("entry-name", "des-key");
 			props.setProperty("keystore-password", "TEST");
 			props.setProperty("key-path", keyfile.getPath());
 			
@@ -651,7 +652,7 @@ public class SecurePropertiesTest {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.AES, "aes-key");
+			KeyConfig config = new KeyConfig(keyfile, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);

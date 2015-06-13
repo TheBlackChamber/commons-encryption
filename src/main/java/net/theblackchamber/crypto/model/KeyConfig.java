@@ -26,6 +26,7 @@ package net.theblackchamber.crypto.model;
 import java.io.File;
 
 import net.theblackchamber.crypto.constants.SupportedKeyGenAlgorithms;
+import static net.theblackchamber.crypto.constants.SupportedKeyGenAlgorithms.*;
 
 /**
  * Class used to configure key generation. 
@@ -34,7 +35,8 @@ import net.theblackchamber.crypto.constants.SupportedKeyGenAlgorithms;
  */
 public class KeyConfig {
 
-	private static final int DEFAULT_KEY_SIZE = 256;
+	private static final int DEFAULT_AES_KEY_SIZE = 256;
+	private static final int DEFAULT_DES_KEY_SIZE = 192;
 
 	private File keyStoreFile = null;
 	private String keyStorePassword = null;
@@ -132,7 +134,23 @@ public class KeyConfig {
 	 * @return
 	 */
 	public Integer getKeySize() {
-		return keySize == null ? DEFAULT_KEY_SIZE : keySize;
+		
+		if(keySize == null){
+			
+			switch (algorithm) {
+			case DESede:
+				keySize = DEFAULT_DES_KEY_SIZE;
+				break;
+
+			default:
+				keySize = DEFAULT_AES_KEY_SIZE;
+				break;
+			}
+			
+		}
+		
+		return keySize;
+		
 	}
 
 	/**

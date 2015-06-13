@@ -51,7 +51,7 @@ sProperties.setProperty("key3-unencrypted","cleartext value");
 If you find yourself needing to build your own "implementation" using encryption or just want to manually encrypt/decrypt values. The providers can be used directly.
 ```java
 SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
-AESEncryptionProvider encryptionProvider = new AESEncryptionProvider(key);
+EncryptionProvider encryptionProvider = EncryptionProviderFactory.getProvider(key);
 String cipherText = encryptionProvider.encode("clear text");
 ```
 

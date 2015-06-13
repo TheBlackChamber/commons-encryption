@@ -23,7 +23,9 @@
  */
 package net.theblackchamber.crypto.implementations;
 
-import static net.theblackchamber.crypto.constants.Constants.*;
+import static net.theblackchamber.crypto.constants.Constants.ENTRY_NAME_PROPERTY_KEY;
+import static net.theblackchamber.crypto.constants.Constants.KEYSTORE_PASSWORD_PROPERTY_KEY;
+import static net.theblackchamber.crypto.constants.Constants.KEY_PATH_PROPERTY_KEY;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,6 +33,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.security.Key;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableEntryException;
@@ -38,17 +41,16 @@ import java.security.cert.CertificateException;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
-import javax.crypto.SecretKey;
-
-import org.apache.commons.lang3.StringUtils;
-
 import net.theblackchamber.crypto.constants.Constants;
 import net.theblackchamber.crypto.exceptions.MissingParameterException;
 import net.theblackchamber.crypto.exceptions.RuntimeCryptoException;
 import net.theblackchamber.crypto.exceptions.UnsupportedAlgorithmException;
 import net.theblackchamber.crypto.exceptions.UnsupportedKeySizeException;
-import net.theblackchamber.crypto.providers.AESEncryptionProvider;
+import net.theblackchamber.crypto.providers.EncryptionProvider;
+import net.theblackchamber.crypto.providers.EncryptionProviderFactory;
 import net.theblackchamber.crypto.util.KeystoreUtils;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Extension of the java {@link Properties} class which will provide the ability
@@ -70,17 +72,17 @@ public class SecureProperties extends Properties {
 	private static final long serialVersionUID = 6795084558089471182L;
 	private static final String ENCRYPTED_SUFFIX = "-encrypted";
 	private static final String UNENCRYPTED_SUFFIX = "-unencrypted";
-	private SecretKey key = null;
-	private AESEncryptionProvider encryptionProvider = null;
+	private Key key = null;
+	private EncryptionProvider encryptionProvider = null;
 
 	/**
-	 * Gets the AES encryption key to be used for encryption and decryption. The
+	 * Gets the encryption key to be used for encryption and decryption. The
 	 * path to <b>this file will have been specified in the properties file with
-	 * the key: "key-path"</b>
+	 * the key: "key-path" or have been passed in by parameter</b>
 	 * 
 	 * @return
 	 */
-	public SecretKey getKey() {
+	public Key getKey() {
 		return key;
 	}
 
@@ -90,7 +92,7 @@ public class SecureProperties extends Properties {
 	 * 
 	 * @return
 	 */
-	public AESEncryptionProvider getEncryptionProvider() {
+	public EncryptionProvider getEncryptionProvider() {
 		return encryptionProvider;
 	}
 
@@ -602,7 +604,7 @@ public class SecureProperties extends Properties {
 	private void initializeEncryptionProvider() {
 		if (key != null) {
 			try {
-				encryptionProvider = new AESEncryptionProvider(key);
+				encryptionProvider = EncryptionProviderFactory.getProvider(key);
 			} catch (UnsupportedKeySizeException e) {
 				throw new RuntimeCryptoException(e.getMessage(), e);
 			} catch (UnsupportedAlgorithmException e) {
