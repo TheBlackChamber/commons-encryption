@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.theblackchamber</groupId>
 	<artifactId>commons-encryption</artifactId>
-	<version>1.2.0</version>
+	<version>1.2.1-SNAPSHOT</version>
 	<url>http://theblackchamber.github.io/commons-encryption/</url>
 	<name>commons-encryption</name>
 	<description>Utility project to provide common encryption support to applications. The goal being to provide encryption services to applications in as transparent and simple (while secure) method as possible.</description>
