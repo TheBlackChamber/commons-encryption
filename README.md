@@ -25,6 +25,10 @@ The following snippet of code is an example of generating a 256 bit AES key and 
 ```java
 KeyConfig config = new KeyConfig(keyStoreFile, "TEST", 256, SupportedKeyGenAlgorithms.AES, "aes-key");
 KeystoreUtils.generateSecretKey(config);
+
+//Add additional key to the keystore.
+config = new KeyConfig(keyStoreFile, "TEST", 192, SupportedKeyGenAlgorithms.DES, "des-key");
+KeystoreUtils.generateSecretKey(config);
 ```
 
 ###### SecureProperties
@@ -55,7 +59,7 @@ sProperties.load(reader);
 String decryptedProperty = sProperties.getProperty("test-encrypted");
 ```
 
-###### AESEncryptionProvider
+###### EncryptionProvider
 If you find yourself needing to build your own "implementation" using encryption or just want to manually encrypt/decrypt values. The providers can be used directly.
 ```java
 SecretKey key = KeystoreUtils.getSecretKey(keyfile, "aes-key", "TEST");
@@ -75,6 +79,16 @@ key2-unencrypted=This Will Be Encrypted
 ```java
 SecureProperties sProperties = SecurePropertiesUtils.encryptPropertiesFile(propertiesFile);
 ```
+
+###### Message Digest
+SHA256 and Whirlpool are the currently implemented Digest Providers. Usage for both is the same:
+```java
+SHA256DigestProvider provider = new SHA256DigestProvider();
+String hashedString = provider.digest("CLEARTEXT");
+```
+
+###### Further Examples
+More examples of usage can be found in the src/test/java folder.
 
 
 

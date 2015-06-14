@@ -43,6 +43,8 @@ import org.jasypt.salt.RandomSaltGenerator;
  * Implementation of {@link EncryptionProvider} which will implement the Triple
  * DES (DESede) algorithm.
  * 
+ * Supported Key Sizes: 128 & 192
+ * 
  * @author sminogue
  * 
  */

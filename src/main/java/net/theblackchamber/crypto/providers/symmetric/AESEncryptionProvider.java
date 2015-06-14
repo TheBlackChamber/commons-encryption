@@ -51,6 +51,8 @@ import org.jasypt.salt.RandomSaltGenerator;
  * String cipherText = encryptionProvider.encode("clear text");
  * </code>
  * 
+ * Supported Key Sizes: 128, 192, & 256
+ * 
  * @author sminogue
  * 
  */
