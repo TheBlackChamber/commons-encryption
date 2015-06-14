@@ -123,7 +123,7 @@ public abstract class EncryptionProvider {
 	 */
 	public byte[] encrypt(byte[] clearBytes) throws MissingParameterException {
 
-		if (clearBytes == null || clearBytes.length == 0) {
+		if (clearBytes.length == 0) {
 			throw new MissingParameterException("Missing parameter: clearBytes");
 		}
 

@@ -187,6 +187,20 @@ public class AESEncryptionProviderTest {
 
 			}
 
+			
+			byte[] bytes = "test string".getBytes();
+			aesEncryptionProvider = new AESEncryptionProvider(key128);
+			byte[] cipherBytes = aesEncryptionProvider.encrypt(bytes);
+			assertTrue(cipherBytes != null && cipherBytes.length > 0);
+			
+			try {
+				aesEncryptionProvider.encrypt("".getBytes());
+				fail();
+			} catch (MissingParameterException mpe) {
+
+			}
+			
+			
 		} catch (Throwable t) {
 			t.printStackTrace();
 			fail();
@@ -215,6 +229,15 @@ public class AESEncryptionProviderTest {
 
 			}
 
+			byte[] bytes = "test string".getBytes();
+			aesEncryptionProvider = new AESEncryptionProvider(key128);
+			byte[] cipherBytes = aesEncryptionProvider.encrypt(bytes);
+			assertTrue(cipherBytes != null && cipherBytes.length > 0);
+			byte[] clearBytes = aesEncryptionProvider.decrypt(cipherBytes);
+			String clearString  = new String(clearBytes);
+			assertTrue("test string".equals(clearString));
+			
+			
 		} catch (Throwable t) {
 			t.printStackTrace();
 			fail();

@@ -43,6 +43,7 @@ import net.theblackchamber.crypto.exceptions.MissingParameterException;
 import net.theblackchamber.crypto.exceptions.UnsupportedAlgorithmException;
 import net.theblackchamber.crypto.exceptions.UnsupportedKeySizeException;
 import net.theblackchamber.crypto.model.KeyConfig;
+import net.theblackchamber.crypto.providers.symmetric.AESEncryptionProvider;
 import net.theblackchamber.crypto.providers.symmetric.DESEdeEncryptionProvider;
 import net.theblackchamber.crypto.util.KeystoreUtils;
 
@@ -144,6 +145,18 @@ public class DESEdeEncryptionProviderTest {
 
 			}
 
+			byte[] bytes = "test string".getBytes();
+			aesEncryptionProvider = new DESEdeEncryptionProvider(key128);
+			byte[] cipherBytes = aesEncryptionProvider.encrypt(bytes);
+			assertTrue(cipherBytes != null && cipherBytes.length > 0);
+			
+			try {
+				aesEncryptionProvider.encrypt("".getBytes());
+				fail();
+			} catch (MissingParameterException mpe) {
+
+			}
+			
 		} catch (Throwable t) {
 			t.printStackTrace();
 			fail();
@@ -172,6 +185,14 @@ public class DESEdeEncryptionProviderTest {
 
 			}
 
+			byte[] bytes = "test string".getBytes();
+			aesEncryptionProvider = new DESEdeEncryptionProvider(key128);
+			byte[] cipherBytes = aesEncryptionProvider.encrypt(bytes);
+			assertTrue(cipherBytes != null && cipherBytes.length > 0);
+			byte[] clearBytes = aesEncryptionProvider.decrypt(cipherBytes);
+			String clearString  = new String(clearBytes);
+			assertTrue("test string".equals(clearString));
+			
 		} catch (Throwable t) {
 			t.printStackTrace();
 			fail();
