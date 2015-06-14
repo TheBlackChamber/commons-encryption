@@ -1,16 +1,17 @@
 package net.theblackchamber.crypto.providers;
 
 import net.theblackchamber.crypto.providers.digest.SHA256DigestProvider;
-
+import net.theblackchamber.crypto.providers.digest.WhirlpoolDigestProvider;
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 
-public class SHA256DigestProviderTest {
+public class WhirlpoolDigestProviderTest {
 
 	@Test
 	public void testDigest(){
 		
-		SHA256DigestProvider provider = new SHA256DigestProvider();
+		WhirlpoolDigestProvider provider = new WhirlpoolDigestProvider();
 		String prevHash = null;
 		String clear = "test";
 		
@@ -19,7 +20,7 @@ public class SHA256DigestProviderTest {
 			String hashed = provider.digest(clear);
 			
 			assertFalse(clear.equals(hashed));
-			assertTrue(hashed.length() == 64);
+			assertTrue(hashed.length() == 128);
 			
 			if(prevHash == null){
 				prevHash = hashed;
