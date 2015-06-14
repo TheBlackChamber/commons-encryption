@@ -6,6 +6,14 @@
 
 **Implemented enhancements:**
 
+- Implement SHA256 Hash Function Provider [\#10](https://github.com/TheBlackChamber/commons-encryption/issues/10)
+
+- Implement Whirlpool Hash Function Provider [\#9](https://github.com/TheBlackChamber/commons-encryption/issues/9)
+
+- Make use of pooled encryptors for better performance in the EncryptionProviders [\#8](https://github.com/TheBlackChamber/commons-encryption/issues/8)
+
+- Add support for file encryption [\#4](https://github.com/TheBlackChamber/commons-encryption/issues/4)
+
 - Support DESede \(Triple DES\) algorithm [\#3](https://github.com/TheBlackChamber/commons-encryption/issues/3)
 
 - Support other encryption algorithms in SecureProperties [\#2](https://github.com/TheBlackChamber/commons-encryption/issues/2)
