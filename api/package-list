@@ -6,4 +6,3 @@ net.theblackchamber.crypto.providers
 net.theblackchamber.crypto.providers.digest
 net.theblackchamber.crypto.providers.symmetric
 net.theblackchamber.crypto.util
-net.theblackchamber.util
