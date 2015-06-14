@@ -3,15 +3,15 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.theblackchamber</groupId>
 	<artifactId>commons-encryption</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
-	<url>http://sminogue.github.io/commons-encryption/</url>
+	<version>1.2.0</version>
+	<url>http://theblackchamber.github.io/commons-encryption/</url>
 	<name>commons-encryption</name>
 	<description>Utility project to provide common encryption support to applications. The goal being to provide encryption services to applications in as transparent and simple (while secure) method as possible.</description>
 	<inceptionYear>2014</inceptionYear>
 
 	<issueManagement>
 		<system>GitHub Issues</system>
-		<url>https://github.com/sminogue/commons-encryption/issues</url>
+		<url>https://github.com/TheBlackChamber/commons-encryption/issues</url>
 	</issueManagement>
 
 	<organization>
@@ -20,9 +20,9 @@
 	</organization>
 
 	<scm>
-		<url>https://github.com/sminogue/commons-encryption</url>
-		<connection>scm:git:git://github.com/sminogue/commons-encryption.git</connection>
-		<developerConnection>scm:git:git@github.com:sminogue/commons-encryption.git</developerConnection>
+		<url>https://github.com/TheBlackChamber/commons-encryption</url>
+		<connection>scm:git:git://github.com/TheBlackChamber/commons-encryption.git</connection>
+		<developerConnection>scm:git:git@github.com:TheBlackChamber/commons-encryption.git</developerConnection>
 	</scm>
 
 	<developers>
