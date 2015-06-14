@@ -18,6 +18,10 @@
 
 - Support other encryption algorithms in SecureProperties [\#2](https://github.com/TheBlackChamber/commons-encryption/issues/2)
 
+**Fixed bugs:**
+
+- AES192 is doing 256 bit encryption [\#12](https://github.com/TheBlackChamber/commons-encryption/issues/12)
+
 ## [v1.1.0](https://github.com/TheBlackChamber/commons-encryption/tree/v1.1.0) (2015-06-12)
 
 [Full Changelog](https://github.com/TheBlackChamber/commons-encryption/compare/1.0.0...v1.1.0)
