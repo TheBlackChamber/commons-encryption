@@ -10,9 +10,9 @@ import javax.crypto.SecretKey;
 
 import net.theblackchamber.crypto.constants.SupportedKeyGenAlgorithms;
 import net.theblackchamber.crypto.model.KeyConfig;
-import net.theblackchamber.crypto.providers.AESEncryptionProvider;
 import net.theblackchamber.crypto.providers.EncryptionProvider;
 import net.theblackchamber.crypto.providers.EncryptionProviderFactory;
+import net.theblackchamber.crypto.providers.symmetric.AESEncryptionProvider;
 import net.theblackchamber.crypto.util.KeystoreUtils;
 
 import org.apache.commons.io.FileUtils;

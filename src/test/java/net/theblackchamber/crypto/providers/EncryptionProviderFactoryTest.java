@@ -44,11 +44,11 @@ public class EncryptionProviderFactoryTest {
 			KeystoreUtils.generateSecretKey(config);
 			
 			config = new KeyConfig(keyFile, "TEST", 128,
-					SupportedKeyGenAlgorithms.DESede, "des-key-128");
+					SupportedKeyGenAlgorithms.DES, "des-key-128");
 			KeystoreUtils.generateSecretKey(config);
 			
 			config = new KeyConfig(keyFile, "TEST", 192,
-					SupportedKeyGenAlgorithms.DESede, "des-key-192");
+					SupportedKeyGenAlgorithms.DES, "des-key-192");
 			KeystoreUtils.generateSecretKey(config);
 			
 

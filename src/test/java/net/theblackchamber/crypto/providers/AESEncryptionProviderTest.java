@@ -43,6 +43,7 @@ import net.theblackchamber.crypto.exceptions.MissingParameterException;
 import net.theblackchamber.crypto.exceptions.UnsupportedAlgorithmException;
 import net.theblackchamber.crypto.exceptions.UnsupportedKeySizeException;
 import net.theblackchamber.crypto.model.KeyConfig;
+import net.theblackchamber.crypto.providers.symmetric.AESEncryptionProvider;
 import net.theblackchamber.crypto.util.KeystoreUtils;
 
 public class AESEncryptionProviderTest {
@@ -77,7 +78,7 @@ public class AESEncryptionProviderTest {
 					SupportedKeyGenAlgorithms.AES, "aes-key-badlen");
 			KeystoreUtils.generateSecretKey(config);
 			config = new KeyConfig(keyFile, "TEST", 192,
-					SupportedKeyGenAlgorithms.DESede, "aes-key-badalg");
+					SupportedKeyGenAlgorithms.DES, "aes-key-badalg");
 			KeystoreUtils.generateSecretKey(config);
 
 			key256 = KeystoreUtils.getSecretKey(keyFile, "aes-key-256", "TEST");

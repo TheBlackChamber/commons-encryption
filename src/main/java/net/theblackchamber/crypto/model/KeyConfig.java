@@ -138,7 +138,7 @@ public class KeyConfig {
 		if(keySize == null){
 			
 			switch (algorithm) {
-			case DESede:
+			case DES:
 				keySize = DEFAULT_DES_KEY_SIZE;
 				break;
 

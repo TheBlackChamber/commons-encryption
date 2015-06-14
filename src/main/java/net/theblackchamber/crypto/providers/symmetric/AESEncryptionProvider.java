@@ -22,7 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.theblackchamber.crypto.providers;
+package net.theblackchamber.crypto.providers.symmetric;
 
 import java.security.Key;
 
@@ -32,6 +32,7 @@ import net.theblackchamber.crypto.constants.SupportedEncryptionAlgorithms;
 import net.theblackchamber.crypto.exceptions.MissingParameterException;
 import net.theblackchamber.crypto.exceptions.UnsupportedAlgorithmException;
 import net.theblackchamber.crypto.exceptions.UnsupportedKeySizeException;
+import net.theblackchamber.crypto.providers.EncryptionProvider;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -91,7 +92,7 @@ public class AESEncryptionProvider extends EncryptionProvider {
 		config.setPassword(Hex.toHexString(key.getEncoded()));
 		config.setProvider(new BouncyCastleProvider());
 		config.setSaltGenerator(new RandomSaltGenerator());
-
+		
 		stringEncryptor = new PooledPBEStringEncryptor();
 		stringEncryptor.setPoolSize(ENCRYPTOR_POOL_SIZE);
 		stringEncryptor.setConfig(config);

@@ -56,7 +56,7 @@ public class KeystoreUtils3DESKeyTest {
 		
 		try {
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DES, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 			
 			assertTrue(FileUtils.sizeOf(file) > 0);
@@ -73,7 +73,7 @@ public class KeystoreUtils3DESKeyTest {
 		
 		try {
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", 128, SupportedKeyGenAlgorithms.DESede, "des-key");
+			KeyConfig config = new KeyConfig(file, "TEST", 128, SupportedKeyGenAlgorithms.DES, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 			
 			assertTrue(FileUtils.sizeOf(file) > 0);
@@ -96,7 +96,7 @@ public class KeystoreUtils3DESKeyTest {
 		
 		try {
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", 192, SupportedKeyGenAlgorithms.DESede, "des-key");
+			KeyConfig config = new KeyConfig(file, "TEST", 192, SupportedKeyGenAlgorithms.DES, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 			
 			assertTrue(FileUtils.sizeOf(file) > 0);
@@ -140,7 +140,7 @@ public class KeystoreUtils3DESKeyTest {
 		try {
 			
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DESede, null);
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DES, null);
 			KeystoreUtils.generateSecretKey(config);
 			fail();
 			
@@ -161,7 +161,7 @@ public class KeystoreUtils3DESKeyTest {
 		
 		try {
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DES, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 			
 			assertTrue(FileUtils.sizeOf(file) > 0);
@@ -179,11 +179,11 @@ public class KeystoreUtils3DESKeyTest {
 		
 		try {
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DES, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 			long fileSize = FileUtils.sizeOf(file);
 			assertTrue(fileSize > 0);
-			KeyConfig config2 = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key2");
+			KeyConfig config2 = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DES, "des-key2");
 			KeystoreUtils.generateSecretKey(config2);
 			assertTrue(FileUtils.sizeOf(file) > 0);
 			assertTrue(FileUtils.sizeOf(file) > fileSize);
@@ -200,7 +200,7 @@ public class KeystoreUtils3DESKeyTest {
 	public void testLoadDESSecretKey(){
 		try {
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DES, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 			
 			assertTrue(FileUtils.sizeOf(file) > 0);
@@ -222,7 +222,7 @@ public class KeystoreUtils3DESKeyTest {
 	public void testLoadDESSecretKeyNullPassword(){
 		try {
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DES, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 			SecretKey key = KeystoreUtils.getSecretKey(file,"des-key",null);
 			
@@ -240,7 +240,7 @@ public class KeystoreUtils3DESKeyTest {
 	public void testLoadDESSecretKeyInputStreamNullPassword(){
 		try {
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DES, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 			SecretKey key = KeystoreUtils.getSecretKey(new FileInputStream(file),"des-key",null);
 			
@@ -258,7 +258,7 @@ public class KeystoreUtils3DESKeyTest {
 	public void testLoadDESSecretKeyNullKeyEntry(){
 		try {
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DES, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 			SecretKey key = KeystoreUtils.getSecretKey(file,null,"TEST");
 			
@@ -276,7 +276,7 @@ public class KeystoreUtils3DESKeyTest {
 	public void testLoadDESSecretKeyInputStreamNullKeyEntry(){
 		try {
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DES, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 			SecretKey key = KeystoreUtils.getSecretKey(new FileInputStream(file),null,"TEST");
 			
@@ -294,7 +294,7 @@ public class KeystoreUtils3DESKeyTest {
 	public void testLoadDESSecretKeyCustomEntryName(){
 		try {
 			File file = temporaryFolder.newFile("test.key");
-			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DESede, "des-key");
+			KeyConfig config = new KeyConfig(file, "TEST", null, SupportedKeyGenAlgorithms.DES, "des-key");
 			KeystoreUtils.generateSecretKey(config);
 			
 			assertTrue(FileUtils.sizeOf(file) > 0);

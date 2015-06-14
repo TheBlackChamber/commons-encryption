@@ -27,7 +27,7 @@ import net.theblackchamber.crypto.exceptions.UnsupportedAlgorithmException;
 
 public enum SupportedKeyGenAlgorithms {
 
-	AES("AES"),DESede("DESede");
+	AES("AES"),DES("DESede");
 	
 	private String name;
 	

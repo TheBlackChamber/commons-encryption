@@ -43,6 +43,7 @@ import net.theblackchamber.crypto.exceptions.MissingParameterException;
 import net.theblackchamber.crypto.exceptions.UnsupportedAlgorithmException;
 import net.theblackchamber.crypto.exceptions.UnsupportedKeySizeException;
 import net.theblackchamber.crypto.model.KeyConfig;
+import net.theblackchamber.crypto.providers.symmetric.DESEdeEncryptionProvider;
 import net.theblackchamber.crypto.util.KeystoreUtils;
 
 public class DESEdeEncryptionProviderTest {
@@ -60,11 +61,11 @@ public class DESEdeEncryptionProviderTest {
 			File keyFile = tempFolder.newFile("keystore.keys");
 			
 			KeyConfig config = new KeyConfig(keyFile, "TEST", 192,
-					SupportedKeyGenAlgorithms.DESede, "des-key-192");
+					SupportedKeyGenAlgorithms.DES, "des-key-192");
 			KeystoreUtils.generateSecretKey(config);
 			
 			config = new KeyConfig(keyFile, "TEST", 128,
-					SupportedKeyGenAlgorithms.DESede, "des-key-128");
+					SupportedKeyGenAlgorithms.DES, "des-key-128");
 			KeystoreUtils.generateSecretKey(config);
 			
 			config = new KeyConfig(keyFile, "TEST", 192,

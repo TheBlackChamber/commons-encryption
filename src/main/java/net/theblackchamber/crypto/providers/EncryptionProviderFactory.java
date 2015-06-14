@@ -32,6 +32,8 @@ import static net.theblackchamber.crypto.constants.SupportedKeyGenAlgorithms.*;
 import net.theblackchamber.crypto.constants.SupportedKeyGenAlgorithms;
 import net.theblackchamber.crypto.exceptions.UnsupportedAlgorithmException;
 import net.theblackchamber.crypto.exceptions.UnsupportedKeySizeException;
+import net.theblackchamber.crypto.providers.symmetric.AESEncryptionProvider;
+import net.theblackchamber.crypto.providers.symmetric.DESEdeEncryptionProvider;
 
 /**
  * Factory which will create and return instances of {@link EncryptionProvider}
@@ -62,7 +64,7 @@ public class EncryptionProviderFactory {
 		case AES:
 			return new AESEncryptionProvider(key);
 			
-		case DESede:
+		case DES:
 			return new DESEdeEncryptionProvider(key);
 			
 		default:

@@ -22,13 +22,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.theblackchamber.crypto.providers;
+package net.theblackchamber.crypto.providers.symmetric;
 
 import java.security.Key;
 
 import net.theblackchamber.crypto.constants.SupportedEncryptionAlgorithms;
 import net.theblackchamber.crypto.exceptions.UnsupportedAlgorithmException;
 import net.theblackchamber.crypto.exceptions.UnsupportedKeySizeException;
+import net.theblackchamber.crypto.providers.EncryptionProvider;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
@@ -58,7 +59,7 @@ public class DESEdeEncryptionProvider extends EncryptionProvider {
 		switch (keySize) {
 
 		default:
-			config.setAlgorithm(SupportedEncryptionAlgorithms.DESede.getAlgorithm());
+			config.setAlgorithm(SupportedEncryptionAlgorithms.DES.getAlgorithm());
 			break;
 		}
 
