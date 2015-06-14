@@ -23,10 +23,6 @@
           <a href="https://github.com/TheBlackChamber/commons-encryption/tarball/master" class="btn">Download as .tar.gz</a>
           <a href="https://github.com/TheBlackChamber/commons-encryption" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
         </section>
-        <section id="apis">
-          <a href="https://theblackchamber.github.io/commons-encryption/api" target="_blank" class="btn">API</a>
-          <a href="https://theblackchamber.github.io/commons-encryption/site" target="_blank" class="btn">Maven Site</a>
-        </section>
       </div>
     </header>
 
@@ -43,7 +39,7 @@
 <h3>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h3>
 
-<p>In order to make use of the commons-encryption library you first need to download the jars from here on github, or alternatively if you use maven you will soon be able to download the dependency from maven central repository.</p>
+<p>In order to make use of the commons-encryption library you first need to download the jars from here on github, or alternatively if you use maven you are able to download the dependency from maven central repository.</p>
 
 <h6>
 <a id="maven-dependency" class="anchor" href="#maven-dependency" aria-hidden="true"><span class="octicon octicon-link"></span></a>Maven Dependency</h6>
@@ -65,6 +61,10 @@
 <p>The following snippet of code is an example of generating a 256 bit AES key and adding it to a keystore on disk with the key entry name of "aes-key" and the keystore encrypted using the password "TEST".</p>
 
 <div class="highlight highlight-java"><pre><span class="pl-smi">KeyConfig</span> config <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">KeyConfig</span>(keyStoreFile, <span class="pl-s"><span class="pl-pds">"</span>TEST<span class="pl-pds">"</span></span>, <span class="pl-c1">256</span>, <span class="pl-smi">SupportedKeyGenAlgorithms</span><span class="pl-c1"><span class="pl-k">.</span>AES</span>, <span class="pl-s"><span class="pl-pds">"</span>aes-key<span class="pl-pds">"</span></span>);
+<span class="pl-smi">KeystoreUtils</span><span class="pl-k">.</span>generateSecretKey(config);
+
+<span class="pl-c">//Add additional key to the keystore.</span>
+config <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">KeyConfig</span>(keyStoreFile, <span class="pl-s"><span class="pl-pds">"</span>TEST<span class="pl-pds">"</span></span>, <span class="pl-c1">192</span>, <span class="pl-smi">SupportedKeyGenAlgorithms</span><span class="pl-c1"><span class="pl-k">.</span>DES</span>, <span class="pl-s"><span class="pl-pds">"</span>des-key<span class="pl-pds">"</span></span>);
 <span class="pl-smi">KeystoreUtils</span><span class="pl-k">.</span>generateSecretKey(config);</pre></div>
 
 <h6>
@@ -89,13 +89,20 @@ sProperties<span class="pl-k">.</span>load(reader);
 <span class="pl-smi">String</span> clearKey2 <span class="pl-k">=</span> sProperties<span class="pl-k">.</span>getProperty(<span class="pl-s"><span class="pl-pds">"</span>key2-encrypted<span class="pl-pds">"</span></span>);
 sProperties<span class="pl-k">.</span>setProperty(<span class="pl-s"><span class="pl-pds">"</span>key3-unencrypted<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>cleartext value<span class="pl-pds">"</span></span>);</pre></div>
 
+<p>The following snippet of code is an example of configuring the SecureProperties by parameter rather than having configuration in the same file as the secured values (<b>This is the recommended use</b>)</p>
+
+<div class="highlight highlight-java"><pre><span class="pl-smi">FileReader</span> reader <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">FileReader</span>(propertiesFile);
+<span class="pl-smi">SecureProperties</span> sProperties <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">SecureProperties</span>(propertiesFile,keyfile<span class="pl-k">.</span>getPath(),<span class="pl-s"><span class="pl-pds">"</span>aes-key<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>TEST<span class="pl-pds">"</span></span>);
+sProperties<span class="pl-k">.</span>load(reader);
+<span class="pl-smi">String</span> decryptedProperty <span class="pl-k">=</span> sProperties<span class="pl-k">.</span>getProperty(<span class="pl-s"><span class="pl-pds">"</span>test-encrypted<span class="pl-pds">"</span></span>);</pre></div>
+
 <h6>
-<a id="aesencryptionprovider" class="anchor" href="#aesencryptionprovider" aria-hidden="true"><span class="octicon octicon-link"></span></a>AESEncryptionProvider</h6>
+<a id="encryptionprovider" class="anchor" href="#encryptionprovider" aria-hidden="true"><span class="octicon octicon-link"></span></a>EncryptionProvider</h6>
 
 <p>If you find yourself needing to build your own "implementation" using encryption or just want to manually encrypt/decrypt values. The providers can be used directly.</p>
 
 <div class="highlight highlight-java"><pre><span class="pl-smi">SecretKey</span> key <span class="pl-k">=</span> <span class="pl-smi">KeystoreUtils</span><span class="pl-k">.</span>getSecretKey(keyfile, <span class="pl-s"><span class="pl-pds">"</span>aes-key<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>TEST<span class="pl-pds">"</span></span>);
-<span class="pl-smi">AESEncryptionProvider</span> encryptionProvider <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">AESEncryptionProvider</span>(key);
+<span class="pl-smi">EncryptionProvider</span> encryptionProvider <span class="pl-k">=</span> <span class="pl-smi">EncryptionProviderFactory</span><span class="pl-k">.</span>getProvider(key);
 <span class="pl-smi">String</span> cipherText <span class="pl-k">=</span> encryptionProvider<span class="pl-k">.</span>encode(<span class="pl-s"><span class="pl-pds">"</span>clear text<span class="pl-pds">"</span></span>);</pre></div>
 
 <h6>
@@ -110,6 +117,19 @@ sProperties<span class="pl-k">.</span>setProperty(<span class="pl-s"><span class
 <span class="pl-k">key2-unencrypted</span>=This Will Be Encrypted</pre></div>
 
 <div class="highlight highlight-java"><pre><span class="pl-smi">SecureProperties</span> sProperties <span class="pl-k">=</span> <span class="pl-smi">SecurePropertiesUtils</span><span class="pl-k">.</span>encryptPropertiesFile(propertiesFile);</pre></div>
+
+<h6>
+<a id="message-digest" class="anchor" href="#message-digest" aria-hidden="true"><span class="octicon octicon-link"></span></a>Message Digest</h6>
+
+<p>SHA256 and Whirlpool are the currently implemented Digest Providers. Usage for both is the same:</p>
+
+<div class="highlight highlight-java"><pre><span class="pl-smi">SHA256DigestProvider</span> provider <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">SHA256DigestProvider</span>();
+<span class="pl-smi">String</span> hashedString <span class="pl-k">=</span> provider<span class="pl-k">.</span>digest(<span class="pl-s"><span class="pl-pds">"</span>CLEARTEXT<span class="pl-pds">"</span></span>);</pre></div>
+
+<h6>
+<a id="further-examples" class="anchor" href="#further-examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Further Examples</h6>
+
+<p>More examples of usage can be found in the src/test/java folder.</p>
       </section>
     </div>
 
