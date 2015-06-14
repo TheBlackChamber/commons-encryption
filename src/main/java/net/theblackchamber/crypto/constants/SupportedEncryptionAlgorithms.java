@@ -26,7 +26,7 @@ package net.theblackchamber.crypto.constants;
 public enum SupportedEncryptionAlgorithms {
 	DES("PBEWithSHAAnd3KeyTripleDES"),
 	AES128("PBEWITHSHA256AND128BITAES-CBC-BC"),
-	AES192("PBEWITHSHA192AND256BITAES-CBC-BC"),
+	AES192("PBEWITHSHA256AND192BITAES-CBC-BC"),
 	AES256("PBEWITHSHA256AND256BITAES-CBC-BC");
 
 	private String algorithm;
