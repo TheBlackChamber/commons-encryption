@@ -51,6 +51,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  * @author sminogue
  * 
  */
+@Deprecated
 public class KeystoreUtils {
 
 

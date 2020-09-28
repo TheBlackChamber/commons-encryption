@@ -48,6 +48,7 @@ import org.jasypt.salt.RandomSaltGenerator;
  * @author sminogue
  * 
  */
+@Deprecated
 public class DESEdeEncryptionProvider extends EncryptionProvider {
 
 	public DESEdeEncryptionProvider(Key key) throws UnsupportedKeySizeException, UnsupportedAlgorithmException {

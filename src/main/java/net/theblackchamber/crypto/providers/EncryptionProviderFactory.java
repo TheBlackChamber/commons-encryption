@@ -42,6 +42,7 @@ import net.theblackchamber.crypto.providers.symmetric.DESEdeEncryptionProvider;
  * @author sminogue
  * 
  */
+@Deprecated
 public class EncryptionProviderFactory {
 
 	/**

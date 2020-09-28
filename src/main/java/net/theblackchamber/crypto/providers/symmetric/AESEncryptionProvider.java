@@ -56,6 +56,7 @@ import org.jasypt.salt.RandomSaltGenerator;
  * @author sminogue
  * 
  */
+@Deprecated
 public class AESEncryptionProvider extends EncryptionProvider {
 
 	/**
