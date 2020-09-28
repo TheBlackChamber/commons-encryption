@@ -149,7 +149,7 @@ public class AESEncryptionProviderTest {
 			
 			String clear = RandomStringUtils.randomAlphabetic(20);
 			Set<String> crypts = new HashSet<String>();
-			for (int i = 10; i < 10; i++) {
+			for (int i = 1; i < 10; i++) {
 				String cipher = aesEncryptionProvider.encrypt(clear);
 				assertTrue(!crypts.contains(cipher));
 				crypts.add(cipher);
@@ -161,7 +161,7 @@ public class AESEncryptionProviderTest {
 			
 			 clear = RandomStringUtils.randomAlphabetic(20);
 			crypts = new HashSet<String>();
-			for (int i = 10; i < 10; i++) {
+			for (int i = 1; i < 10; i++) {
 				String cipher = aesEncryptionProvider.encrypt(clear);
 				assertTrue(!crypts.contains(cipher));
 				crypts.add(cipher);
@@ -173,7 +173,7 @@ public class AESEncryptionProviderTest {
 			
 			 clear = RandomStringUtils.randomAlphabetic(20);
 			crypts = new HashSet<String>();
-			for (int i = 10; i < 10; i++) {
+			for (int i = 1; i < 10; i++) {
 				String cipher = aesEncryptionProvider.encrypt(clear);
 				assertTrue(!crypts.contains(cipher));
 				crypts.add(cipher);
