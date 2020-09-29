@@ -53,6 +53,7 @@ import com.google.crypto.tink.JsonKeysetReader;
 import com.google.crypto.tink.JsonKeysetWriter;
 import com.google.crypto.tink.KeysetHandle;
 import com.google.crypto.tink.aead.AeadKeyTemplates;
+import com.google.crypto.tink.aead.AesGcmKeyManager;
 import com.google.crypto.tink.config.TinkConfig;
 
 /**
@@ -82,7 +83,7 @@ public class KeystoreUtils2 {
 		}
 		TinkConfig.register();
 		KeysetHandle keysetHandle = KeysetHandle.generateNew(
-		        AeadKeyTemplates.AES256_GCM);
+		        AesGcmKeyManager.aes256GcmTemplate());
 		
 		CleartextKeysetHandle.write(keysetHandle, JsonKeysetWriter.withFile(config.getKeyStoreFile()));
 		
