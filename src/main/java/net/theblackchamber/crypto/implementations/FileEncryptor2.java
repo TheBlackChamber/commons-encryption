@@ -27,18 +27,18 @@ package net.theblackchamber.crypto.implementations;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import net.theblackchamber.crypto.exceptions.MissingParameterException;
-import net.theblackchamber.crypto.providers.EncryptionProvider;
+import java.security.GeneralSecurityException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+
+import net.theblackchamber.crypto.exceptions.MissingParameterException;
+import net.theblackchamber.crypto.providers.EncryptionProvider2;
 
 /**
  * Class which will provide functionality to encrypt and decrypt files.
@@ -46,12 +46,11 @@ import org.apache.commons.lang3.RandomStringUtils;
  * @author sminogue
  * 
  */
-@Deprecated
-public class FileEncryptor {
+public class FileEncryptor2 {
 
-	private EncryptionProvider encryptionProvider;
+	private EncryptionProvider2 encryptionProvider;
 
-	public FileEncryptor(EncryptionProvider provider) throws MissingParameterException {
+	public FileEncryptor2(EncryptionProvider2 provider) throws MissingParameterException {
 
 		if (provider == null) {
 			throw new MissingParameterException();
@@ -67,8 +66,9 @@ public class FileEncryptor {
 	 * @param file
 	 * @throws IOException 
 	 * @throws MissingParameterException 
+	 * @throws GeneralSecurityException 
 	 */
-	public void encryptFile(File file) throws MissingParameterException, IOException {
+	public void encryptFile(File file) throws MissingParameterException, IOException, GeneralSecurityException {
 		encryptFile(file, true);
 	}
 
@@ -82,8 +82,9 @@ public class FileEncryptor {
 	 *            False - Keep the unencrypted file.
 	 * @throws MissingParameterException 
 	 * @throws IOException 
+	 * @throws GeneralSecurityException 
 	 */
-	public void encryptFile(File file, boolean replace) throws MissingParameterException, IOException {
+	public void encryptFile(File file, boolean replace) throws MissingParameterException, IOException, GeneralSecurityException {
 
 		if(file == null || !file.exists()){
 			throw new MissingParameterException("File not specified or file does not exist.");
@@ -139,14 +140,13 @@ public class FileEncryptor {
 	 *            Output stream which the encrypted data will be written to.
 	 * @throws IOException
 	 * @throws MissingParameterException
+	 * @throws GeneralSecurityException 
 	 */
-	public void encryptStream(InputStream clearInputStream, OutputStream encryptedOutputStream) throws IOException, MissingParameterException {
+	public void encryptStream(InputStream clearInputStream, OutputStream encryptedOutputStream) throws IOException, MissingParameterException, GeneralSecurityException {
 
 		byte[] clearBytes = IOUtils.toByteArray(clearInputStream);
 
 		byte[] cipherBytes = encryptionProvider.encrypt(clearBytes);
-
-		//encryptedOutputStream = new ByteArrayOutputStream(1000);
 
 		encryptedOutputStream.write(cipherBytes);
 
