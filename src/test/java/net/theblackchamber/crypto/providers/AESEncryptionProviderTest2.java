@@ -109,6 +109,40 @@ public class AESEncryptionProviderTest2 {
 	}
 
 	@Test
+	public void testEncryptMultProviders() {
+
+		try {
+
+			EncryptionProvider2 aesEncryptionProvider = EncryptionProviderFactory2.getProvider(key);
+			EncryptionProvider2 aesEncryptionProvider2 = EncryptionProviderFactory2.getProvider(key);
+
+			assertNotNull(aesEncryptionProvider.getKey());
+			
+			String clear = RandomStringUtils.randomAlphabetic(20);
+			Set<String> crypts = new HashSet<String>();
+			for (int i = 1; i < 10; i++) {
+				String cipher = new String(aesEncryptionProvider.encrypt(clear));
+				assertTrue(!crypts.contains(cipher));
+				crypts.add(cipher);
+				cipher = new String(aesEncryptionProvider2.encrypt(clear));
+				assertTrue(!crypts.contains(cipher));
+				crypts.add(cipher);
+			}
+			
+			try {
+				aesEncryptionProvider.encrypt("");
+				fail();
+			} catch (MissingParameterException mpe) {
+
+			}
+			
+		} catch (Throwable t) {
+			t.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
 	public void testDecrypt() {
 		try {
 			Encoder encoder = Base64.getEncoder();
