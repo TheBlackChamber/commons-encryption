@@ -35,19 +35,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
-import javax.crypto.SecretKey;
-
-import net.theblackchamber.crypto.constants.Constants;
-import net.theblackchamber.crypto.constants.SupportedKeyGenAlgorithms;
-import net.theblackchamber.crypto.model.KeyConfig;
-import net.theblackchamber.crypto.model.KeyConfig2;
-import net.theblackchamber.crypto.providers.EncryptionProvider2;
-import net.theblackchamber.crypto.providers.EncryptionProviderFactory2;
-import net.theblackchamber.crypto.providers.symmetric.AESEncryptionProvider;
-import net.theblackchamber.crypto.providers.symmetric.AESEncryptionProvider2;
-import net.theblackchamber.crypto.util.KeystoreUtils;
-import net.theblackchamber.crypto.util.KeystoreUtils2;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Rule;
@@ -55,6 +42,12 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import com.google.crypto.tink.KeysetHandle;
+
+import net.theblackchamber.crypto.constants.Constants;
+import net.theblackchamber.crypto.model.KeyConfig2;
+import net.theblackchamber.crypto.providers.EncryptionProvider2;
+import net.theblackchamber.crypto.providers.EncryptionProviderFactory2;
+import net.theblackchamber.crypto.util.KeystoreUtils2;
 
 public class SecurePropertiesAESTest2 {
 
