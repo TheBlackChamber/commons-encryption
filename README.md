@@ -7,6 +7,9 @@ Prior to making use of the commons-encryption library it may be necessary to ins
 ### Versions and Backwards compatibility
 This is the 2.x release of the code which IS NOT backwards compatible with the 1.x releases. Many underlying things have changed such as encryption algorithms (AES-CBC to AES-GCM) as well as changes to key formats. See upgrading section below for details. If you are continuing to use the 1.x versions (which is fine), you will need to use readme on in that branch of code rather than this one. I plan on maintaining the 1.x versions for the foreseeable future.
 
+### Upgrading
+If you are upgrading from 1.x to 2.x you will need to A) Replace all 1.x keys with 2.x keys using the keygen tool. B) Decrypt 1.x encrypted values and re-encrypt with 2.x encrypted values. The exception to this is output from the Whirlpool SHA256 password encryptions. These implementations havent changed in the 2.x branch and will be backwards compatible.
+
 ### Usage
 In order to make use of the commons-encryption library you first need to download the jars from here on github, or alternatively if you use maven you are able to download the dependency from maven central repository.
 
