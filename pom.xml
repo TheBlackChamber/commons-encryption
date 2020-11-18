@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.theblackchamber</groupId>
 	<artifactId>commons-encryption</artifactId>
-	<version>1.2.2-SNAPSHOT</version>
+	<version>1.2.2-RELEASE</version>
 	<url>http://theblackchamber.github.io/commons-encryption/</url>
 	<name>commons-encryption</name>
 	<description>Utility project to provide common encryption support to applications. The goal being to provide encryption services to applications in as transparent and simple (while secure) method as possible.</description>
@@ -56,7 +56,7 @@
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15on</artifactId>
-			<version>1.66</version>
+			<version>1.67</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jasypt</groupId>
@@ -82,7 +82,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
