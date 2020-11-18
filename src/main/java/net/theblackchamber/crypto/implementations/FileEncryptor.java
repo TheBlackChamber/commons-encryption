@@ -44,7 +44,7 @@ import org.apache.commons.lang3.RandomStringUtils;
  * Class which will provide functionality to encrypt and decrypt files.
  * 
  * @author sminogue
- * 
+ * @deprecated Use FileEncryptor2
  */
 @Deprecated
 public class FileEncryptor {

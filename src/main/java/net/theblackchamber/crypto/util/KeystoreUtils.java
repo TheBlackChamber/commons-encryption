@@ -49,9 +49,8 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  * Utility used for managing a keystore. Generate keys etc.
  * 
  * @author sminogue
- * 
+ * @deprecated Use KeystoreUtils2
  */
-@Deprecated
 public class KeystoreUtils {
 
 

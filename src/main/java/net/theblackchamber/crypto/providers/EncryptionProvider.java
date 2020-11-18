@@ -42,7 +42,7 @@ import net.theblackchamber.crypto.exceptions.UnsupportedKeySizeException;
  * allow more dynamic configuration of encryption used in utilities.
  * 
  * @author sminogue
- * 
+ * @deprecated Use EncryptionProvider2
  */
 public abstract class EncryptionProvider {
 

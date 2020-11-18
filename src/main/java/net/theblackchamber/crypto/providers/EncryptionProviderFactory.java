@@ -40,7 +40,7 @@ import net.theblackchamber.crypto.providers.symmetric.DESEdeEncryptionProvider;
  * based on the algorithm of a key.
  * 
  * @author sminogue
- * 
+ * @deprecated Use EncryptionProviderFactory2
  */
 @Deprecated
 public class EncryptionProviderFactory {

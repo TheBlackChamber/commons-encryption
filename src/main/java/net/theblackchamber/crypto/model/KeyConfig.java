@@ -31,7 +31,7 @@ import static net.theblackchamber.crypto.constants.SupportedKeyGenAlgorithms.*;
 /**
  * Class used to configure key generation. 
  * @author sminogue
- *
+ * @deprecated Use KeyConfig2
  */
 public class KeyConfig {
 

@@ -65,7 +65,7 @@ import org.apache.commons.lang3.StringUtils;
  * will result in the value being decoded and the clear text value returned.
  * 
  * @author sminogue
- * 
+ * @deprecated Use SecureProperties2
  */
 public class SecureProperties extends Properties {
 
