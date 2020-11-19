@@ -65,10 +65,10 @@ public class AESEncryptionProviderTest2 {
 		try {
 			File keyFile = tempFolder.newFile("keystore.keys");
 
-			KeyConfig2 config = new KeyConfig2(keyFile);
+			KeyConfig2 config = new KeyConfig2(keyFile,"test");
 			KeystoreUtils2.generateSecretKey(config);
 
-			 key = KeystoreUtils2.getSecretKey(keyFile);
+			 key = KeystoreUtils2.getSecretKey(config);
 			
 			assertNotNull(key);
 

@@ -23,7 +23,6 @@
  */
 package net.theblackchamber.crypto.implementations;
 
-import static net.theblackchamber.crypto.constants.Constants.ENTRY_NAME_PROPERTY_KEY;
 import static net.theblackchamber.crypto.constants.Constants.KEYSTORE_PASSWORD_PROPERTY_KEY;
 import static net.theblackchamber.crypto.constants.Constants.KEY_PATH_PROPERTY_KEY;
 
@@ -34,7 +33,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.security.GeneralSecurityException;
-import java.security.Key;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableEntryException;
@@ -42,28 +40,25 @@ import java.security.cert.CertificateException;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
-import net.theblackchamber.crypto.constants.Constants;
-import net.theblackchamber.crypto.exceptions.MissingParameterException;
-import net.theblackchamber.crypto.exceptions.RuntimeCryptoException;
-import net.theblackchamber.crypto.exceptions.UnsupportedAlgorithmException;
-import net.theblackchamber.crypto.exceptions.UnsupportedKeySizeException;
-import net.theblackchamber.crypto.providers.EncryptionProvider;
-import net.theblackchamber.crypto.providers.EncryptionProvider2;
-import net.theblackchamber.crypto.providers.EncryptionProviderFactory;
-import net.theblackchamber.crypto.providers.EncryptionProviderFactory2;
-import net.theblackchamber.crypto.util.KeystoreUtils;
-import net.theblackchamber.crypto.util.KeystoreUtils2;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.crypto.tink.KeysetHandle;
+
+import net.theblackchamber.crypto.constants.Constants;
+import net.theblackchamber.crypto.exceptions.MissingParameterException;
+import net.theblackchamber.crypto.exceptions.RuntimeCryptoException;
+import net.theblackchamber.crypto.model.KeyConfig2;
+import net.theblackchamber.crypto.providers.EncryptionProvider2;
+import net.theblackchamber.crypto.providers.EncryptionProviderFactory2;
+import net.theblackchamber.crypto.util.KeystoreUtils;
+import net.theblackchamber.crypto.util.KeystoreUtils2;
 
 /**
  * Extension of the java {@link Properties} class which will provide the ability
  * to transparently use encrypted properties.<br>
  * Usage: In order to make use of encryped properties the properties file should
- * contain an entry key-path which will point to a keystore file created via
- * {@link KeystoreUtils}.<br>
+ * contain entries for key-path and keystore-password which will point to a keystore file created via
+ * {@link KeystoreUtils2}.<br>
  * Calling setProperty on a new property with name containing "-unencrypted"
  * will result in the value being added to the {@link Properties} map with the
  * name changed from XX-unencrypted to XX-encrypted and the value being encoded.<br>
@@ -115,24 +110,13 @@ public class SecureProperties2 extends Properties {
 	 * encryption/decryption methods the IOException will wrap the underlying
 	 * exception</b>
 	 * 
-	 * @param propertiesPath
-	 * @param keyPath
-	 * @param keyEntry
-	 * @param keyPass
-	 * @throws KeyStoreException
-	 * @throws NoSuchAlgorithmException
-	 * @throws CertificateException
-	 * @throws FileNotFoundException
-	 * @throws UnrecoverableEntryException
 	 * @throws IOException
 	 */
-	public SecureProperties2(String propertiesPath, String keyPath) throws KeyStoreException,
-			NoSuchAlgorithmException, CertificateException,
-			FileNotFoundException, UnrecoverableEntryException, IOException {
+	public SecureProperties2(String propertiesPath, String keyPath, String keyPass) throws FileNotFoundException, IOException {
 		super();
 		super.load(new FileInputStream(new File(propertiesPath)));
 		try {
-			loadKeystore(keyPath);
+			loadKeystore(keyPath, keyPass);
 			initializeEncryptionProvider();
 		} catch (RuntimeCryptoException rce) {
 			throw new IOException(rce);
@@ -149,22 +133,12 @@ public class SecureProperties2 extends Properties {
 	 * @param keyPath
 	 *            If null an attempt will be made to attempt to use the key path
 	 *            property from the underlying property file.
-	 * @param keyEntry
-	 *            If null an attempt will be made to attempt to use the key
-	 *            entry property from the underlying property file.
 	 * @param keyPass
 	 *            If null an attempt will be made to attempt to use the key pass
 	 *            property from the underlying property file.
-	 * @throws KeyStoreException
-	 * @throws NoSuchAlgorithmException
-	 * @throws CertificateException
-	 * @throws FileNotFoundException
-	 * @throws UnrecoverableEntryException
 	 * @throws IOException
 	 */
-	public SecureProperties2(InputStream inputStream, String keyPath) throws KeyStoreException,
-			NoSuchAlgorithmException, CertificateException,
-			FileNotFoundException, UnrecoverableEntryException, IOException {
+	public SecureProperties2(InputStream inputStream, String keyPath, String keyPass) throws IOException{
 		super();
 		super.load(inputStream);
 		try {
@@ -173,7 +147,10 @@ public class SecureProperties2 extends Properties {
 			if (StringUtils.isEmpty(keyPath)) {
 				keyPath = this.getProperty(Constants.KEY_PATH_PROPERTY_KEY);
 			}
-			loadKeystore(keyPath);
+			if (StringUtils.isEmpty(keyPass)) {
+				keyPass = this.getProperty(Constants.KEYSTORE_PASSWORD_PROPERTY_KEY);
+			}
+			loadKeystore(keyPath,keyPass);
 			initializeEncryptionProvider();
 		} catch (RuntimeCryptoException rce) {
 			throw new IOException(rce);
@@ -189,29 +166,23 @@ public class SecureProperties2 extends Properties {
 	 * @param keyPath
 	 *            If null an attempt will be made to attempt to use the key path
 	 *            property from the underlying property file.
-	 * @param keyEntry
-	 *            If null an attempt will be made to attempt to use the key
-	 *            entry property from the underlying property file.
 	 * @param keyPass
 	 *            If null an attempt will be made to attempt to use the key pass
 	 *            property from the underlying property file.
-	 * @throws KeyStoreException
-	 * @throws NoSuchAlgorithmException
-	 * @throws CertificateException
-	 * @throws FileNotFoundException
-	 * @throws UnrecoverableEntryException
+	 * @throws FileNotFoundException 
 	 * @throws IOException
 	 */
-	public SecureProperties2(File propertiesFile, String keyPath) throws KeyStoreException,
-			NoSuchAlgorithmException, CertificateException,
-			FileNotFoundException, UnrecoverableEntryException, IOException {
+	public SecureProperties2(File propertiesFile, String keyPath, String keyPass) throws FileNotFoundException, IOException  {
 		super();
 		super.load(new FileInputStream(propertiesFile));
 		try {
 			if (StringUtils.isEmpty(keyPath)) {
 				keyPath = this.getProperty(Constants.KEY_PATH_PROPERTY_KEY);
 			}
-			loadKeystore(keyPath);
+			if (StringUtils.isEmpty(keyPass)) {
+				keyPass = this.getProperty(Constants.KEYSTORE_PASSWORD_PROPERTY_KEY);
+			}
+			loadKeystore(keyPath,keyPass);
 			initializeEncryptionProvider();
 		} catch (RuntimeCryptoException rce) {
 			throw new IOException(rce);
@@ -227,28 +198,21 @@ public class SecureProperties2 extends Properties {
 	 * @param keyPath
 	 *            If null an attempt will be made to attempt to use the key path
 	 *            property from the underlying property file.
-	 * @param keyEntry
-	 *            If null an attempt will be made to attempt to use the key
-	 *            entry property from the underlying property file.
 	 * @param keyPass
 	 *            If null an attempt will be made to attempt to use the key pass
 	 *            property from the underlying property file.
-	 * @throws KeyStoreException
-	 * @throws NoSuchAlgorithmException
-	 * @throws CertificateException
-	 * @throws FileNotFoundException
-	 * @throws UnrecoverableEntryException
-	 * @throws IOException
+	 * @throws IOException 
 	 */
-	public SecureProperties2(Properties defaults, String keyPath) throws KeyStoreException,
-			NoSuchAlgorithmException, CertificateException,
-			FileNotFoundException, UnrecoverableEntryException, IOException {
+	public SecureProperties2(Properties defaults, String keyPath, String keyPass) throws IOException  {
 		super(defaults);
 		try {
 			if (StringUtils.isEmpty(keyPath)) {
 				keyPath = this.getProperty(Constants.KEY_PATH_PROPERTY_KEY);
 			}
-			loadKeystore(keyPath);
+			if (StringUtils.isEmpty(keyPass)) {
+				keyPass = this.getProperty(Constants.KEYSTORE_PASSWORD_PROPERTY_KEY);
+			}
+			loadKeystore(keyPath,keyPass);
 			initializeEncryptionProvider();
 		} catch (RuntimeCryptoException rce) {
 			throw new IOException(rce);
@@ -261,16 +225,10 @@ public class SecureProperties2 extends Properties {
 	 * IOException will wrap the underlying exception</b>
 	 * 
 	 * @param propertiesPath
-	 * @throws IOException
-	 * @throws UnrecoverableEntryException
-	 * @throws FileNotFoundException
-	 * @throws CertificateException
-	 * @throws NoSuchAlgorithmException
-	 * @throws KeyStoreException
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 */
-	public SecureProperties2(String propertiesPath) throws KeyStoreException,
-			NoSuchAlgorithmException, CertificateException,
-			FileNotFoundException, UnrecoverableEntryException, IOException {
+	public SecureProperties2(String propertiesPath) throws FileNotFoundException, IOException  {
 		super();
 		super.load(new FileInputStream(new File(propertiesPath)));
 		try {
@@ -287,16 +245,10 @@ public class SecureProperties2 extends Properties {
 	 * IOException will wrap the underlying exception</b>
 	 * 
 	 * @param propertiesFile
-	 * @throws IOException
-	 * @throws UnrecoverableEntryException
-	 * @throws FileNotFoundException
-	 * @throws CertificateException
-	 * @throws NoSuchAlgorithmException
-	 * @throws KeyStoreException
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 */
-	public SecureProperties2(File propertiesFile) throws KeyStoreException,
-			NoSuchAlgorithmException, CertificateException,
-			FileNotFoundException, UnrecoverableEntryException, IOException {
+	public SecureProperties2(File propertiesFile) throws FileNotFoundException, IOException {
 		super();
 		super.load(new FileInputStream(propertiesFile));
 		try {
@@ -313,16 +265,9 @@ public class SecureProperties2 extends Properties {
 	 * will wrap the underlying exception</b>
 	 * 
 	 * @param defaults
-	 * @throws IOException
-	 * @throws UnrecoverableEntryException
-	 * @throws FileNotFoundException
-	 * @throws CertificateException
-	 * @throws NoSuchAlgorithmException
-	 * @throws KeyStoreException
+	 * @throws IOException 
 	 */
-	public SecureProperties2(Properties defaults) throws KeyStoreException,
-			NoSuchAlgorithmException, CertificateException,
-			FileNotFoundException, UnrecoverableEntryException, IOException {
+	public SecureProperties2(Properties defaults) throws IOException {
 		super(defaults);
 		try {
 			loadKeystore();
@@ -338,16 +283,9 @@ public class SecureProperties2 extends Properties {
 	 * will wrap the underlying exception</b>
 	 * 
 	 * @param inputStream
-	 * @throws IOException
-	 * @throws UnrecoverableEntryException
-	 * @throws FileNotFoundException
-	 * @throws CertificateException
-	 * @throws NoSuchAlgorithmException
-	 * @throws KeyStoreException
+	 * @throws IOException 
 	 */
-	public SecureProperties2(InputStream inputStream) throws KeyStoreException,
-			NoSuchAlgorithmException, CertificateException,
-			FileNotFoundException, UnrecoverableEntryException, IOException {
+	public SecureProperties2(InputStream inputStream) throws IOException  {
 		super();
 		super.load(inputStream);
 		try {
@@ -549,7 +487,7 @@ public class SecureProperties2 extends Properties {
 	}
 
 	/**
-	 * Method will load the KeyStore from file using the key path, entry name,
+	 * Method will load the KeyStore from file using the key path,
 	 * and keystore password from the properties file.
 	 * 
 	 * @throws RuntimeCryptoException
@@ -557,8 +495,9 @@ public class SecureProperties2 extends Properties {
 	 */
 	private void loadKeystore() {
 		String keypath = this.getProperty(KEY_PATH_PROPERTY_KEY);
+		String keypass = this.getProperty(KEYSTORE_PASSWORD_PROPERTY_KEY);
 
-		loadKeystore(keypath);
+		loadKeystore(keypath, keypass);
 
 	}
 
@@ -571,17 +510,15 @@ public class SecureProperties2 extends Properties {
 	 *            Path to keystore file.
 	 * @param keyPass
 	 *            Password to open keystore.
-	 * @param keyEntry
-	 *            Entry name for the key in the keystore.
 	 * 
 	 * @throws RuntimeCryptoException
 	 *             Wraps encryption key loading errors.
 	 * 
 	 */
-	private void loadKeystore(String keyPath) {
+	private void loadKeystore(String keyPath, String keyPass) {
 		if (!StringUtils.isEmpty(keyPath)) {
 			try {
-				key = KeystoreUtils2.getSecretKey(new File(keyPath));
+				key = KeystoreUtils2.getSecretKey(new KeyConfig2( new File(keyPath),keyPass));
 			} catch (Throwable t) {
 				throw new RuntimeCryptoException(
 						"Failed when attempting to load keystore: "

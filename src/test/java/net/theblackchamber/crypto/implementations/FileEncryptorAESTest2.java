@@ -34,10 +34,10 @@ public class FileEncryptorAESTest2 {
 		try {
 			File keyFile = temporaryFolder.newFile("keystore.keys");
 
-			KeyConfig2 config = new KeyConfig2(keyFile);
+			KeyConfig2 config = new KeyConfig2(keyFile,"test");
 			KeystoreUtils2.generateSecretKey(config);
 
-			KeysetHandle key256 = KeystoreUtils2.getSecretKey(keyFile);
+			KeysetHandle key256 = KeystoreUtils2.getSecretKey(config);
 
 			assertNotNull(key256);
 

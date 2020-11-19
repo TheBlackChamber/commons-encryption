@@ -37,4 +37,5 @@ import lombok.Getter;
 @Getter
 public class KeyConfig2 {
 	private File keyStoreFile = null;
+	private String keyPass;
 }

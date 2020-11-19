@@ -75,13 +75,16 @@ public class SecurePropertiesAESTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 		
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile,"test");
 			KeystoreUtils2.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties props = new SecureProperties2();
+			//NOTE!!!!! The order here is important... always set password THEN keyfile
+			props.setProperty("keystore-password", "test");
 			props.setProperty("key-path", keyfile.getPath());
+			
 			
 			assertNotNull(((SecureProperties2)props).getKey());
 			assertNotNull(((SecureProperties2)props).getEncryptionProvider());
@@ -99,14 +102,14 @@ public class SecurePropertiesAESTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 		
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile,"test");
 			KeystoreUtils2.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties clearProperties = new Properties();
 			
-			Properties props = new SecureProperties2(clearProperties,keyfile.getPath());
+			Properties props = new SecureProperties2(clearProperties,keyfile.getPath(),"test");
 			
 			assertNotNull(((SecureProperties2)props).getKey());
 			assertNotNull(((SecureProperties2)props).getEncryptionProvider());
@@ -124,13 +127,13 @@ public class SecurePropertiesAESTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 		
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile,"test");
 			KeystoreUtils2.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties clearProperties = new Properties();
-			Properties props = new SecureProperties2(clearProperties,keyfile.getPath());
+			Properties props = new SecureProperties2(clearProperties,keyfile.getPath(),"test");
 			
 			assertNotNull(((SecureProperties2)props).getKey());
 			assertNotNull(((SecureProperties2)props).getEncryptionProvider());
@@ -148,15 +151,14 @@ public class SecurePropertiesAESTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 		
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile,"test");
 			KeystoreUtils2.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties clearProperties = new Properties();
-			clearProperties.setProperty(Constants.ENTRY_NAME_PROPERTY_KEY, "aes-key");
 			
-			Properties props = new SecureProperties2(clearProperties,keyfile.getPath());
+			Properties props = new SecureProperties2(clearProperties,keyfile.getPath(),"test");
 			
 			assertNotNull(((SecureProperties2)props).getKey());
 			assertNotNull(((SecureProperties2)props).getEncryptionProvider());
@@ -175,15 +177,14 @@ public class SecurePropertiesAESTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 		
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile,"test");
 			KeystoreUtils2.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
-			Properties clearProperties = new Properties();
+			Properties clearProperties = new Properties();			
 			clearProperties.setProperty("key-path", keyfile.getPath());
-			clearProperties.setProperty("entry-name", "aes-key");
-			clearProperties.setProperty("keystore-password", "TEST");
+			clearProperties.setProperty("keystore-password", "test");
 			
 			
 			Properties props = new SecureProperties2(clearProperties);
@@ -206,15 +207,14 @@ public class SecurePropertiesAESTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile,"test");
 			KeystoreUtils2.generateSecretKey(config);
 		
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("key-path", keyfile.getPath());
-			clearProperties.setProperty("entry-name", "aes-key");
-			clearProperties.setProperty("keystore-password", "TEST");
+			clearProperties.setProperty("keystore-password", "test");
 			
 			File propertiesFile = temporaryFolder.newFile("test.properties");
 			OutputStream stream = new FileOutputStream(propertiesFile);
@@ -227,7 +227,6 @@ public class SecurePropertiesAESTest2 {
 			SecureProperties2 sProperties = new SecureProperties2();
 			sProperties.load(inputStream);
 			assertNotNull(sProperties);
-			assertNotNull(sProperties.getProperty("entry-name"));
 			
 		}catch(Throwable t){
 			t.printStackTrace();
@@ -241,16 +240,15 @@ public class SecurePropertiesAESTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile,"test");
 			KeystoreUtils2.generateSecretKey(config);
-			KeysetHandle key = KeystoreUtils2.getSecretKey(keyfile);
+			KeysetHandle key = KeystoreUtils2.getSecretKey(config);
 			
 			EncryptionProvider2 encryptionProvider = EncryptionProviderFactory2.getProvider(key);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("key-path", keyfile.getPath());
-			clearProperties.setProperty("entry-name", "aes-key");
-			clearProperties.setProperty("keystore-password", "TEST");
+			clearProperties.setProperty("keystore-password", "test");
 			clearProperties.setProperty("test-encrypted", encryptionProvider.encrypt("TESTY"));
 			
 			File propertiesFile = temporaryFolder.newFile("test.properties");
@@ -280,16 +278,15 @@ public class SecurePropertiesAESTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile,"test");
 			KeystoreUtils2.generateSecretKey(config);
-			KeysetHandle key = KeystoreUtils2.getSecretKey(keyfile);
+			KeysetHandle key = KeystoreUtils2.getSecretKey(config);
 			
 			EncryptionProvider2 encryptionProvider = EncryptionProviderFactory2.getProvider(key);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("key-path", keyfile.getPath());
-			clearProperties.setProperty("entry-name", "aes-key");
-			clearProperties.setProperty("keystore-password", "TEST");
+			clearProperties.setProperty("keystore-password", "test");
 			clearProperties.setProperty("test-encrypted", encryptionProvider.encrypt("TESTY"));
 			
 			File propertiesFile = temporaryFolder.newFile("test.properties");
@@ -317,16 +314,15 @@ public class SecurePropertiesAESTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile,"test");
 			KeystoreUtils2.generateSecretKey(config);
-			KeysetHandle key = KeystoreUtils2.getSecretKey(keyfile);
+			KeysetHandle key = KeystoreUtils2.getSecretKey(config);
 			
 			EncryptionProvider2 encryptionProvider = EncryptionProviderFactory2.getProvider(key);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("key-path", keyfile.getPath());
-			clearProperties.setProperty("entry-name", "aes-key");
-			clearProperties.setProperty("keystore-password", "TEST");
+			clearProperties.setProperty("keystore-password", "test");
 			clearProperties.setProperty("test-encrypted", encryptionProvider.encrypt("TESTY"));
 			
 			File propertiesFile = temporaryFolder.newFile("test.properties");
@@ -354,16 +350,15 @@ public class SecurePropertiesAESTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile,"test");
 			KeystoreUtils2.generateSecretKey(config);
-			KeysetHandle key = KeystoreUtils2.getSecretKey(keyfile);
+			KeysetHandle key = KeystoreUtils2.getSecretKey(config);
 			
 			EncryptionProvider2 encryptionProvider = EncryptionProviderFactory2.getProvider(key);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("key-path", keyfile.getPath());
-			clearProperties.setProperty("entry-name", "aes-key");
-			clearProperties.setProperty("keystore-password", "TEST");
+			clearProperties.setProperty("keystore-password", "test");
 			clearProperties.setProperty("test-encrypted", encryptionProvider.encrypt("TESTY"));
 			
 			File propertiesFile = temporaryFolder.newFile("test.properties");
@@ -391,9 +386,9 @@ public class SecurePropertiesAESTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile,"test");
 			KeystoreUtils2.generateSecretKey(config);
-			KeysetHandle key = KeystoreUtils2.getSecretKey(keyfile);
+			KeysetHandle key = KeystoreUtils2.getSecretKey(config);
 			
 			EncryptionProvider2 encryptionProvider = EncryptionProviderFactory2.getProvider(key);
 			
@@ -409,7 +404,7 @@ public class SecurePropertiesAESTest2 {
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			FileReader reader = new FileReader(propertiesFile);
-			SecureProperties2 sProperties = new SecureProperties2(new FileInputStream(propertiesFile),keyfile.getPath());
+			SecureProperties2 sProperties = new SecureProperties2(new FileInputStream(propertiesFile),keyfile.getPath(),"test");
 			sProperties.load(reader);
 			assertNotNull(sProperties);
 			String decryptedProperty = sProperties.getProperty("test-encrypted");
@@ -428,9 +423,9 @@ public class SecurePropertiesAESTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile,"test");
 			KeystoreUtils2.generateSecretKey(config);
-			KeysetHandle key = KeystoreUtils2.getSecretKey(keyfile);
+			KeysetHandle key = KeystoreUtils2.getSecretKey(config);
 			
 			EncryptionProvider2 encryptionProvider = EncryptionProviderFactory2.getProvider(key);
 			
@@ -446,7 +441,7 @@ public class SecurePropertiesAESTest2 {
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			FileReader reader = new FileReader(propertiesFile);
-			SecureProperties2 sProperties = new SecureProperties2(propertiesFile,keyfile.getPath());
+			SecureProperties2 sProperties = new SecureProperties2(propertiesFile,keyfile.getPath(),"test");
 			sProperties.load(reader);
 			assertNotNull(sProperties);
 			String decryptedProperty = sProperties.getProperty("test-encrypted");
@@ -465,9 +460,9 @@ public class SecurePropertiesAESTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile,"test");
 			KeystoreUtils2.generateSecretKey(config);
-			KeysetHandle key = KeystoreUtils2.getSecretKey(keyfile);
+			KeysetHandle key = KeystoreUtils2.getSecretKey(config);
 			
 			EncryptionProvider2 encryptionProvider = EncryptionProviderFactory2.getProvider(key);
 			
@@ -483,7 +478,7 @@ public class SecurePropertiesAESTest2 {
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			FileReader reader = new FileReader(propertiesFile);
-			SecureProperties2 sProperties = new SecureProperties2(new FileInputStream(propertiesFile),keyfile.getPath());
+			SecureProperties2 sProperties = new SecureProperties2(new FileInputStream(propertiesFile),keyfile.getPath(),"test");
 			sProperties.load(reader);
 			assertNotNull(sProperties);
 			String decryptedProperty = sProperties.getProperty("test-encrypted");
@@ -502,9 +497,9 @@ public class SecurePropertiesAESTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile,"test");
 			KeystoreUtils2.generateSecretKey(config);
-			KeysetHandle key = KeystoreUtils2.getSecretKey(keyfile);
+			KeysetHandle key = KeystoreUtils2.getSecretKey(config);
 			
 			EncryptionProvider2 encryptionProvider = EncryptionProviderFactory2.getProvider(key);
 			
@@ -520,7 +515,7 @@ public class SecurePropertiesAESTest2 {
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			FileReader reader = new FileReader(propertiesFile);
-			SecureProperties2 sProperties = new SecureProperties2(propertiesFile.getPath(),keyfile.getPath());
+			SecureProperties2 sProperties = new SecureProperties2(propertiesFile.getPath(),keyfile.getPath(),"test");
 			sProperties.load(reader);
 			assertNotNull(sProperties);
 			String decryptedProperty = sProperties.getProperty("test-encrypted");
@@ -541,15 +536,14 @@ public class SecurePropertiesAESTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile,"test");
 			KeystoreUtils2.generateSecretKey(config);
 			
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("key-path", keyfile.getPath());
-			clearProperties.setProperty("entry-name", "aes-key");
-			clearProperties.setProperty("keystore-password", "TEST");
+			clearProperties.setProperty("keystore-password", "test");
 			
 			File propertiesFile = temporaryFolder.newFile("test.properties");
 			OutputStream stream = new FileOutputStream(propertiesFile);
@@ -562,9 +556,8 @@ public class SecurePropertiesAESTest2 {
 			SecureProperties2 sProperties = new SecureProperties2();
 			sProperties.load(reader);
 			assertNotNull(sProperties);
-			assertNotNull(sProperties.getProperty("entry-name"));
-			assertNotNull(sProperties.getProperty("nothere","TEST"));
-			assertTrue(!StringUtils.equals(sProperties.getProperty("entry-name","SM"), "SM"));
+			assertNotNull(sProperties.getProperty("nothere","test"));
+			
 			
 		}catch(Throwable t){
 			t.printStackTrace();
@@ -579,15 +572,14 @@ public class SecurePropertiesAESTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile,"test");
 			KeystoreUtils2.generateSecretKey(config);
 			
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties clearProperties = new Properties();
 			clearProperties.setProperty("key-path", keyfile.getPath());
-			clearProperties.setProperty("entry-name", "aes-key");
-			clearProperties.setProperty("keystore-password", "TEST");
+			clearProperties.setProperty("keystore-password", "test");
 			
 			File propertiesFile = temporaryFolder.newFile("test.xml");
 			OutputStream stream = new FileOutputStream(propertiesFile);
@@ -600,7 +592,6 @@ public class SecurePropertiesAESTest2 {
 			SecureProperties2 sProperties = new SecureProperties2();
 			sProperties.loadFromXML(is);
 			assertNotNull(sProperties);
-			assertNotNull(sProperties.getProperty("entry-name"));
 			
 		}catch(Throwable t){
 			t.printStackTrace();
@@ -615,14 +606,14 @@ public class SecurePropertiesAESTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile,"test");
 			KeystoreUtils2.generateSecretKey(config);
 			
 			assertTrue(FileUtils.sizeOf(keyfile) > 0);
 			
 			Properties props = new SecureProperties2();
-			props.setProperty("entry-name", "aes-key");
-			props.setProperty("keystore-password", "TEST");
+			//NOTE!!!!! The order here is important... always set password THEN keyfile
+			props.setProperty("keystore-password", "test");
 			props.setProperty("key-path", keyfile.getPath());
 			
 			
@@ -649,7 +640,7 @@ public class SecurePropertiesAESTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 			
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile,"test");
 			KeystoreUtils2.generateSecretKey(config);
 			
 		

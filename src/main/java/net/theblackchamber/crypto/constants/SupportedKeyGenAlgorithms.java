@@ -24,7 +24,12 @@
 package net.theblackchamber.crypto.constants;
 
 import net.theblackchamber.crypto.exceptions.UnsupportedAlgorithmException;
-
+import net.theblackchamber.crypto.providers.symmetric.AESEncryptionProvider2;
+/**
+ * 
+ * @author sminogue
+ *@deprecated Stop using this. New encryption uses the {@link AESEncryptionProvider2} and 3DES will no longer be supported.
+ */
 public enum SupportedKeyGenAlgorithms {
 
 	AES("AES"),DES("DESede");

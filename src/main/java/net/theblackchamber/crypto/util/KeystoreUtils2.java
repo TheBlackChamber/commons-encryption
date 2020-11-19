@@ -43,6 +43,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import net.theblackchamber.crypto.model.KeyConfig2;
+import net.theblackchamber.crypto.providers.digest.SHA256DigestProvider;
+import net.theblackchamber.crypto.providers.digest.SHA256DigestProvider.TYPE;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -55,6 +57,7 @@ import com.google.crypto.tink.KeysetHandle;
 import com.google.crypto.tink.aead.AeadKeyTemplates;
 import com.google.crypto.tink.aead.AesGcmKeyManager;
 import com.google.crypto.tink.config.TinkConfig;
+import com.google.crypto.tink.subtle.AesGcmJce;
 
 /**
  * Utility used for managing a keystore. Generate keys etc.
@@ -64,10 +67,10 @@ import com.google.crypto.tink.config.TinkConfig;
  */
 public class KeystoreUtils2 {
 
-
+	private static SHA256DigestProvider digest = new SHA256DigestProvider(TYPE.SHA1);
+	
 	/**
-	 * Method which will generate a random Secret key and add it to a keystore
-	 * with the entry name provided.
+	 * Method which will generate a random Secret key and store it securely on disk.
 	 * 
 	 * @param config
 	 *            Configuration for generation of key.
@@ -77,16 +80,26 @@ public class KeystoreUtils2 {
 	public static void generateSecretKey(KeyConfig2 config)
 			throws IOException, GeneralSecurityException {
 
-		if (config == null || config.getKeyStoreFile() == null) {
+		if (config == null || config.getKeyStoreFile() == null || StringUtils.isBlank(config.getKeyPass())) {
 			throw new KeyStoreException(
 					"Missing parameters, unable to create keystore.");
 		}
 		TinkConfig.register();
+		
+		//Create rando key
 		KeysetHandle keysetHandle = KeysetHandle.generateNew(
 		        AesGcmKeyManager.aes256GcmTemplate());
+				
+		//using key-pass from config encrypt the encryption key
+		String dKey = digest.digest(config.getKeyPass());
+		AesGcmJce aesKey = new AesGcmJce(dKey.substring(0, 32).getBytes());
+		ByteArrayOutputStream privateOutputStream = new ByteArrayOutputStream();
+		keysetHandle.write(JsonKeysetWriter.withOutputStream(privateOutputStream), aesKey);
 		
-		CleartextKeysetHandle.write(keysetHandle, JsonKeysetWriter.withFile(config.getKeyStoreFile()));
-		
+		//Store the key to disk.
+		byte[] privateBytes = privateOutputStream.toByteArray();
+		FileUtils.writeByteArrayToFile(config.getKeyStoreFile(), privateBytes);
+        
 	}
 
 	/**
@@ -95,8 +108,6 @@ public class KeystoreUtils2 {
 	 * 
 	 * @param keystore
 	 *            {@link KeyStore} file to read.
-	 * @param entryName
-	 *            Entry name of the key to be retrieved
 	 * @param keyStorePassword
 	 *            Password used to open the {@link KeyStore}
 	 * @return
@@ -104,64 +115,22 @@ public class KeystoreUtils2 {
 	 * @throws IOException
 	 * @throws GeneralSecurityException 
 	 */
-	public static KeysetHandle getSecretKey(File keystore) throws FileNotFoundException, IOException, GeneralSecurityException {
+	public static KeysetHandle getSecretKey(KeyConfig2 config) throws IOException, GeneralSecurityException {
 		
-		if (keystore == null || !keystore.exists()
-				|| FileUtils.sizeOf(keystore) == 0) {
-			throw new FileNotFoundException();
+
+		if (config == null || config.getKeyStoreFile() == null || StringUtils.isBlank(config.getKeyPass())) {
+			throw new KeyStoreException(
+					"Missing parameters, unable to create keystore.");
 		}
 		
 		TinkConfig.register();
 		
-		 return CleartextKeysetHandle.read(
-			        JsonKeysetReader.withFile(keystore));
-
-	}
-
-	/**
-	 * Method which will load a secret key from an input stream with the
-	 * specified entry name.
-	 * 
-	 * @param keystore
-	 *            {@link KeyStore} file to read.
-	 * @param entryName
-	 *            Entry name of the key to be retrieved
-	 * @param keyStorePassword
-	 *            Password used to open the {@link KeyStore}
-	 * @return
-	 * @throws KeyStoreException
-	 * @throws NoSuchAlgorithmException
-	 * @throws CertificateException
-	 * @throws IOException
-	 * @throws UnrecoverableEntryException
-	 */
-	public static SecretKey getSecretKey(InputStream keyInputStream,
-			String entryName, String keyStorePassword)
-			throws KeyStoreException, NoSuchAlgorithmException,
-			CertificateException, IOException, UnrecoverableEntryException {
-		KeyStore keyStore = KeyStore.getInstance("JCEKS");
-
-		if (keyInputStream == null) {
-			throw new KeyStoreException("No Keystore stream provided.");
-		}
-		if (StringUtils.isEmpty(keyStorePassword)) {
-			throw new KeyStoreException("No Keystore password provided.");
-		}
-		if (StringUtils.isEmpty(entryName)) {
-			throw new KeyStoreException("No Keystore entry name provided.");
-		}
-
-		keyStore.load(keyInputStream, keyStorePassword.toCharArray());
-		KeyStore.ProtectionParameter protectionParameter = new KeyStore.PasswordProtection(
-				keyStorePassword.toCharArray());
-		KeyStore.SecretKeyEntry pkEntry = (KeyStore.SecretKeyEntry) keyStore
-				.getEntry(entryName, protectionParameter);
-		try {
-			return pkEntry.getSecretKey();
-		} finally {
-			keyInputStream.close();
-		}
-
+		//Read and decrypt encrypted key from disk
+		String dKey = digest.digest(config.getKeyPass());
+		AesGcmJce aesKey = new AesGcmJce(dKey.substring(0, 32).getBytes());
+		byte[] encryptedBytes = FileUtils.readFileToByteArray(config.getKeyStoreFile());
+		return KeysetHandle.read(JsonKeysetReader.withBytes(encryptedBytes), aesKey);
+		
 	}
 
 }

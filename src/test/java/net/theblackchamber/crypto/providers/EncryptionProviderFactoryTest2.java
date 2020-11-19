@@ -32,11 +32,11 @@ public class EncryptionProviderFactoryTest2 {
 		try {
 			File keyFile = tempFolder.newFile("keystore.keys");
 
-			KeyConfig2 config = new KeyConfig2(keyFile);
+			KeyConfig2 config = new KeyConfig2(keyFile,"test");
 			KeystoreUtils2.generateSecretKey(config);
 			
 
-			aesKey = KeystoreUtils2.getSecretKey(keyFile);
+			aesKey = KeystoreUtils2.getSecretKey(config);
 			
 
 			assertNotNull(aesKey);

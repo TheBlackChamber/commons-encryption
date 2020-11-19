@@ -23,7 +23,9 @@
  */
 package net.theblackchamber.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,18 +36,6 @@ import java.io.OutputStream;
 import java.security.KeyStoreException;
 import java.util.Properties;
 
-import net.theblackchamber.crypto.constants.Constants;
-import net.theblackchamber.crypto.constants.SupportedKeyGenAlgorithms;
-import net.theblackchamber.crypto.exceptions.RuntimeCryptoException;
-import net.theblackchamber.crypto.implementations.SecureProperties;
-import net.theblackchamber.crypto.implementations.SecureProperties2;
-import net.theblackchamber.crypto.model.KeyConfig;
-import net.theblackchamber.crypto.model.KeyConfig2;
-import net.theblackchamber.crypto.util.KeystoreUtils;
-import net.theblackchamber.crypto.util.KeystoreUtils2;
-import net.theblackchamber.crypto.util.SecurePropertiesUtils;
-import net.theblackchamber.crypto.util.SecurePropertiesUtils2;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
@@ -54,6 +44,13 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+
+import net.theblackchamber.crypto.constants.Constants;
+import net.theblackchamber.crypto.exceptions.RuntimeCryptoException;
+import net.theblackchamber.crypto.implementations.SecureProperties2;
+import net.theblackchamber.crypto.model.KeyConfig2;
+import net.theblackchamber.crypto.util.KeystoreUtils2;
+import net.theblackchamber.crypto.util.SecurePropertiesUtils2;
 
 public class SecurePropertiesUtilsTest2 {
 
@@ -69,35 +66,8 @@ public class SecurePropertiesUtilsTest2 {
 			File keyfile = temporaryFolder.newFile("test.key");
 
 			assertTrue(keyfile.exists());
-			KeyConfig2 config = new KeyConfig2(keyfile);
+			KeyConfig2 config = new KeyConfig2(keyfile, "test");
 			KeystoreUtils2.generateSecretKey(config);
-		} catch (Throwable t) {
-			t.printStackTrace();
-			fail();
-		}
-	}
-
-	@Test
-	public void testEncryptPropertiesFileParameterConfigDontKeepConfigMissingParams() {
-		try {
-			File keyfile = new File(temporaryFolder.getRoot().getPath() + File.separator + "test.key");
-
-			File propertiesFile = writeTestFile(keyfile, false);
-
-			try {
-				SecurePropertiesUtils2.encryptPropertiesFile(null);
-				Assert.fail();
-			} catch (KeyStoreException kse) {
-				// This was intended
-			}
-
-			try {
-				SecurePropertiesUtils2.encryptPropertiesFile(propertiesFile, null);
-				Assert.fail();
-			} catch (KeyStoreException kse) {
-				// This was intended
-			}
-
 		} catch (Throwable t) {
 			t.printStackTrace();
 			fail();
@@ -114,10 +84,10 @@ public class SecurePropertiesUtilsTest2 {
 
 			File keyfile = new File(temporaryFolder.getRoot().getPath() + File.separator + "test.key");
 
-			File propertiesFile = writeTestFile(keyfile, false);
+			File propertiesFile = writeTestFile(keyfile, "test", false);
 
 			SecureProperties2 sProperties = SecurePropertiesUtils2.encryptPropertiesFile(propertiesFile,
-					keyfile.getPath());
+					keyfile.getPath(), "test");
 			String decryptedProperty = sProperties.getProperty("test-encrypted");
 			assertTrue(StringUtils.equals(decryptedProperty, "TESTY"));
 			assertTrue(sProperties.getProperty("test-unencrypted") == null);
@@ -151,10 +121,10 @@ public class SecurePropertiesUtilsTest2 {
 
 			File keyfile = new File(temporaryFolder.getRoot().getPath() + File.separator + "test.key");
 
-			File propertiesFile = writeTestFile(keyfile, false);
+			File propertiesFile = writeTestFile(keyfile, "test", false);
 
 			SecureProperties2 sProperties = SecurePropertiesUtils2.encryptPropertiesFile(propertiesFile,
-					keyfile.getPath(), true);
+					keyfile.getPath(), "test", true);
 			String decryptedProperty = sProperties.getProperty("test-encrypted");
 			assertTrue(StringUtils.equals(decryptedProperty, "TESTY"));
 			assertTrue(sProperties.getProperty("test-unencrypted") == null);
@@ -181,7 +151,7 @@ public class SecurePropertiesUtilsTest2 {
 		try {
 			File keyfile = new File(temporaryFolder.getRoot().getPath() + File.separator + "test.key");
 
-			File propertiesFile = writeTestFile(keyfile, true);
+			File propertiesFile = writeTestFile(keyfile, "test", true);
 
 			SecureProperties2 sProperties = SecurePropertiesUtils2.encryptPropertiesFile(propertiesFile);
 			String decryptedProperty = sProperties.getProperty("test-encrypted");
@@ -201,11 +171,15 @@ public class SecurePropertiesUtilsTest2 {
 		}
 	}
 
-	private File writeTestFile(File keyfile, boolean keypath) throws IOException {
+	private File writeTestFile(File keyfile, String keyPass, boolean keypath) throws IOException {
 		Properties clearProperties = new Properties();
 
 		if (keypath) {
 			clearProperties.setProperty("key-path", keyfile.getPath());
+		}
+
+		if (StringUtils.isNotBlank(keyPass)) {
+			clearProperties.setProperty("keystore-password", keyPass);
 		}
 
 		clearProperties.setProperty("test-unencrypted", "TESTY");

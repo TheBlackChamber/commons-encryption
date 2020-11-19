@@ -35,21 +35,37 @@ import org.jasypt.util.password.ConfigurablePasswordEncryptor;
  */
 public class SHA256DigestProvider {
 
+	public static enum TYPE {
+		
+		SHA1("SHA-1"),SHA256("SHA-256"),SHA384("SHA-384"),SHA512("SHA-512");
+
+		String value;
+		
+		TYPE(String string) {
+			this.value  = string;
+		}
+		
+		String getValue() {
+			return value;
+		}
+		
+	}
+	
 	private ConfigurablePasswordEncryptor encryptor;
 	
 	/**
 	 * Constructor
 	 */
-	public SHA256DigestProvider() {
+	public SHA256DigestProvider(TYPE type) {
 		
 		SimpleDigesterConfig config = new SimpleDigesterConfig();
-		config.setAlgorithm("SHA256");
+		config.setAlgorithm(type.getValue());
 		config.setIterations(50000);
 		config.setProvider(new BouncyCastleProvider());
 		
 		encryptor = new ConfigurablePasswordEncryptor();
 		encryptor.setProvider(new BouncyCastleProvider());
-		encryptor.setAlgorithm("SHA256");
+		encryptor.setAlgorithm(type.getValue());
 		encryptor.setConfig(config);
 		encryptor.setPlainDigest(true);
 		encryptor.setStringOutputType("hexadecimal");
