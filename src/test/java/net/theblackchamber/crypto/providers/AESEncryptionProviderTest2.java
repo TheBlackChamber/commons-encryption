@@ -24,6 +24,8 @@
 package net.theblackchamber.crypto.providers;
 
 import java.io.File;
+import java.security.GeneralSecurityException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.HashSet;
@@ -55,27 +57,82 @@ import net.theblackchamber.crypto.util.KeystoreUtils2;
 
 public class AESEncryptionProviderTest2 {
 
-	KeysetHandle key;
-	
+	KeysetHandle			key;
+
 	@Rule
-	public TemporaryFolder tempFolder = new TemporaryFolder();
+	public TemporaryFolder	tempFolder	= new TemporaryFolder();
 
 	@Before
 	public void init() {
 		try {
 			File keyFile = tempFolder.newFile("keystore.keys");
 
-			KeyConfig2 config = new KeyConfig2(keyFile,"test");
+			KeyConfig2 config = new KeyConfig2(keyFile, "test");
 			KeystoreUtils2.generateSecretKey(config);
 
-			 key = KeystoreUtils2.getSecretKey(config);
-			
+			key = KeystoreUtils2.getSecretKey(config);
+
 			assertNotNull(key);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
 		}
+	}
+
+	@Test
+	public void testEncryptBytesAssociated() throws GeneralSecurityException, MissingParameterException {
+
+		EncryptionProvider2 aesEncryptionProvider = EncryptionProviderFactory2.getProvider(key);
+
+		assertNotNull(aesEncryptionProvider.getKey());
+
+		byte[] clear = RandomStringUtils.randomAlphabetic(20).getBytes();
+		byte[] assoc = RandomStringUtils.randomAlphabetic(20).getBytes();
+
+		for (int i = 1; i < 10; i++) {
+
+			byte[] cipher = aesEncryptionProvider.encrypt(clear,assoc);
+			byte[] badCipher = aesEncryptionProvider.encrypt(clear);
+
+			assertFalse(Arrays.equals(cipher, badCipher));
+			assertFalse(Arrays.equals(cipher, clear));
+
+		}
+
+		try {
+			aesEncryptionProvider.encrypt("".getBytes());
+			fail();
+		} catch (MissingParameterException mpe) {
+			// Expected behavior
+		}
+
+	}
+	
+	@Test
+	public void testEncryptBytes() throws GeneralSecurityException, MissingParameterException {
+
+		EncryptionProvider2 aesEncryptionProvider = EncryptionProviderFactory2.getProvider(key);
+
+		assertNotNull(aesEncryptionProvider.getKey());
+
+		String clear = RandomStringUtils.randomAlphabetic(20);
+
+		for (int i = 1; i < 10; i++) {
+
+			byte[] cipher = aesEncryptionProvider.encrypt(clear.getBytes());
+
+			assertFalse(Arrays.equals(cipher, clear.getBytes()));
+
+		}
+
+		try {
+			aesEncryptionProvider.encrypt("".getBytes());
+			fail();
+		} catch (MissingParameterException mpe) {
+			// Expected behavior
+		}
+
 	}
 
 	@Test
@@ -86,7 +143,7 @@ public class AESEncryptionProviderTest2 {
 			EncryptionProvider2 aesEncryptionProvider = EncryptionProviderFactory2.getProvider(key);
 
 			assertNotNull(aesEncryptionProvider.getKey());
-			
+
 			String clear = RandomStringUtils.randomAlphabetic(20);
 			Set<String> crypts = new HashSet<String>();
 			for (int i = 1; i < 10; i++) {
@@ -94,14 +151,14 @@ public class AESEncryptionProviderTest2 {
 				assertTrue(!crypts.contains(cipher));
 				crypts.add(cipher);
 			}
-			
+
 			try {
 				aesEncryptionProvider.encrypt("");
 				fail();
 			} catch (MissingParameterException mpe) {
 
 			}
-			
+
 		} catch (Throwable t) {
 			t.printStackTrace();
 			fail();
@@ -117,7 +174,7 @@ public class AESEncryptionProviderTest2 {
 			EncryptionProvider2 aesEncryptionProvider2 = EncryptionProviderFactory2.getProvider(key);
 
 			assertNotNull(aesEncryptionProvider.getKey());
-			
+
 			String clear = RandomStringUtils.randomAlphabetic(20);
 			Set<String> crypts = new HashSet<String>();
 			for (int i = 1; i < 10; i++) {
@@ -128,28 +185,79 @@ public class AESEncryptionProviderTest2 {
 				assertTrue(!crypts.contains(cipher));
 				crypts.add(cipher);
 			}
-			
+
 			try {
 				aesEncryptionProvider.encrypt("");
 				fail();
 			} catch (MissingParameterException mpe) {
 
 			}
-			
+
 		} catch (Throwable t) {
 			t.printStackTrace();
 			fail();
 		}
 	}
+
+	@Test
+	public void testDecryptBytes() throws GeneralSecurityException, MissingParameterException {
+
+		
+		EncryptionProvider2 aesEncryptionProvider = EncryptionProviderFactory2.getProvider(key);
+
+		assertNotNull(aesEncryptionProvider.getKey());
+
+		byte[] clear = RandomStringUtils.randomAlphabetic(20).getBytes();
+
+		byte[] cipher = aesEncryptionProvider.encrypt(clear);
+
+		byte[] decrypted = aesEncryptionProvider.decrypt(cipher);
+
+		assertTrue(Arrays.equals(clear, decrypted));
+
+		try {
+			aesEncryptionProvider.decrypt("".getBytes());
+			fail();
+		} catch (MissingParameterException mpe) {
+			//expected behavior
+		}
+
+	}
+
+	@Test
+	public void testDecryptBytesAssociated() throws GeneralSecurityException, MissingParameterException {
+
+		
+		EncryptionProvider2 aesEncryptionProvider = EncryptionProviderFactory2.getProvider(key);
+
+		assertNotNull(aesEncryptionProvider.getKey());
+
+		byte[] clear = RandomStringUtils.randomAlphabetic(20).getBytes();
+		byte[] associated = RandomStringUtils.randomAlphabetic(20).getBytes();
+
+		byte[] cipher = aesEncryptionProvider.encrypt(clear,associated);
+
+		byte[] decrypted = aesEncryptionProvider.decrypt(cipher,associated);
+
+		assertTrue(Arrays.equals(clear, decrypted));
+
+		try {
+			aesEncryptionProvider.decrypt("".getBytes());
+			fail();
+		} catch (MissingParameterException mpe) {
+			//expected behavior
+		}
+
+	}
 	
 	@Test
 	public void testDecrypt() {
 		try {
-			Encoder encoder = Base64.getEncoder();
+			
 			EncryptionProvider2 aesEncryptionProvider = EncryptionProviderFactory2.getProvider(key);
 
 			assertNotNull(aesEncryptionProvider.getKey());
-			
+
 			String clear = RandomStringUtils.randomAlphabetic(20);
 
 			String cipher = new String(aesEncryptionProvider.encrypt(clear));
