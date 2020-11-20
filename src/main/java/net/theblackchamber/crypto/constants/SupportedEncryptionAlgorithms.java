@@ -23,6 +23,7 @@
  */
 package net.theblackchamber.crypto.constants;
 
+@Deprecated
 public enum SupportedEncryptionAlgorithms {
 	DES("PBEWithSHAAnd3KeyTripleDES"),
 	AES128("PBEWITHSHA256AND128BITAES-CBC-BC"),

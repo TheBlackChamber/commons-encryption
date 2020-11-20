@@ -46,8 +46,9 @@ import org.jasypt.salt.RandomSaltGenerator;
  * Supported Key Sizes: 128 & 192
  * 
  * @author sminogue
- * 
+ * @deprecated You should be using AESEncryptionProvider.
  */
+@Deprecated
 public class DESEdeEncryptionProvider extends EncryptionProvider {
 
 	public DESEdeEncryptionProvider(Key key) throws UnsupportedKeySizeException, UnsupportedAlgorithmException {

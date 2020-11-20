@@ -45,7 +45,7 @@ import org.apache.commons.lang3.StringUtils;
  * encrypt it.
  * 
  * @author sminogue
- * 
+ * @deprecated Use SecurePropertiesUtils2
  */
 public class SecurePropertiesUtils {
 

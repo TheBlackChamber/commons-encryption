@@ -30,7 +30,7 @@ package net.theblackchamber.crypto.exceptions;
  * 
  * @author sminogue
  * 
- */
+ */@Deprecated
 public class UnsupportedKeySizeException extends Exception {
 
 	public UnsupportedKeySizeException() {

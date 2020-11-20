@@ -54,8 +54,9 @@ import org.jasypt.salt.RandomSaltGenerator;
  * Supported Key Sizes: 128, 192, & 256
  * 
  * @author sminogue
- * 
+ * @deprecated Use AESEncryptionProvider2
  */
+@Deprecated
 public class AESEncryptionProvider extends EncryptionProvider {
 
 	/**

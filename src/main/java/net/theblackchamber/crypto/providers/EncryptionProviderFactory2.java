@@ -1,6 +1,6 @@
 /**
  * The MIT License (MIT)
- *
+ * 
  * Copyright (c) 2014 Seamus Minogue
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -10,7 +10,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  * 
- * The above copyright notice and this permission notice shall be included in all
+ * The above copyright notice and this permission notice shall be included in
+ * all
  * copies or substantial portions of the Software.
  * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -21,47 +22,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.theblackchamber.crypto.constants;
+package net.theblackchamber.crypto.providers;
 
+import java.security.GeneralSecurityException;
+import java.security.Key;
+
+import javax.crypto.SecretKey;
+
+import com.google.crypto.tink.KeysetHandle;
+import com.google.crypto.tink.config.TinkConfig;
+
+import static net.theblackchamber.crypto.constants.SupportedKeyGenAlgorithms.*;
+import net.theblackchamber.crypto.constants.SupportedKeyGenAlgorithms;
 import net.theblackchamber.crypto.exceptions.UnsupportedAlgorithmException;
+import net.theblackchamber.crypto.exceptions.UnsupportedKeySizeException;
+import net.theblackchamber.crypto.providers.symmetric.AESEncryptionProvider;
 import net.theblackchamber.crypto.providers.symmetric.AESEncryptionProvider2;
+import net.theblackchamber.crypto.providers.symmetric.DESEdeEncryptionProvider;
+
 /**
+ * Factory which will create and return instances of {@link EncryptionProvider}
+ * based on the algorithm of a key.
  * 
  * @author sminogue
- *@deprecated Stop using this. New encryption uses the {@link AESEncryptionProvider2} and 3DES will no longer be supported.
+ * 
  */
-public enum SupportedKeyGenAlgorithms {
+public class EncryptionProviderFactory2 {
 
-	AES("AES"),DES("DESede");
-	
-	private String name;
-	
-	private SupportedKeyGenAlgorithms(String name){
-		this.name = name;
-	}
-	
-	public String getName(){
-		return name;
-	}
-	
 	/**
-	 * Get enum based on name.
-	 * @param algorithm
-	 * @return
-	 * @throws UnsupportedAlgorithmException
+	 * Method which will return a new instance of {@link EncryptionProvider}
+	 * @throws GeneralSecurityException 
+	 * 
 	 */
-	public static SupportedKeyGenAlgorithms getAlgorithm(String algorithm) throws UnsupportedAlgorithmException{
-		
-		for(SupportedKeyGenAlgorithms supportedAlgorithm : SupportedKeyGenAlgorithms.values()){
-			
-			if(algorithm.equals(supportedAlgorithm.getName())){
-				return supportedAlgorithm;
-			}
-			
-		}
-		
-		throw new UnsupportedAlgorithmException("Algorithm ["+algorithm+"] is unsupported.");
-		
+	public static EncryptionProvider2 getProvider(KeysetHandle key) throws  GeneralSecurityException {
+
+		TinkConfig.register();
+
+		return new AESEncryptionProvider2(key);
+
 	}
-	
+
 }

@@ -21,47 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.theblackchamber.crypto.constants;
+package net.theblackchamber.crypto.model;
 
-import net.theblackchamber.crypto.exceptions.UnsupportedAlgorithmException;
-import net.theblackchamber.crypto.providers.symmetric.AESEncryptionProvider2;
+import java.io.File;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
- * 
+ * Class used to configure key generation. 
  * @author sminogue
- *@deprecated Stop using this. New encryption uses the {@link AESEncryptionProvider2} and 3DES will no longer be supported.
+ *
  */
-public enum SupportedKeyGenAlgorithms {
-
-	AES("AES"),DES("DESede");
-	
-	private String name;
-	
-	private SupportedKeyGenAlgorithms(String name){
-		this.name = name;
-	}
-	
-	public String getName(){
-		return name;
-	}
-	
-	/**
-	 * Get enum based on name.
-	 * @param algorithm
-	 * @return
-	 * @throws UnsupportedAlgorithmException
-	 */
-	public static SupportedKeyGenAlgorithms getAlgorithm(String algorithm) throws UnsupportedAlgorithmException{
-		
-		for(SupportedKeyGenAlgorithms supportedAlgorithm : SupportedKeyGenAlgorithms.values()){
-			
-			if(algorithm.equals(supportedAlgorithm.getName())){
-				return supportedAlgorithm;
-			}
-			
-		}
-		
-		throw new UnsupportedAlgorithmException("Algorithm ["+algorithm+"] is unsupported.");
-		
-	}
-	
+@AllArgsConstructor
+@Getter
+public class KeyConfig2 {
+	private File keyStoreFile = null;
+	private String keyPass;
 }
